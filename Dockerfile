@@ -24,6 +24,13 @@ RUN /root/install_node_ubuntu
 
 RUN sudo apt-get install -y nodejs build-essential
 
+# Entrypoint
+# Also need
+EXPOSE 3000-3000
+WORKDIR /opt/project/eos-voter
+ENTRYPOINT ["/opt/project/run-eos-voter"]
+
+
 
 
 

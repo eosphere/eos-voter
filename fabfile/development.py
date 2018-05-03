@@ -17,10 +17,23 @@ def build():
 @task
 def setup():
     build()
+    npm_install()
 
 @task
 def bash():
     print(yellow('Running docker process...'))
     with lcd('.'):
         local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="bash" --publish=3000:3000 "${PWD##*/}"')
+
+@task
+def npm_install():
+    print(yellow('Running docker process...'))
+    with lcd('.'):
+        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-npm-install" --publish=3000:3000 "${PWD##*/}"')
+
+@task
+def runserver():
+    print(yellow('Running docker process...'))
+    with lcd('.'):
+        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 "${PWD##*/}"')
 
