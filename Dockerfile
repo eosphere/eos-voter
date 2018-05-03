@@ -24,6 +24,12 @@ RUN /root/install_node_ubuntu
 
 RUN sudo apt-get install -y nodejs build-essential
 
+RUN mkdir /.config
+RUN chmod 777 /.config -R
+
+RUN mkdir /.npm
+RUN chmod 777 /.npm -R
+
 # Entrypoint
 # Also need
 EXPOSE 3000-3000
