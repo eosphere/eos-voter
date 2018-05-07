@@ -37,3 +37,9 @@ def runserver():
     with lcd('.'):
         local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 --user=$(id -u):$(id -g) "${PWD##*/}"')
 
+@task
+def webpack():
+    print(yellow('Running docker process...'))
+    with lcd('.'):
+        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-webpack" --user=$(id -u):$(id -g) "${PWD##*/}"')
+

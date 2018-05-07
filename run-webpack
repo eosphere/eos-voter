@@ -1,0 +1,5 @@
+#! /bin/bash
+
+cd /opt/project/eos-voter
+nodejs node_modules/webpack/bin/webpack.js src/index.js --output public/bin/app.js -d --watch
+

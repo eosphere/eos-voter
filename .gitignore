@@ -63,3 +63,6 @@ typings/
 # Python virtual environment
 venv/
 
+# Webpack's compiled binary output
+eos-voter/public/bin/
+
