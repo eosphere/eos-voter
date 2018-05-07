@@ -1,8 +1,77 @@
 body {
-  padding: 50px;
+  padding: 10px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*background-color: #EEE;*/
+  margin: 0px;
+  padding: 0px;
 }
 
 a {
   color: #00B7FF;
 }
+
+.eoslogo {
+  height: 100px;
+}
+
+.pageheader {
+  background-color: #333;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.pageheaderitem {
+  display: inline-block;
+  margin: 10px;
+}
+
+.signupbuttoncontainer {
+  float: right;
+}
+
+.signupbutton {
+  height: 50px;
+  width: 170px;
+
+  background-color: #333;
+  border: 3px solid white;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.centre {
+    text-align: center;
+}
+
+div.block-producer-row:nth-child(even) {
+  background-color: #CCC;
+}
+
+div.block-producer-row:nth-child(odd) {
+  background-color: #FFF;
+}
+
+.block-producer-cell {
+  /*border: 1px solid red;*/
+  display: inline-block;
+  font-size: 18px;
+}
+
+.block-producer-cell-1 {
+  width: 10%;
+}
+
+.block-producer-cell-2 {
+  width: 40%;
+}
+
+.block-producer-cell-3 {
+  width: 20%;
+}
+
+.block-producer-cell-4 {
+  width: 20%;
+}
+

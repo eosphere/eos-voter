@@ -1,5 +1,31 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div.pageheader
+    div.pageheaderitem
+      img.eoslogo(src='/images/Logo-dark-landscape-v2-1.png')
+    div.pageheaderitem.signupbuttoncontainer
+      button.signupbutton Sign in to vote
+  h1.centre EOS Voter
+  p.centre EOS Voter is a provided as a free service to the community by EOSphere. You can use it to monitor the votes of block producers and to vote
+  h2.centre Active Block Producers
+
+  div.block-producer-list
+    - var n = 1
+    each blockproducer in activeblockproducers
+      div.block-producer-row
+        div.block-producer-cell.block-producer-cell-1= n++
+        div.block-producer-cell.block-producer-cell-2= blockproducer.name
+        div.block-producer-cell.block-producer-cell-3= blockproducer.votes
+        div.block-producer-cell.block-producer-cell-4= blockproducer.statement
+
+  h2.centre Backup Block Producers
+
+  div.block-producer-list
+    each blockproducer in backupblockproducers
+      div.block-producer-row
+        div.block-producer-cell.block-producer-cell-1= n++
+        div.block-producer-cell.block-producer-cell-2= blockproducer.name
+        div.block-producer-cell.block-producer-cell-3= blockproducer.votes
+        div.block-producer-cell.block-producer-cell-4= blockproducer.statement
+
