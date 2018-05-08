@@ -71,10 +71,12 @@ function getActiveBlockProducers() {
 }
 
 var votes = [];
+var proxy_name = ''
 
 function recalcVotes() {
-    var checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"))
-    votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'))
+    proxy_name = document.getElementById('id-proxy-name').value;
+    var checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
+    votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'));
 }
 
 var Hello = {
@@ -90,7 +92,7 @@ var Hello = {
                  ]),
                  m("div", {'class': 'content-container'}, [
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
-                   m("p", 'You have voted for ' + votes.length + ' producer candidates.'),
+                   m("p", (proxy_name == '' ? 'You have voted for ' + votes.length + ' producer candidates.' : 'You have proxied your vote to ' + proxy_name)),
                    m('div', {'class': 'block-producer-list'}, [
                      m('div', {'class': 'block-producer-row'}, [
                        m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, 'Vote'),
@@ -113,11 +115,26 @@ var Hello = {
                      ]);              
                     }
                    ))),
+                   m("div", [
+                     m("div", {'style': 'margin-top: 15px;'}, [
+                       m('div', {'style': 'display: inline-block; width: 240px;'}, [
+                         m("span", "Proxy my vote to another user"),
+                       ]),
+                       m("span", "@"),
+                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;'}),
+                       m("Button", {'class': 'vote-helper-button', 'onclick': recalcVotes}, "Set Proxy"),
+                     ]),
+                     m("div", {'style': 'margin-top: 15px;'}, [
+                       m('div', {'style': 'display: inline-block; width: 240px;'}, [
+                         m("span", {'style': 'min-width:240px;'}, "You can add a candidate to the list"),
+                       ]),
+                       m("span", "@"),
+                       m("input", {'type': 'text', 'style': 'height:25px;width:200px;'}),
+                       m("Button", {'class': 'vote-helper-button'}, "Add candidate"),
+                     ]),
+                   ]),
                  ]),
-               ].concat(
-               [
-                 m("button", {onclick: function() {count++}}, "Do it"),
-               ]))
+               ])
 
 
 

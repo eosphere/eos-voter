@@ -194,3 +194,21 @@ div.block-producer-row:nth-child(odd) {
     transform: rotate(45deg);
 }
 
+.vote-helper-button {
+  height: 40px;
+  width: 150px;
+
+  background-color: #EEE;
+  border: 3px solid black;
+  color: black;
+  font-size: 16px;
+  border-radius: 8px;
+  margin-left: 10px;
+
+  /*
+  position: absolute;
+  top: 50%; left: calc(100% - 50px - 50px);
+  transform: translate(-50%,-50%)
+  */
+}
+
