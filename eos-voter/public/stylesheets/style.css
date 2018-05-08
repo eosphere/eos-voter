@@ -59,6 +59,12 @@ a {
   transform: translate(-50%,-50%);
 }
 
+.signupbutton:hover {
+  background-color: #FFF;
+  border: 3px solid black;
+  color: black;
+}
+
 .centre {
     text-align: center;
 }
