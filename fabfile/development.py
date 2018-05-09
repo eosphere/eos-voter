@@ -21,25 +21,62 @@ def setup():
 
 @task
 def bash():
-    print(yellow('Running docker process...'))
+    print(yellow('Running docker process bash...'))
     with lcd('.'):
-        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="bash" --publish=3000:3000 --user=$(id -u):$(id -g) "${PWD##*/}"')
+        local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
+              '--entrypoint="bash" --publish=3000:3000 '
+              '--network={project_name}-network '
+              '--network-alias=webserver '
+              '--user=$(id -u):$(id -g) "{project_name}"'.format(
+                    local_pwd=local_pwd, project_name=project_name))
 
 @task
 def npm_install():
-    print(yellow('Running docker process...'))
+    print(yellow('Running docker process npm_install...'))
     with lcd('.'):
-        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-npm-install" --user=$(id -u):$(id -g) "${PWD##*/}"')
+        local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
+              '--entrypoint="/opt/project/run-npm-install" '
+              '--user=$(id -u):$(id -g) "{project_name}"'.format(
+                    local_pwd=local_pwd, project_name=project_name))
 
 @task
 def runserver():
-    print(yellow('Running docker process...'))
+    print(yellow('Running docker process webserver...'))
     with lcd('.'):
-        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 --user=$(id -u):$(id -g) "${PWD##*/}"')
+        local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
+              '--entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 '
+              '--network={project_name}-network '
+              '--network-alias=webserver '
+              '--user=$(id -u):$(id -g) "{project_name}"'.format(
+                    local_pwd=local_pwd, project_name=project_name))
 
 @task
 def webpack():
     print(yellow('Running docker process...'))
     with lcd('.'):
-        local('docker run --tty --interactive --volume "${PWD}":/opt/project --entrypoint="/opt/project/run-webpack" --user=$(id -u):$(id -g) "${PWD##*/}"')
+        local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
+              '--entrypoint="/opt/project/run-webpack" --user=$(id -u):$(id -g) '
+              '"{project_name}}"'.format(
+                    local_pwd=local_pwd, project_name=project_name))
+
+@task
+def setup_network():
+    print(yellow('Launching docker network...'))
+    with lcd('.'):
+        local('docker network create --driver bridge {project_name}-network'
+              ''.format(project_name=project_name))
+
+@task
+def setup_mongodb():
+    print(yellow('Launching detached mongodb docker process...'))
+    with lcd('.'):
+        with warn_only():
+            result = local('docker run --detach --name={project_name}-chrome '
+                           '--network={project_name}-network '
+                           '--network-alias=mongo '
+                           '-d mongo '.format(
+                            project_name=project_name))
+            if result.failed:
+                abort(red('Could not setup mongodb. Have you run '
+                          '\'setup_network\'?'))
 
