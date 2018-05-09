@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var voteRouter = require('./routes/vote');
+var chainInpectorTask = require('./tasks/chainInspector.js')
 
 var app = express();
 
