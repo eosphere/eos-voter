@@ -3,6 +3,7 @@ import m from "mithril";
 var root = document.body
 
 var all_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-block-producers'));
+var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name')
 
 var votes = [];
 var proxy_name = '';
@@ -12,8 +13,6 @@ function recalcVotes() {
     var checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
     votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'));
 }
-
-var network_name = 'Jungle Testnet';
 
 function cast_vote() {
     alert('Voted');
@@ -40,7 +39,7 @@ var Hello = {
                  m("div", {'class': 'content-container'}, [
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
                    current_vote(),
-                   m("p", 'Currently connected to the ' + network_name + ' network'),
+                   m("p", 'Currently connected to the ' + chain_name + ' network'),
                    m('div', {'class': 'block-producer-list'}, [
                      m('div', {'class': 'block-producer-row'}, [
                        m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, 'Vote'),

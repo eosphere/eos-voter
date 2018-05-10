@@ -1,6 +1,6 @@
 extends layout
 
 block content
-  div(id='allblockproducers', 'data-block-producers'=allblockproducers )
+  div(id='allblockproducers', 'data-chain-name'=chainname, 'data-block-producers'=allblockproducers )
   script(src="/bin/app.js")
 

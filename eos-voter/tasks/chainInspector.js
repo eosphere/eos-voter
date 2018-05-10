@@ -1,3 +1,5 @@
+var exports = module.exports = {};
+
 // Connect to EOS
 var Eos = require('eosjs') // Eos = require('./src')
  
@@ -8,6 +10,9 @@ var options = {
   debug: false,
   fetchConfiguration: {}
 }
+
+exports.chain_name = 'Jungle Testnet';
+//exports.chain_name = 'EOS Main Net';
 
 
 eos = Eos.Testnet(options) // testnet at eos.io
