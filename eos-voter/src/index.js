@@ -19,6 +19,10 @@ function cast_vote() {
     alert('Voted');
 }
 
+function current_vote() {
+    return m("p", (proxy_name == '' ? 'You have voted for ' + votes.length + ' producer candidates.' : 'You have proxied your vote to ' + proxy_name))
+}
+
 var Hello = {
     view: function() {
         return m("main", [
@@ -35,7 +39,7 @@ var Hello = {
                  ]),
                  m("div", {'class': 'content-container'}, [
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
-                   m("p", (proxy_name == '' ? 'You have voted for ' + votes.length + ' producer candidates.' : 'You have proxied your vote to ' + proxy_name)),
+                   current_vote(),
                    m("p", 'Currently connected to the ' + network_name + ' network'),
                    m('div', {'class': 'block-producer-list'}, [
                      m('div', {'class': 'block-producer-row'}, [
@@ -78,6 +82,7 @@ var Hello = {
                        m("input", {'type': 'text', 'style': 'height:25px;width:200px;'}),
                        m("Button", {'class': 'vote-helper-button'}, "Add candidate"),
                      ]),
+                     current_vote(),
                    ]),
                  ]),
                ])
