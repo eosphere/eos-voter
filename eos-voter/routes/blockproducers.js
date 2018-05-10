@@ -71,5 +71,20 @@ exports.getBackupBlockProducers = function() {
            ]
 }
 
+// Connect to mongo
+var mongo = require('mongodb'); 
+var url = "mongodb://mongo:27017/eos-voter";
+var MongoClient = mongo.MongoClient;
+
+exports.get_block_producers_from_db = function () {
+    return MongoClient.connect(url).then(
+        (db) => { return db.db("eos-voter").createCollection("block_producers") }
+    ).then(
+        (block_producers_collection) => { return block_producers_collection.find({}).sort({'name': 1}).toArray(); }
+    )
+}
+
 exports.getAllBlockProducers = () => { return exports.getActiveBlockProducers().concat(exports.getBackupBlockProducers()); };
+
+
 
