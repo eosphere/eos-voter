@@ -24,6 +24,7 @@ function current_vote() {
 
 var scatter = null;
 var waiting_for_scatter = true;
+var custom_candidates = [];
 
 document.addEventListener('scatterLoaded', scatterExtension => {
     console.log('scatterLoaded called');
@@ -46,6 +47,16 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 })
 
 setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
+
+function addcustomcandidate() {
+    var name = document.getElementById('id-add-custom-candidate').value;
+    var existingnames = custom_candidates.map((x) => x.name);
+    if (name != '' && !existingnames.includes(name)) {
+        custom_candidates.push({'id': name, 'name': name, 'votes': '0', 'statement': ''});
+        recalcVotes();
+        m.redraw();
+    }
+}
 
 var Hello = {
     view: function() {
@@ -73,7 +84,7 @@ var Hello = {
                        m('div', {'class': 'block-producer-cell block-producer-cell-4 block-producer-column-header'}, m.trust('&nbsp;')),
                      ]),
 
-                     ].concat(all_block_producers.map((block_producer) => {
+                     ].concat(all_block_producers.concat(custom_candidates).map((block_producer) => {
                      return m('div', {'class': 'block-producer-row'}, [
                        m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, [
                          m('label', {'class': 'checkbox-container'}, [
@@ -103,8 +114,8 @@ var Hello = {
                          m("span", {'style': 'min-width:240px;'}, "You can add a candidate to the list"),
                        ]),
                        m("span", "@"),
-                       m("input", {'type': 'text', 'style': 'height:25px;width:200px;'}),
-                       m("Button", {'class': 'vote-helper-button'}, "Add candidate"),
+                       m("input", {'id': 'id-add-custom-candidate', 'type': 'text', 'style': 'height:25px;width:200px;'}),
+                       m("Button", {'class': 'vote-helper-button', 'onclick': addcustomcandidate}, "Add candidate"),
                      ]),
                      current_vote(),
                    ]),
