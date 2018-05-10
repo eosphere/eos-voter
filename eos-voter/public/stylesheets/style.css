@@ -212,3 +212,30 @@ div.block-producer-row:nth-child(odd) {
   color: white;
 }
 
+.dialog {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: calc(100vh - 80px);
+  width: calc(100vw - 80px);
+  background-color: rgba(0, 0, 0, 0.35);
+  padding: 40px;
+}
+
+.dialogContent {
+  background: #fff;
+  padding: 40px;
+  width: calc(100% - 80px);
+  height: calc(100% - 80px);
+  
+  h2 {
+    margin-top: 0;
+  }
+
+}
+
+.scatterPopupText {
+  text-align: center;
+  width: 100%;
+}
+

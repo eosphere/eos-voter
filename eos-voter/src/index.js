@@ -22,6 +22,31 @@ function current_vote() {
     return m("p", (proxy_name == '' ? 'You have voted for ' + votes.length + ' producer candidates.' : 'You have proxied your vote to ' + proxy_name))
 }
 
+var scatter = null;
+var waiting_for_scatter = true;
+
+document.addEventListener('scatterLoaded', scatterExtension => {
+    console.log('scatterLoaded called');
+
+    // Scatter will now be available from the window scope.
+    // At this stage the connection to Scatter from the application is
+    // already encrypted.
+    scatter = window.scatter;
+
+    // It is good practice to take this off the window once you have
+    // a reference to it.
+    window.scatter = null;
+
+    // If you want to require a specific version of Scatter
+    scatter.requireVersion(3.0);
+
+    //...
+    waiting_for_scatter = false;
+    m.redraw();
+})
+
+setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
+
 var Hello = {
     view: function() {
         return m("main", [
@@ -84,7 +109,25 @@ var Hello = {
                      current_vote(),
                    ]),
                  ]),
-               ])
+               ].concat( scatter ? [] : (
+                 [
+                   m('.dialog', 
+                     m('.dialogContent', [
+                       m('div', {'class': 'scatterPopupText'}, waiting_for_scatter ? 
+                       [
+                         m('h2', 'Detecting Scatter'),
+                       ]
+                       :
+                       [
+                         m('h2', 'You need to install Scatter'),
+                         m('a', {href:'https://scatter-eos.com', target: '_blank'}, 'Download scatter')
+                       ])
+                     ])
+                   )
+                 ]
+                 )
+               )
+        )
     }
 }   
 m.mount(root, Hello)

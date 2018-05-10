@@ -7,7 +7,6 @@ var chaininpector = require('../tasks/chainInspector')
 router.get('/', function(req, res, next) {
     return blockproducers.get_block_producers_from_db().then(
         (result) => {
-        console.log('chaininpector.chain_name=',chaininpector.chain_name);
                        res.render('vote', { title: 'EOS Voter - Cast my vote',
                                             chainname: chaininpector.chain_name,
                                             'allblockproducers': result,
