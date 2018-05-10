@@ -71,7 +71,7 @@ def setup_mongodb():
     print(yellow('Launching detached mongodb docker process...'))
     with lcd('.'):
         with warn_only():
-            result = local('docker run --detach --name={project_name}-chrome '
+            result = local('docker run --detach --name={project_name}-mongo '
                            '--network={project_name}-network '
                            '--network-alias=mongo '
                            '-d mongo '.format(

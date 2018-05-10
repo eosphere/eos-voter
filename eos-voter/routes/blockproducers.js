@@ -2,7 +2,7 @@ var exports = module.exports = {};
 
 exports.getActiveBlockProducers = function() {
     return [
-             {'id': '3b887c39-e497-4984-8ce1-5f01abec8c95', 'name': 'Simon', 'votes': '1,000,000', 'statement': 'Blah\" Blah'},
+/*             {'id': '3b887c39-e497-4984-8ce1-5f01abec8c95', 'name': 'Simon', 'votes': '1,000,000', 'statement': 'Blah\" Blah'},
              {'id': '063d27bb-ec73-4baf-9f08-1918d5405a01', 'name': 'Peter', 'votes': '990,000', 'statement': 'Yel\'low'},
              {'id': '004b08bc-6494-4466-9c4a-6b0a4805aa05', 'name': 'Jones', 'votes': '980,000', 'statement': 'I am good'},
              {'id': 'd4f5cca3-42d6-4e6a-ab7e-4da0b4bd885d', 'name': 'Simon', 'votes': '1,000,000', 'statement': 'Blah Blah'},
@@ -22,13 +22,13 @@ exports.getActiveBlockProducers = function() {
              {'id': '23a8a506-f389-4ef7-9b2a-23e4ec692785', 'name': 'Jones', 'votes': '980,000', 'statement': 'I am good'},
              {'id': '19c42dba-4be2-41e4-a7d1-cbb3be9acf62', 'name': 'Simon', 'votes': '1,000,000', 'statement': 'Blah Blah'},
              {'id': '16ee4037-2ebd-4019-9c53-f4bd1712998f', 'name': 'Peter', 'votes': '990,000', 'statement': 'Yellow'},
-             {'id': '0e922b60-a185-4145-b8c7-1de4ca311efd', 'name': 'Jones', 'votes': '980,000', 'statement': 'I am good'},
+             {'id': '0e922b60-a185-4145-b8c7-1de4ca311efd', 'name': 'Jones', 'votes': '980,000', 'statement': 'I am good'},*/
            ]
 }
 
 exports.getBackupBlockProducers = function() {
     return [
-             {'id': 'e6d00577-e97d-4965-88c0-2d9dda220d22', 'name': 'Elizabeth', 'votes': '1,000,000', 'statement': 'Blah\' Blah'},
+/*             {'id': 'e6d00577-e97d-4965-88c0-2d9dda220d22', 'name': 'Elizabeth', 'votes': '1,000,000', 'statement': 'Blah\' Blah'},
              {'id': 'faa8364f-c368-42f9-bb90-419d65fb13bc', 'name': 'Sarah', 'votes': '990,000', 'statement': 'Yellow'},
              {'id': '66a9dd16-585b-4211-8ce0-26d2398f1c22', 'name': 'Kelly', 'votes': '980,000', 'statement': 'I am good'},
              {'id': '7e6ef68f-1d57-4c83-8ac5-9d19201e3a4d', 'name': 'Elizabeth', 'votes': '1,000,000', 'statement': 'Blah Blah'},
@@ -67,7 +67,7 @@ exports.getBackupBlockProducers = function() {
              {'id': '72531b98-bd22-4c38-8124-9d8859d92db3', 'name': 'Elizabeth', 'votes': '1,000,000', 'statement': 'Blah Blah'},
              {'id': 'a18abe53-6db9-4f4a-8ccb-96eb667595e6', 'name': 'Sarah', 'votes': '990,000', 'statement': 'Yellow'},
              {'id': '65c6f30c-a2bf-4503-a161-aad96bada5fa', 'name': 'Kelly', 'votes': '980,000', 'statement': 'I am good'},
-             {'id': '7e34316a-0ea1-4d7b-b359-a75a248f094a', 'name': 'Elizabeth', 'votes': '1,000,000', 'statement': 'Blah Blah'},
+             {'id': '7e34316a-0ea1-4d7b-b359-a75a248f094a', 'name': 'Elizabeth', 'votes': '1,000,000', 'statement': 'Blah Blah'},*/
            ]
 }
 

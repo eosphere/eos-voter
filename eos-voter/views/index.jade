@@ -10,6 +10,7 @@ block content
       button.signupbutton(onclick='window.location="/vote"') Sign in to vote
   div.content-container
     p.centre EOS Voter is a provided as a free service to the community by EOSphere. You can use it to monitor the votes of block producers and to vote
+    p.centre Currently connected to the #{networkname} network
     h2.centre Active Block Producers
 
     div.block-producer-list
@@ -25,7 +26,7 @@ block content
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2= blockproducer.name
           div.block-producer-cell.block-producer-cell-3.right= blockproducer.votes
-          div.block-producer-cell.block-producer-cell-4= blockproducer.statement
+          div.block-producer-cell.block-producer-cell-4 #{blockproducer.statement} !{"&nbsp;"}
 
     h2.centre Backup Block Producers
 
