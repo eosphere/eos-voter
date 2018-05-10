@@ -15,6 +15,10 @@ function recalcVotes() {
 
 var network_name = 'Jungle Testnet';
 
+function cast_vote() {
+    alert('Voted');
+}
+
 var Hello = {
     view: function() {
         return m("main", [
@@ -24,6 +28,9 @@ var Hello = {
                    ]),
                    m("div", {'class': 'centre-header'}, [
                      m("h1", {'class': 'centre-h1'}, "EOS Voter")
+                   ]),
+                   m("div", {'class': 'pageheaderitem signupbuttoncontainer'}, [
+                     m("button", {'class': 'signupbutton', 'onclick': cast_vote}, 'Cast Vote'),
                    ]),
                  ]),
                  m("div", {'class': 'content-container'}, [
