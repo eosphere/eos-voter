@@ -6,7 +6,7 @@ var Eos = require('eosjs') // Eos = require('./src')
 // eos = Eos.Localnet() // 127.0.0.1:8888
 
 var options = {
-  httpEndpoint: 'http://jungle.cryptolions.io:8888', // default
+  httpEndpoint: 'http://dev.cryptolions.io:28888', // default
   debug: false,
   fetchConfiguration: {}
 }
