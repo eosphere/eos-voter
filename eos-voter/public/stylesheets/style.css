@@ -239,3 +239,24 @@ div.block-producer-row:nth-child(odd) {
   width: 100%;
 }
 
+a.statement {
+  color: black;
+}
+
+a.statement:link {
+  color: black;
+}
+
+a.statement:visited {
+  color: black;
+}
+
+a.statement:hover {
+  color: black;
+}
+
+a.statement:active {
+  color: black;
+}
+
+

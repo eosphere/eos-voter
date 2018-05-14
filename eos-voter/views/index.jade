@@ -28,7 +28,7 @@ block content
           div.block-producer-cell.block-producer-cell-3.right= blockproducer.votes
           div.block-producer-cell.block-producer-cell-4 
             if blockproducer.valid_url
-              a(href=blockproducer.statement, target='_blank') #{blockproducer.statement}
+              a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}
             else
               div #{blockproducer.statement} !{"&nbsp;"}
 
