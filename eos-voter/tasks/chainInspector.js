@@ -25,6 +25,11 @@ var MongoClient = mongo.MongoClient;
 
 var db = null;
 var block_producers_collection = null;
+var active_block_producers = null;
+
+exports.get_active_block_producers = function() {
+    return active_block_producers;
+};
 
 console.log('Attempting to connect to mongodb');
 MongoClient.connect(url, function(err, connected_db) {
@@ -37,6 +42,8 @@ MongoClient.connect(url, function(err, connected_db) {
     //console.log("Collection created! res=", res);
     block_producers_collection = res;
     block_producers_collection.createIndex({'id': 1}, {unique: true});
+
+    
     //db.close();
     inspectChain();
   });
@@ -47,10 +54,14 @@ var first_run = true;
 
 function inspectChain()
 {
+    /*
      block_producers_collection.find({}).sort({'name': 1}).toArray(function(err, result) {
        if (err) throw err;
        //console.log('block producers in mongodb=', result);
      });
+    */
+
+    /*
     //console.log('Known block producers =', block_producers);
     eos.getInfo({}).then(
         (result) => {
@@ -69,6 +80,22 @@ function inspectChain()
         (result) => {
                      setTimeout(inspectChain, 5 * 1000);
                     })
+    */
+
+    eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
+        (result) => {
+            active_block_producers = result.rows;
+            for (let i = 0 ; i < result.rows.length ; i++ ) {
+                let producer_info = result.rows[i];
+                //console.log('Adding producer_info.owner=', producer_info.owner);
+                //console.log('typeof producer_info.total_votes=', typeof producer_info.total_votes);
+                block_producers_collection.replaceOne({'id': producer_info.owner}, {'id': producer_info.owner,
+                                                                                    'name': producer_info.owner,
+                                                                                    'votes': producer_info.total_votes,
+                                                                                    'statement': producer_info.url}, {upsert: true});
+            }
+        }
+        );
 }
  
 // All API methods print help when called with no-arguments.
@@ -96,3 +123,13 @@ eos.getBlock({block_num_or_id: 1}, callback)
 eos.getInfo({}).then(result => {console.log(result)})
 */
  
+
+/*
+console.log('Attempt to retreive block producer info from the eosio system contract');
+eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
+    (result) => {
+        console.log(result);
+        console.log('result.length=',result.rows.length);
+    }
+);
+*/
