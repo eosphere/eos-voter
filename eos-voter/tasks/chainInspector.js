@@ -26,9 +26,14 @@ var MongoClient = mongo.MongoClient;
 var db = null;
 var block_producers_collection = null;
 var active_block_producers = null;
+var last_irreversible_block_num = 0;
 
 exports.get_active_block_producers = function() {
-    return active_block_producers;
+    return active_block_producers.filter((x) => { return x.last_produced_block_time >= (last_irreversible_block_num - 63) });
+};
+
+exports.get_backup_block_producers = function() {
+    return active_block_producers.filter((x) => { return x.last_produced_block_time < (last_irreversible_block_num - 63) });
 };
 
 console.log('Attempting to connect to mongodb');
@@ -82,20 +87,35 @@ function inspectChain()
                     })
     */
 
-    eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
+    //console.log('Getting block producers');
+    console.log('Calling getInfo');
+    eos.getInfo({}).then(
         (result) => {
-            active_block_producers = result.rows;
-            for (let i = 0 ; i < result.rows.length ; i++ ) {
-                let producer_info = result.rows[i];
-                //console.log('Adding producer_info.owner=', producer_info.owner);
-                //console.log('typeof producer_info.total_votes=', typeof producer_info.total_votes);
-                block_producers_collection.replaceOne({'id': producer_info.owner}, {'id': producer_info.owner,
-                                                                                    'name': producer_info.owner,
-                                                                                    'votes': producer_info.total_votes,
-                                                                                    'statement': producer_info.url}, {upsert: true});
+        console.log('getInfo returned');
+        last_irreversible_block_num = result.last_irreversible_block_num;
+        eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
+            (result) => {
+                console.log('getTableRows returned');
+                active_block_producers = result.rows;
+                for (let i = 0 ; i < result.rows.length ; i++ ) {
+                    let producer_info = result.rows[i];
+                    //console.log('Adding producer_info.owner=', producer_info.owner);
+                    //console.log('typeof producer_info.total_votes=', typeof producer_info.total_votes);
+                    block_producers_collection.replaceOne({'id': producer_info.owner}, {'id': producer_info.owner,
+                                                                                        'name': producer_info.owner,
+                                                                                        'votes': producer_info.total_votes,
+                                                                                        'statement': producer_info.url}, {upsert: true});
+                }
+                 //setTimeout(inspectChain, (first_run ? 5 : 60) * 1000);
+                 //first_run = false;
+                 setTimeout(inspectChain, 5 * 1000);
             }
-        }
-        );
+            );
+    }).catch(
+        (result) => {
+                    console.error('Error result=', result);
+                     setTimeout(inspectChain, 5 * 1000);
+                    });
 }
  
 // All API methods print help when called with no-arguments.

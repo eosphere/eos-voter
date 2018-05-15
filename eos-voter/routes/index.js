@@ -34,6 +34,20 @@ function ValidURL(str) {
   }
 }
 
+function strcmp ( str1, str2 ) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: Waldo Malqui Silva
+    // +      input by: Steve Hilder
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +    revised by: gorthaur
+    // *     example 1: strcmp( 'waldo', 'owald' );
+    // *     returns 1: 1
+    // *     example 2: strcmp( 'owald', 'waldo' );
+    // *     returns 2: -1
+
+    return ( ( str1 == str2 ) ? 0 : ( ( str1 > str2 ) ? 1 : -1 ) );
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
@@ -50,12 +64,19 @@ router.get('/', function(req, res, next) {
     */
 
     let active_block_producers = chaininpector.get_active_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': parseInt(x.total_votes), 'statement': x.url, 'valid_url': ValidURL(x.url) };
+        return { 'id': x.owner, 'name': x.owner, 'votes': parseInt(x.total_votes),
+                  'statement': x.url, 'valid_url': ValidURL(x.url),
+                  'last_produced_block_time': x.last_produced_block_time };
+    });
+    let backup_block_producers = chaininpector.get_backup_block_producers().map((x) => {
+        return { 'id': x.owner, 'name': x.owner, 'votes': parseInt(x.total_votes),
+                  'statement': x.url, 'valid_url': ValidURL(x.url),
+                  'last_produced_block_time': x.last_produced_block_time };
     });
     res.render('index', { title: 'EOS Voter',
                           chainname: chaininpector.chain_name,
                          'activeblockproducers': active_block_producers,
-                         'backupblockproducers': blockproducers.getBackupBlockProducers(),
+                         'backupblockproducers': backup_block_producers,
                          });
 });
 

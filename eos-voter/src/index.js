@@ -2,7 +2,8 @@ import m from "mithril";
 
 var root = document.body
 
-var all_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-block-producers'));
+var active_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-active-block-producers'));
+var backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name')
 
 var votes = [];
@@ -50,12 +51,47 @@ setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
 
 function addcustomcandidate() {
     var name = document.getElementById('id-add-custom-candidate').value;
-    var existingnames = custom_candidates.map((x) => x.name);
+    var existingnames = active_block_producers.concat(backup_block_producers).concat(custom_candidates).map((x) => x.name);
     if (name != '' && !existingnames.includes(name)) {
         custom_candidates.push({'id': name, 'name': name, 'votes': '0', 'statement': ''});
         recalcVotes();
         m.redraw();
+    } else {
+        alert('Block producer ' + name + ' is already in the list');
     }
+}
+
+function block_producers_grid(block_producer_list, description) {
+    if (block_producer_list.length == 0)
+        return [];
+    else
+        return [
+           m("h2.centre", description),
+           m('div', {'class': 'block-producer-list'}, [
+             m('div', {'class': 'block-producer-row'}, [
+               m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, 'Vote'),
+               m('div', {'class': 'block-producer-cell block-producer-cell-2 block-producer-column-header'}, m.trust('&nbsp;')),
+               m('div', {'class': 'block-producer-cell block-producer-cell-3 block-producer-column-header'}, m.trust('&nbsp;')),
+               m('div', {'class': 'block-producer-cell block-producer-cell-4 block-producer-column-header'}, m.trust('&nbsp;')),
+             ]),
+
+           ].concat(block_producer_list.map((block_producer) => {
+             return m('div', {'class': 'block-producer-row'}, [
+               m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, [
+                 m('label', {'class': 'checkbox-container'}, [
+                   m.trust('&nbsp;'),
+                   m('input', {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes}),
+                   m('span', {'class': 'checkmark'}),
+                 ]),
+               ]),
+               m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
+               m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, block_producer.votes),
+               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.statement != '' ? block_producer.statement : m.trust('&nbsp;')),
+             ]);              
+            }))
+
+           ),
+    ];
 }
 
 var Hello = {
@@ -76,30 +112,9 @@ var Hello = {
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
                    current_vote(),
                    m("p", 'Currently connected to the ' + chain_name + ' network'),
-                   m('div', {'class': 'block-producer-list'}, [
-                     m('div', {'class': 'block-producer-row'}, [
-                       m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, 'Vote'),
-                       m('div', {'class': 'block-producer-cell block-producer-cell-2 block-producer-column-header'}, m.trust('&nbsp;')),
-                       m('div', {'class': 'block-producer-cell block-producer-cell-3 block-producer-column-header'}, m.trust('&nbsp;')),
-                       m('div', {'class': 'block-producer-cell block-producer-cell-4 block-producer-column-header'}, m.trust('&nbsp;')),
-                     ]),
-
-                     ].concat(all_block_producers.concat(custom_candidates).map((block_producer) => {
-                     return m('div', {'class': 'block-producer-row'}, [
-                       m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, [
-                         m('label', {'class': 'checkbox-container'}, [
-                           m.trust('&nbsp;'),
-                           m('input', {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes}),
-                           m('span', {'class': 'checkmark'}),
-                         ]),
-                       ]),
-                       m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
-                       m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, block_producer.votes),
-                       m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.statement != '' ? block_producer.statement : m.trust('&nbsp;')),
-                     ]);              
-                    })
-
-                   )),
+                 ].concat(block_producers_grid(active_block_producers, "Active Producers").
+                 concat(block_producers_grid(backup_block_producers, "Backup Producers").
+                 concat(block_producers_grid(custom_candidates, "Custom Candidates").concat([
                    m("div", [
                      m("div", {'style': 'margin-top: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 240px;'}, [
@@ -119,7 +134,7 @@ var Hello = {
                      ]),
                      current_vote(),
                    ]),
-                 ]),
+                 ]))))),
                ].concat( scatter ? [] : (
                  [
                    m('.dialog', 
