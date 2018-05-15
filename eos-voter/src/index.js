@@ -9,6 +9,22 @@ var chain_name = document.getElementById('allblockproducers').getAttribute('data
 var votes = [];
 var proxy_name = '';
 
+function ValidURL(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
+  if(!pattern.test(str)) {
+    //alert("Please enter a valid URL.");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
 function recalcVotes() {
     proxy_name = document.getElementById('id-proxy-name').value;
     var checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
@@ -93,7 +109,9 @@ function block_producers_grid(block_producer_list, description) {
                ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
                m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, block_producer.votes),
-               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.statement != '' ? block_producer.statement : m.trust('&nbsp;')),
+               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, ValidURL(block_producer.statement) ? 
+                 [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
+                   [block_producer.statement, m.trust('&nbsp;')]),
              ]);              
             }))
 
