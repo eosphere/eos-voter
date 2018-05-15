@@ -16,7 +16,13 @@ function recalcVotes() {
 }
 
 function cast_vote() {
-    alert('Voted');
+    scatter.getIdentity().then(identity => {
+        alert('scatter.getIdentity() worked identity=', identity);
+        console.log('scatter.getIdentity() identityr=', identity);
+    }).catch(error => {
+        alert('scatter.getIdentity() gave error=', error);
+        console.log('scatter.getIdentity() gave error=', error);
+    });
 }
 
 function current_vote() {
@@ -45,6 +51,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     //...
     waiting_for_scatter = false;
     m.redraw();
+
 })
 
 setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
