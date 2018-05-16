@@ -32,9 +32,18 @@ function recalcVotes() {
 }
 
 function cast_vote() {
-    scatter.getIdentity().then(identity => {
-        alert('scatter.getIdentity() worked identity=', identity);
+    const requiredFields = {
+        //personal:['firstname', 'email'],
+        accounts:[
+            {blockchain:'eos', host:'dev.cryptolions.io', port:28888},
+        ]
+    };
+
+    scatter.getIdentity(requiredFields).then(identity => {
+        //alert('scatter.getIdentity() worked identity=', identity);
         console.log('scatter.getIdentity() identityr=', identity);
+
+
     }).catch(error => {
         alert('scatter.getIdentity() gave error=', error);
         console.log('scatter.getIdentity() gave error=', error);
@@ -68,6 +77,22 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     waiting_for_scatter = false;
     m.redraw();
 
+    console.log('scatter=', scatter);
+
+    if (scatter.identity == null) {
+        //scatter.forgetIdentity();
+    }
+
+    const network = {
+        blockchain:'eos',
+        host:'dev.cryptolions.io', // ( or null if endorsed chainId )
+        port:28888, // ( or null if defaulting to 80 )
+        //chainId:1 || 'abcd', // Or null to fetch automatically ( takes longer )
+    }
+
+    scatter.suggestNetwork(network).then((result) => {
+        console.log('Suggested network was accepted result=', result);
+        });
 })
 
 setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
