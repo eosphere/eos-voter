@@ -57,7 +57,7 @@ function current_vote() {
     return m('div', {'style': {'text-align':'center'}},
              m("span.vote_info", (proxy_name == '' ? 
                 ['You have voted for ', m('strong.bolded-vote-info', votes.length), ' producer candidates.'] : 
-                'You have proxied your vote to ' + proxy_name) 
+                m('strong.bolded-vote-info', 'You have proxied your vote to ' + proxy_name)) 
              )
            ) 
 }
@@ -207,7 +207,7 @@ var Hello = {
                        :
                        [
                          m('h2', 'You need to install Scatter'),
-                         m('a', {href:'https://scatter-eos.com', target: '_blank'}, 'Download scatter')
+                         m('a', { href: 'https://scatter-eos.com', target: '_blank'}, 'Download scatter')
                        ])
                      ])
                    )
@@ -219,6 +219,11 @@ var Hello = {
                      m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
                        m('div', {'class': 'scatterPopupText'}, [
                          m('h2', {'style': {'text-align': 'center'}}, 'Confirm your vote'),
+                         (proxy_name != '' ? 
+                           m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
+                             m('h2', {'style': {'text-align':'center'}}, 'You are voting for proxy - ' + proxy_name)
+                           )
+                         :
                          (votes.length > 0 ?
                          m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
                            votes.map((x) => {
@@ -236,7 +241,7 @@ var Hello = {
                            m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
                              m('h2', {'style': {'text-align':'center'}}, 'You are voting for no block producer')
                            )
-                         ),
+                         )),
                          m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                            m('div', {'style': {'text-align': 'center'}}, [
                              m("Button", {'class': 'big-vote-now-button', 'onclick': e => confirming_vote = false}, 
