@@ -32,6 +32,7 @@ function recalcVotes() {
 }
 
 function cast_vote() {
+    /*
     const requiredFields = {
         //personal:['firstname', 'email'],
         accounts:[
@@ -48,6 +49,7 @@ function cast_vote() {
         alert('scatter.getIdentity() gave error=', error);
         console.log('scatter.getIdentity() gave error=', error);
     });
+    */
 }
 
 function current_vote() {
@@ -164,9 +166,9 @@ var Hello = {
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
                    current_vote(),
                    m("p", 'Currently connected to the ' + chain_name + ' network'),
-                 ].concat(block_producers_grid(active_block_producers, "Active Producers").
-                 concat(block_producers_grid(backup_block_producers, "Backup Producers").
-                 concat(block_producers_grid(custom_candidates, "Custom Candidates").concat([
+                 ].concat(block_producers_grid(active_block_producers, "Active Producers")).
+                 concat(block_producers_grid(backup_block_producers, "Backup Producers")).
+                 concat(block_producers_grid(custom_candidates, "Custom Candidates")).concat([
                    m("div", [
                      m("div", {'style': 'margin-top: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 240px;'}, [
@@ -186,7 +188,7 @@ var Hello = {
                      ]),
                      current_vote(),
                    ]),
-                 ]))))),
+                 ])),
                ].concat( scatter ? [] : (
                  [
                    m('.dialog', 
