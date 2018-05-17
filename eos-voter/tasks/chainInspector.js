@@ -24,8 +24,8 @@ var url = "mongodb://mongo:27017/eos-voter";
 var MongoClient = mongo.MongoClient;
 
 var db = null;
-var block_producers_collection = null;
-var active_block_producers = null;
+var block_producers_collection = [];
+var active_block_producers = [];
 var last_irreversible_block_num = 0;
 
 exports.get_active_block_producers = function() {
