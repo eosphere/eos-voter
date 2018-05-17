@@ -50,6 +50,7 @@ function cast_vote() {
         console.log('scatter.getIdentity() gave error=', error);
     });
     */
+    confirming_vote = true;
 }
 
 function current_vote() {
@@ -59,6 +60,7 @@ function current_vote() {
 var scatter = null;
 var waiting_for_scatter = true;
 var custom_candidates = [];
+var confirming_vote = false;
 
 document.addEventListener('scatterLoaded', scatterExtension => {
     console.log('scatterLoaded called');
@@ -195,7 +197,7 @@ var Hello = {
                      m('.dialogContent', [
                        m('div', {'class': 'scatterPopupText'}, waiting_for_scatter ? 
                        [
-                         m('h2', 'Detecting Scatter'),
+                         m('h2', {'style': {'text-align': 'center'}}, 'Detecting Scatter'),
                        ]
                        :
                        [
@@ -206,7 +208,46 @@ var Hello = {
                    )
                  ]
                  )
-               )
+               ).concat( confirming_vote ? (
+                 [
+                   m('.dialog', {'onclick': e => confirming_vote = false}, 
+                     m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
+                       m('div', {'class': 'scatterPopupText'}, [
+                         m('h2', {'style': {'text-align': 'center'}}, 'Confirm your vote'),
+                         (votes.length > 0 ?
+                         m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
+                           votes.map((x) => {
+                             return  m('div', {'style': {'width': '165px',
+                                                         'height': '48px',
+                                                         'overflow': 'hidden',
+                                                         'display': 'inline-block',
+                                                         'border': '1px solid black',
+                                                         'padding-left': '6px', 'padding-right': '6px'}}, [
+                                       m('h3', x)
+                                     ]);
+                           }),
+                         )
+                         :
+                           m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
+                             m('h2', {'style': {'text-align':'center'}}, 'You are voting for no block producer')
+                           )
+                         ),
+                         m('div', {'style': {'width': '100%', 'height': '120px'}}, [
+                           m('div', {'style': {'text-align': 'center'}}, [
+                             m("Button", {'class': 'big-vote-now-button', 'onclick': e => confirming_vote = false}, 
+                               "Cast Vote"),
+                           ]),
+                           m('div', [
+                             m("Button", {'class': 'vote-helper-button', 'onclick': e => confirming_vote = false,
+                                          'style': {'float': 'right'}}, "Cancel"),
+                           ]),
+                         ]),
+
+                       ])
+                     ])
+                   )
+                 ]
+                 ) : [])
         )
     }
 }   

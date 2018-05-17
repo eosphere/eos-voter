@@ -212,6 +212,24 @@ div.block-producer-row:nth-child(odd) {
   color: white;
 }
 
+.big-vote-now-button {
+  height: 80px;
+  width: 300px;
+
+  background-color: #ecffab;
+  border: 6px solid black;
+  color: black;
+  font-size: 32px;
+  border-radius: 16px;
+  margin-left: 10px;
+}
+
+.big-vote-now-button:hover {
+  background-color: #111;
+  border: 6px solid white;
+  color: white;
+}
+
 .dialog {
   position: fixed;
   left: 0;
@@ -221,6 +239,12 @@ div.block-producer-row:nth-child(odd) {
   background-color: rgba(0, 0, 0, 0.35);
   padding: 40px;
 }
+
+/*
+.dialog * {
+  border: 1px solid red;
+}
+*/
 
 .dialogContent {
   background: #fff;
@@ -235,8 +259,8 @@ div.block-producer-row:nth-child(odd) {
 }
 
 .scatterPopupText {
-  text-align: center;
   width: 100%;
+  height: 100%;
 }
 
 a.statement {
