@@ -54,7 +54,12 @@ function cast_vote() {
 }
 
 function current_vote() {
-    return m("p", (proxy_name == '' ? 'You have voted for ' + votes.length + ' producer candidates.' : 'You have proxied your vote to ' + proxy_name))
+    return m('div', {'style': {'text-align':'center'}},
+             m("span.vote_info", (proxy_name == '' ? 
+                ['You have voted for ', m('strong.bolded-vote-info', votes.length), ' producer candidates.'] : 
+                'You have proxied your vote to ' + proxy_name) 
+             )
+           ) 
 }
 
 var scatter = null;
@@ -180,7 +185,7 @@ var Hello = {
                        m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;'}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': recalcVotes}, "Set Proxy"),
                      ]),
-                     m("div", {'style': 'margin-top: 15px;'}, [
+                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 240px;'}, [
                          m("span", {'style': 'min-width:240px;'}, "You can add a candidate to the list"),
                        ]),

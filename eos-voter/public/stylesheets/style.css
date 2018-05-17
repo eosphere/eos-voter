@@ -283,4 +283,15 @@ a.statement:active {
   color: black;
 }
 
+.bolded-vote-info {
+  font-size: 16px;
+}
+
+.vote_info {
+  padding: 8px;
+  background-color: #eee;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
 
