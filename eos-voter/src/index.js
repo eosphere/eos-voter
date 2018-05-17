@@ -169,6 +169,7 @@ var Hello = {
                      m("button", {'class': 'signupbutton', 'onclick': cast_vote}, 'Cast Vote'),
                    ]),
                  ]),
+                 m('div', {'class': 'pageheader-spacer'}),
                  m("div", {'class': 'content-container'}, [
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
                    current_vote(),

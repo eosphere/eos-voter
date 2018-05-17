@@ -30,9 +30,16 @@ a {
 
 .pageheader {
   background-color: #333;
-    overflow: hidden;
-    position: relative;
-    width: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  top: 0;
+  position: fixed;
+  z-index: 1;
+}
+
+.pageheader-spacer {
+  height: 93px;
 }
 
 .pageheaderitem {
@@ -238,6 +245,7 @@ div.block-producer-row:nth-child(odd) {
   width: calc(100vw - 80px);
   background-color: rgba(0, 0, 0, 0.35);
   padding: 40px;
+  z-index: 2;
 }
 
 /*
