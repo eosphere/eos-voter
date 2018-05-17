@@ -88,6 +88,9 @@ function inspectChain()
     */
 
     //console.log('Getting block producers');
+    //console.log('Calling getAccount');
+    //eos.getAccount('alskjdfhls').then((results) => { console.log('results=', results); });
+
     console.log('Calling getInfo');
     eos.getInfo({}).then(
         (result) => {
@@ -101,6 +104,7 @@ function inspectChain()
                     let producer_info = result.rows[i];
                     //console.log('Adding producer_info.owner=', producer_info.owner);
                     //console.log('typeof producer_info.total_votes=', typeof producer_info.total_votes);
+                    //console.log('producer_info=', producer_info);
                     block_producers_collection.replaceOne({'id': producer_info.owner}, {'id': producer_info.owner,
                                                                                         'name': producer_info.owner,
                                                                                         'votes': producer_info.total_votes,
@@ -116,6 +120,8 @@ function inspectChain()
                     console.error('Error result=', result);
                      setTimeout(inspectChain, 5 * 1000);
                     });
+
+    
 }
  
 // All API methods print help when called with no-arguments.

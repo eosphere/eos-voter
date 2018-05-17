@@ -21,12 +21,12 @@ function ValidURL(str) {
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     let active_block_producers = chaininpector.get_active_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': parseInt(x.total_votes),
+        return { 'id': x.owner, 'name': x.owner, 'votes': x.total_votes,
                   'statement': x.url, 'valid_url': ValidURL(x.url),
                   'last_produced_block_time': x.last_produced_block_time };
     });
     let backup_block_producers = chaininpector.get_backup_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': parseInt(x.total_votes),
+        return { 'id': x.owner, 'name': x.owner, 'votes': x.total_votes,
                   'statement': x.url, 'valid_url': ValidURL(x.url),
                   'last_produced_block_time': x.last_produced_block_time };
     });

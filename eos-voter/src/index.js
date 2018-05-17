@@ -77,9 +77,10 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     waiting_for_scatter = false;
     m.redraw();
 
+    /*
     console.log('scatter=', scatter);
 
-    if (scatter.identity == null) {
+    if (scatter.identity != null) {
         //scatter.forgetIdentity();
     }
 
@@ -93,6 +94,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     scatter.suggestNetwork(network).then((result) => {
         console.log('Suggested network was accepted result=', result);
         });
+    */
 })
 
 setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
