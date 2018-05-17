@@ -7,7 +7,8 @@ var backup_block_producers = JSON.parse(document.getElementById('allblockproduce
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name')
 
 var votes = [];
-var proxy_name = '';
+var proxy_name = ''; 
+var is_voting = false;
 
 function ValidURL(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -155,6 +156,17 @@ function block_producers_grid(block_producer_list, description) {
     ];
 }
 
+function vote_now(e) {
+    if (is_voting)
+        return;
+    is_voting = true;
+    setTimeout(() => {
+        confirming_vote = false;
+        is_voting = false;
+        m.redraw();
+    }, 3000);
+}
+
 var Hello = {
     view: function() {
         return m("main", [
@@ -245,8 +257,8 @@ var Hello = {
                          )),
                          m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                            m('div', {'style': {'text-align': 'center'}}, [
-                             m("Button", {'class': 'big-vote-now-button', 'onclick': e => confirming_vote = false}, 
-                               "Cast Vote"),
+                             m("Button", {'class': 'big-vote-now-button', 'onclick': vote_now}, 
+                               (is_voting == false ? "Cast Vote" : "Voting")),
                            ]),
                            m('div', [
                              m("Button", {'class': 'vote-helper-button', 'onclick': e => confirming_vote = false,
