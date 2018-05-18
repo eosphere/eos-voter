@@ -90,6 +90,23 @@ function inspectChain()
     //console.log('Getting block producers');
     //console.log('Calling getAccount');
     //eos.getAccount('alskjdfhls').then((results) => { console.log('results=', results); });
+    //eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'voteproducers', 'table_key': 'voter', 'lower_bound': 'block21genic', 'upper_bound': 'block21genic', 'limit': 10}).then(
+
+    /*
+    eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'voters', 'limit': 100}).then(
+        (result) => {
+                     console.log('getTableRows returned rows= ', result.rows);
+                     console.log('getTableRows returned rows.length= ', result.rows.length);
+                     var fun = result.rows.filter((x) => x.producers.length > 1);
+                     console.log('fun=', fun);
+                    }
+        ).catch(
+            (result) => {
+                        console.error('Error result=', result);
+                        }
+        );
+    */
+
 
     console.log('Calling getInfo');
     eos.getInfo({}).then(

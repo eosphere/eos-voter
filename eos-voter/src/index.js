@@ -1,4 +1,5 @@
 import m from "mithril";
+import Eos from 'eosjs'
 
 var root = document.body
 
@@ -9,6 +10,7 @@ var chain_name = document.getElementById('allblockproducers').getAttribute('data
 var votes = [];
 var proxy_name = ''; 
 var is_voting = false;
+var account_producers = []; // The producers the current user voted for
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -114,10 +116,74 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     }
 
     scatter.suggestNetwork(network).then((result) => {
-            console.log('Suggested network was accepted result=', result);
+            //console.log('Suggested network was accepted result=', result);
             //...
-            scatter_status = ScatterStatus.CONNECTED;
+            //scatter_status = ScatterStatus.CONNECTED;
+
+            const requiredFields = {
+                //personal:['firstname', 'email'],
+                accounts:[
+                    {blockchain:'eos', host:'dev.cryptolions.io', port:28888},
+                ]
+            };
+
+            scatter.getIdentity(requiredFields).then(identity => {
+                //alert('scatter.getIdentity() worked identity=', identity);
+                //console.log('scatter.getIdentity() identityr=', identity);
+
+                // Set up any extra options you want to use eosjs with. 
+                const eosOptions = {};
+                 
+                // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
+                const eos = scatter.eos( network, Eos.Localnet, eosOptions );
+
+                //console.log('eos=', eos);
+
+                //console.log('eos.getTableRows=', eos.getTableRows);
+                eos.getAccount({'account_name': /*'capycapybara'*/identity.accounts[0].name}).then((result) => { 
+                        scatter_status = ScatterStatus.CONNECTED;
+                        //console.log('getAccount result=', result);
+                        if (result.voter_info) {
+                            account_producers = result.voter_info.producers;
+                            //for (var i = 0 ; i < account_producers.length ; i++) {
+                            //    console.log('Producer = ', account_producers[i]);
+                            //}
+                        } else {
+                            account_producers = [];
+                        }
+                        votes = account_producers;
+                        m.redraw();
+                    })
+                    .catch(   (result) => {
+                                    console.error('Error getAccount result=', result);
+                                    }
+                    );
+    
+                /*
+                eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'voters', 'limit': 100, 'table_key': 'owner', 'lower_bound': 'a', 'upper_bound': 'z'}).then(
+                    (result) => {
+                                 console.log('getTableRows returned rows= ', result.rows);
+                                 console.log('getTableRows returned rows.length= ', result.rows.length);
+                                 var fun = result.rows.filter((x) => x.producers.length > 1);
+                                 console.log('fun=', fun);
+                                }
+                    ).catch(
+                        (result) => {
+                                    console.error('Error result=', result);
+                                    }
+                    );
+                */
+    
+            }).catch(error => {
+                //alert('scatter.getIdentity() gave error=', error);
+                console.log('scatter.getIdentity() gave error=', error);
+            });
+
+
             m.redraw();
+
+
+
         }).catch((result) => {
         console.log('Suggested network was rejected result=', result);
         });
@@ -142,6 +208,8 @@ function addcustomcandidate() {
 }
 
 function block_producers_grid(block_producer_list, description) {
+    //console.log(' block_producers_grid account_producers-', account_producers);
+    //console.log(' block_producers_grid block_producer_list-', block_producer_list);
     if (block_producer_list.length == 0)
         return [];
     else
@@ -160,7 +228,8 @@ function block_producers_grid(block_producer_list, description) {
                m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, [
                  m('label', {'class': 'checkbox-container'}, [
                    m.trust('&nbsp;'),
-                   m('input', {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes}),
+                   m('input', Object.assign({}, {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes}, 
+                        ((account_producers.includes(block_producer.id)) ? {'checked': 'checked'} : {}))),
                    m('span', {'class': 'checkmark'}),
                  ]),
                ]),
