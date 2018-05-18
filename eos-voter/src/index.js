@@ -83,6 +83,8 @@ var scatter = null;
 var custom_candidates = [];
 var confirming_vote = false;
 
+var eos = null; // The eosjs instance provided by scatter
+
 document.addEventListener('scatterLoaded', scatterExtension => {
     console.log('scatterLoaded called');
 
@@ -136,14 +138,18 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                 const eosOptions = {};
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                const eos = scatter.eos( network, Eos.Localnet, eosOptions );
+                eos = scatter.eos( network, Eos.Localnet, eosOptions );
 
                 //console.log('eos=', eos);
 
                 //console.log('eos.getTableRows=', eos.getTableRows);
+                eos.getCurrencyBalance({'code': 'capycapybara', 'account': 'capycapybara'})
+                .then((result) => {console.log('getCurrencyBalance result=', result);})
+                .catch((error) => {console.log('getCurrencyBalance error=', error);})
+
                 eos.getAccount({'account_name': /*'capycapybara'*/identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        //console.log('getAccount result=', result);
+                        console.log('getAccount result=', result);
                         if (result.voter_info) {
                             account_producers = result.voter_info.producers;
                             account_proxy = result.voter_info.proxy;
@@ -253,11 +259,28 @@ function vote_now(e) {
     if (is_voting)
         return;
     is_voting = true;
+    /*
     setTimeout(() => {
         confirming_vote = false;
         is_voting = false;
         m.redraw();
-    }, 3000);
+    }, 3000);*/
+    console.log('vote_now called');
+
+    eos.contract('eosio').then(c => {
+        console.log('contract c=', c);
+        
+        /*c.delegatebw({'from':scatter.identity.accounts[0].name, 'receiver':scatter.identity.accounts[0].name,
+                     'stake_net_quantity': '50.0000 EOS', 'stake_cpu_quantity':'50.0000 EOS', 'transfer':1})
+            .then(() => {
+            console.log('delegatebw result=', result);*/
+            c.voteproducer(scatter.identity.accounts[0].name, proxy_name, votes)
+                .then((result) => {console.log('voteproducer result=', result);})
+                .catch((error) => {console.log('voteproducer error=', error);})
+            /*})
+            .catch(e => {console.log('delegatebw error e=', e)});*/
+        })
+        .catch(e => {console.log('contract error e=', e)});
 }
 
 var Hello = {
