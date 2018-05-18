@@ -25,6 +25,11 @@ function ValidURL(str) {
   }
 }
 
+// If the list of block producers is empty reload the page. This usually means the server just started and is loding it's list of
+// block producers
+if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
+    setTimeout(() => document.location.reload(true), 2000);
+}
 
 function recalcVotes() {
     proxy_name = document.getElementById('id-proxy-name').value;
@@ -81,7 +86,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     window.scatter = null;
 
     // If you want to require a specific version of Scatter
-    scatter.requireVersion(3.0);
+    var ret = scatter.requireVersion(4.0)
 
     //...
     waiting_for_scatter = false;
@@ -93,7 +98,9 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     if (scatter.identity != null) {
         //scatter.forgetIdentity();
     }
+    */
 
+    /*
     const network = {
         blockchain:'eos',
         host:'dev.cryptolions.io', // ( or null if endorsed chainId )

@@ -1,5 +1,9 @@
 extends layout
 
+block append head
+  if block_producer_list_empty
+    meta(http-equiv="refresh", content="2")
+
 block content
   div.pageheader
     div.pageheaderitem

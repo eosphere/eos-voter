@@ -77,6 +77,7 @@ router.get('/', function(req, res, next) {
                           chainname: chaininpector.chain_name,
                          'activeblockproducers': active_block_producers,
                          'backupblockproducers': backup_block_producers,
+                         'block_producer_list_empty': (active_block_producers.length + backup_block_producers.length) == 0,
                          });
 });
 
