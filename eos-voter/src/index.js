@@ -10,6 +10,14 @@ var votes = [];
 var proxy_name = ''; 
 var is_voting = false;
 
+var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
+                     'CONNECTING': 'CONNECTING', // Connecting to scatter
+                     'CONNECTED': 'CONNECTED', // Scatter is connected and working correctly
+                     'FAILED': 'FAILED',
+                    }
+
+var scatter_status = ScatterStatus.DETECTING;
+
 function ValidURL(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -69,7 +77,6 @@ function current_vote() {
 }
 
 var scatter = null;
-var waiting_for_scatter = true;
 var custom_candidates = [];
 var confirming_vote = false;
 
@@ -86,10 +93,9 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     window.scatter = null;
 
     // If you want to require a specific version of Scatter
-    var ret = scatter.requireVersion(4.0)
+    var ret = scatter.requireVersion(4.0);
 
-    //...
-    waiting_for_scatter = false;
+    scatter_status = ScatterStatus.CONNECTING;
     m.redraw();
 
     /*
@@ -100,7 +106,6 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     }
     */
 
-    /*
     const network = {
         blockchain:'eos',
         host:'dev.cryptolions.io', // ( or null if endorsed chainId )
@@ -109,12 +114,20 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     }
 
     scatter.suggestNetwork(network).then((result) => {
-        console.log('Suggested network was accepted result=', result);
+            console.log('Suggested network was accepted result=', result);
+            //...
+            scatter_status = ScatterStatus.CONNECTED;
+            m.redraw();
+        }).catch((result) => {
+        console.log('Suggested network was rejected result=', result);
         });
-    */
 })
 
-setTimeout(() => { waiting_for_scatter = false; m.redraw();}, 2000);
+setTimeout(() => { if (scatter_status == ScatterStatus.DETECTING) {
+                     scatter_status = ScatterStatus.FAILED; 
+                     m.redraw();
+                   }
+                  }, 2000);
 
 function addcustomcandidate() {
     var name = document.getElementById('id-add-custom-candidate').value;
@@ -216,19 +229,23 @@ var Hello = {
                      current_vote(),
                    ]),
                  ])),
-               ].concat( scatter ? [] : (
+               ].concat( !(scatter_status != ScatterStatus.CONNECTED) ? [] : (
                  [
                    m('.dialog', 
                      m('.dialogContent', [
-                       m('div', {'class': 'scatterPopupText'}, waiting_for_scatter ? 
-                       [
-                         m('h2', {'style': {'text-align': 'center'}}, 'Detecting Scatter'),
-                       ]
-                       :
-                       [
-                         m('h2', 'You need to install Scatter'),
-                         m('a', { href: 'https://scatter-eos.com', target: '_blank'}, 'Download scatter')
-                       ])
+                       m('div', {'class': 'scatterPopupText'}, (() => {
+                         switch (scatter_status) {
+                           case ScatterStatus.DETECTING:
+                             return m('h2', {'style': {'text-align': 'center'}}, 'Detecting Scatter');
+                           case ScatterStatus.CONNECTING:
+                             return m('h2', {'style': {'text-align': 'center'}}, 'Connecting Scatter to EOS');
+                           case ScatterStatus.FAILED:
+                             return [
+                               m('h2', 'You need to install Scatter'),
+                               m('a', { href: 'https://scatter-eos.com', target: '_blank'}, 'Download scatter')
+                             ]
+                         }  
+                       })())
                      ])
                    )
                  ]
