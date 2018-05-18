@@ -11,6 +11,7 @@ var votes = [];
 var proxy_name = ''; 
 var is_voting = false;
 var account_producers = []; // The producers the current user voted for
+var account_proxy = ''; //The proxy the current user voted for
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -145,13 +146,16 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                         //console.log('getAccount result=', result);
                         if (result.voter_info) {
                             account_producers = result.voter_info.producers;
+                            account_proxy = result.voter_info.proxy;
                             //for (var i = 0 ; i < account_producers.length ; i++) {
                             //    console.log('Producer = ', account_producers[i]);
                             //}
                         } else {
                             account_producers = [];
+                            account_proxy = '';
                         }
-                        votes = account_producers;
+                        votes = account_producers; 
+                        proxy_name = account_proxy;                       
                         m.redraw();
                     })
                     .catch(   (result) => {
@@ -284,7 +288,7 @@ var Hello = {
                          m("span", "Proxy my vote to another user"),
                        ]),
                        m("span", "@"),
-                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;'}),
+                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': account_proxy}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': recalcVotes}, "Set Proxy"),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
