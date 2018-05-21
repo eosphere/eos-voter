@@ -143,9 +143,11 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                 //console.log('eos=', eos);
 
                 //console.log('eos.getTableRows=', eos.getTableRows);
+                /*
                 eos.getCurrencyBalance({'code': 'capycapybara', 'account': 'capycapybara'})
                 .then((result) => {console.log('getCurrencyBalance result=', result);})
                 .catch((error) => {console.log('getCurrencyBalance error=', error);})
+                */
 
                 eos.getAccount({'account_name': /*'capycapybara'*/identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
