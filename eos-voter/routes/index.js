@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var blockproducers = require('./blockproducers')
 var chaininpector = require('../tasks/chainInspector')
+var utils = require('../utils/utils.js');
 
 /*
 function ValidURL(str) {
@@ -64,12 +65,12 @@ router.get('/', function(req, res, next) {
     */
 
     let active_block_producers = chaininpector.get_active_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': parseFloat(x.total_votes).toPrecision(4),
+        return { 'id': x.owner, 'name': x.owner, 'votes': utils.to_engineering(x.total_votes),
                   'statement': x.url, 'valid_url': ValidURL(x.url),
                   'last_produced_block_time': x.last_produced_block_time };
     });
     let backup_block_producers = chaininpector.get_backup_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': parseFloat(x.total_votes).toPrecision(4),
+        return { 'id': x.owner, 'name': x.owner, 'votes': utils.to_engineering(x.total_votes),
                   'statement': x.url, 'valid_url': ValidURL(x.url),
                   'last_produced_block_time': x.last_produced_block_time };
     });
