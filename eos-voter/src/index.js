@@ -5,6 +5,8 @@ var root = document.body
 
 var active_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-active-block-producers'));
 var backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
+var chain_addr = document.getElementById('allblockproducers').getAttribute('data-chain-addr');
+var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name')
 
 var votes = [];
@@ -85,6 +87,10 @@ var confirming_vote = false;
 
 var eos = null; // The eosjs instance provided by scatter
 
+function eos_to_float() {
+    return 0;
+}
+
 document.addEventListener('scatterLoaded', scatterExtension => {
     console.log('scatterLoaded called');
 
@@ -113,10 +119,14 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
     const network = {
         blockchain:'eos',
-        host:'dev.cryptolions.io', // ( or null if endorsed chainId )
-        port:28888, // ( or null if defaulting to 80 )
+        //host:'dev.cryptolions.io', // ( or null if endorsed chainId )
+        //port:28888, // ( or null if defaulting to 80 )
+        host: chain_addr, // ( or null if endorsed chainId )
+        port: chain_port, // ( or null if defaulting to 80 )
         //chainId:1 || 'abcd', // Or null to fetch automatically ( takes longer )
     }
+
+    console.log('network=', network);
 
     scatter.suggestNetwork(network).then((result) => {
             //console.log('Suggested network was accepted result=', result);
@@ -126,13 +136,13 @@ document.addEventListener('scatterLoaded', scatterExtension => {
             const requiredFields = {
                 //personal:['firstname', 'email'],
                 accounts:[
-                    {blockchain:'eos', host:'dev.cryptolions.io', port:28888},
+                    {blockchain:'eos', host:chain_addr, port:chain_port},
                 ]
             };
 
             scatter.getIdentity(requiredFields).then(identity => {
                 //alert('scatter.getIdentity() worked identity=', identity);
-                //console.log('scatter.getIdentity() identityr=', identity);
+                console.log('scatter.getIdentity() identityr=', identity);
 
                 // Set up any extra options you want to use eosjs with. 
                 const eosOptions = {};
@@ -144,10 +154,19 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
                 //console.log('eos.getTableRows=', eos.getTableRows);
                 /*
-                eos.getCurrencyBalance({'code': 'capycapybara', 'account': 'capycapybara'})
-                .then((result) => {console.log('getCurrencyBalance result=', result);})
-                .catch((error) => {console.log('getCurrencyBalance error=', error);})
+                eos.getCode({'account_name': identity.accounts[0].name}).then((result) => {
+                    console.log('getCode result=', result);
+                    eos.getCurrencyBalance({'code': 'EOS', 'account': identity.accounts[0].name})
+                    .then((result) => {console.log('getCurrencyBalance acryptolions result=', result);})
+                    .catch((error) => {console.log('getCurrencyBalance acryptolions error=', error);})
+                });
                 */
+
+                /*
+                eos.getAccount({'account_name': 'acryptolions'}).then((result) => { 
+                        console.log('getAccount acryptolions result=', result);
+                })
+                */              
 
                 eos.getAccount({'account_name': /*'capycapybara'*/identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
@@ -162,6 +181,12 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                             account_producers = [];
                             account_proxy = '';
                         }
+                        if (result.delegated_bandwidth === null || (eos_to_float(result.delegated_bandwidth.cpu_weight) === 0
+                            && eos_to_float(result.delegated_bandwidth.net_weight) === 0))
+                        {
+                            console.log('You have not staked any EOS and therefore cannot vote');
+                        }
+        
                         votes = account_producers; 
                         proxy_name = account_proxy;                       
                         m.redraw();

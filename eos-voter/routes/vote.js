@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var blockproducers = require('./blockproducers')
-var chaininpector = require('../tasks/chainInspector')
+var blockproducers = require('./blockproducers');
+var chaininpector = require('../tasks/chainInspector');
+var settings = require('../config/settings.js');
 
 function ValidURL(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -34,6 +35,8 @@ router.get('/', function(req, res, next) {
                           chainname: chaininpector.chain_name,
                          'activeblockproducers': active_block_producers,
                          'backupblockproducers': backup_block_producers,
+                         'chainaddr': settings.chain_addr,
+                         'chainport': settings.chain_port,
                          });
 
     /*

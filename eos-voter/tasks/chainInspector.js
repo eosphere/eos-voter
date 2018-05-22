@@ -2,11 +2,14 @@ var exports = module.exports = {};
 
 // Connect to EOS
 var Eos = require('eosjs') // Eos = require('./src')
+var settings = require('../config/settings.js');
  
 // eos = Eos.Localnet() // 127.0.0.1:8888
 
 var options = {
-  httpEndpoint: 'http://dev.cryptolions.io:28888', // default
+  //httpEndpoint: 'http://dev.cryptolions.io:28888', // default
+  httpEndpoint: 'http://' + settings.chain_addr + ':' + settings.chain_port, 
+  //httpEndpoint: 'http://ec2-34-215-187-15.us-west-2.compute.amazonaws.com:8888', //Private test net
   debug: false,
   fetchConfiguration: {}
 }
@@ -117,6 +120,7 @@ function inspectChain()
             (result) => {
                 console.log('getTableRows returned');
                 active_block_producers = result.rows;
+                //console.log('getTableRows active_block_producers=', active_block_producers);
                 for (let i = 0 ; i < result.rows.length ; i++ ) {
                     let producer_info = result.rows[i];
                     //console.log('Adding producer_info.owner=', producer_info.owner);
