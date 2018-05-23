@@ -23,21 +23,6 @@ var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
 
 var scatter_status = ScatterStatus.DETECTING;
 
-function ValidURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
-  if(!pattern.test(str)) {
-    //alert("Please enter a valid URL.");
-    return false;
-  } else {
-    return true;
-  }
-}
-
 // If the list of block producers is empty reload the page. This usually means the server just started and is loding it's list of
 // block producers
 if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
@@ -202,7 +187,7 @@ function block_producers_grid(block_producer_list, description) {
                ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
                m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, block_producer.votes),
-               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, ValidURL(block_producer.statement) ? 
+               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.valid_url ? 
                  [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
                    [block_producer.statement, m.trust('&nbsp;')]),
              ]);              
