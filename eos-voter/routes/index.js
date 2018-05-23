@@ -5,21 +5,6 @@ var utils = require('../utils/utils.js');
 var settings = require('../config/settings.js');
 
 
-function ValidURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
-  if(!pattern.test(str)) {
-    //alert("Please enter a valid URL.");
-    return false;
-  } else {
-    return true;
-  }
-}
-
 function strcmp ( str1, str2 ) {
     // http://kevin.vanzonneveld.net
     // +   original by: Waldo Malqui Silva
@@ -37,16 +22,8 @@ function strcmp ( str1, str2 ) {
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-    let active_block_producers = chaininpector.get_active_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': utils.to_engineering(x.total_votes),
-                  'statement': x.url, 'valid_url': ValidURL(x.url),
-                  'last_produced_block_time': x.last_produced_block_time };
-    });
-    let backup_block_producers = chaininpector.get_backup_block_producers().map((x) => {
-        return { 'id': x.owner, 'name': x.owner, 'votes': utils.to_engineering(x.total_votes),
-                  'statement': x.url, 'valid_url': ValidURL(x.url),
-                  'last_produced_block_time': x.last_produced_block_time };
-    });
+    let active_block_producers = chaininpector.get_active_block_producers().map(utils.format_block_producer);
+    let backup_block_producers = chaininpector.get_backup_block_producers().map(utils.format_block_producer);
     res.render('index', { title: 'EOS Voter',
                           chainname: settings.chain_name,
                          'activeblockproducers': active_block_producers,
