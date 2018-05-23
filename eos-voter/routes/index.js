@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var chaininpector = require('../tasks/chainInspector')
 var utils = require('../utils/utils.js');
+var settings = require('../config/settings.js');
+
 
 function ValidURL(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -46,7 +48,7 @@ router.get('/', function(req, res, next) {
                   'last_produced_block_time': x.last_produced_block_time };
     });
     res.render('index', { title: 'EOS Voter',
-                          chainname: chaininpector.chain_name,
+                          chainname: settings.chain_name,
                          'activeblockproducers': active_block_producers,
                          'backupblockproducers': backup_block_producers,
                          'block_producer_list_empty': (active_block_producers.length + backup_block_producers.length) == 0,

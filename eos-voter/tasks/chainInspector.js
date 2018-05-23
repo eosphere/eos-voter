@@ -10,9 +10,6 @@ var options = {
   fetchConfiguration: {}
 }
 
-exports.chain_name = 'Jungle Testnet';
-
-
 eos = Eos.Testnet(options) // testnet at eos.io
 
 var db = null;

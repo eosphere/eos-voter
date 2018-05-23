@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
                   'last_produced_block_time': x.last_produced_block_time };
     });
     res.render('vote', { title: 'EOS Voter - Cast my vote',
-                          chainname: chaininpector.chain_name,
+                          chainname: settings.chain_name,
                          'activeblockproducers': active_block_producers,
                          'backupblockproducers': backup_block_producers,
                          'chainaddr': settings.chain_addr,
