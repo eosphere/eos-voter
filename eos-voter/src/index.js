@@ -23,7 +23,7 @@ var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
 
 var scatter_status = ScatterStatus.DETECTING;
 
-// If the list of block producers is empty reload the page. This usually means the server just started and is loding it's list of
+// If the list of block producers is empty reload the page. This usually means the server just started and is loading it's list of
 // block producers
 if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
     setTimeout(() => document.location.reload(true), 2000);
@@ -106,7 +106,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        console.log('getAccount result=', result);
+                        //console.log('getAccount result=', result);
                         if (result.voter_info) {
                             account_producers = result.voter_info.producers;
                             account_proxy = result.voter_info.proxy;
@@ -125,12 +125,16 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                         m.redraw();
                     })
                     .catch(   (result) => {
-                                    console.error('Error getAccount result=', result);
+                                    console.error('Error returned by getAccount = ', result);
+                                    let error = JSON.parse(result['message']);
+                                    alert('Scatter returned an error from getAccount\nmessage:' + error.message + 
+                                           '\nDetails: ' + error.error.details.map((d) => d.message).join(' ') );
                                     }
                     );
     
             }).catch(error => {
-                console.log('scatter.getIdentity() gave error=', error);
+                console.error('scatter.getIdentity() gave error=', error);
+                alert('Scatter returned an error from getIdentity\nmessage:' + error.message);
             });
 
 
@@ -138,8 +142,9 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
 
 
-        }).catch((result) => {
-            console.log('Suggested network was rejected result=', result);
+        }).catch((error) => {
+            console.error('Suggested network was rejected result=', error);
+            alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
         });
 })
 
@@ -211,7 +216,10 @@ function vote_now(e) {
             console.log('delegatebw result=', result);*/
             c.voteproducer(scatter.identity.accounts[0].name, proxy_name, votes)
                 .then((result) => {console.log('voteproducer result=', result);})
-                .catch((error) => {console.log('voteproducer error=', error);})
+                .catch((error) => {
+                    console.error('voteproducer error=', error);
+                    alert('eosio.voteproducer returned an error\nmessage:' + error.message);
+                })
             /*})
             .catch(e => {console.log('delegatebw error e=', e)});*/
         })
