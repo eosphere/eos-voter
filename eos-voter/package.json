@@ -13,7 +13,6 @@
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "mithril": "^1.1.6",
-    "mongodb": "^3.0.8",
     "morgan": "~1.9.0",
     "nodemon": "^1.17.4",
     "sprintf": "^0.1.5",

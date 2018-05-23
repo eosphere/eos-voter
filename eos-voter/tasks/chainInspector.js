@@ -20,12 +20,6 @@ exports.chain_name = 'Jungle Testnet';
 
 eos = Eos.Testnet(options) // testnet at eos.io
 
-// Connect to mongo
-var mongo = require('mongodb'); 
-
-var url = "mongodb://mongo:27017/eos-voter";
-var MongoClient = mongo.MongoClient;
-
 var db = null;
 var block_producers_collection = [];
 var active_block_producers = [];
@@ -48,24 +42,6 @@ exports.get_backup_block_producers = function() {
     var recent_producers = get_recent_producers();
     return active_block_producers.filter((producer) => { return !recent_producers.includes(producer.owner); });
 };
-
-console.log('Attempting to connect to mongodb');
-MongoClient.connect(url, function(err, connected_db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db = connected_db;
-  var dbo = db.db("eos-voter");
-  dbo.createCollection("block_producers", function(err, res) {
-    if (err) throw err;
-    //console.log("Collection created! res=", res);
-    block_producers_collection = res;
-    block_producers_collection.createIndex({'id': 1}, {unique: true});
-
-    
-    //db.close();
-    inspectChain();
-  });
-});
 
 //var block_producers = new Set()
 var first_run = true;
@@ -137,10 +113,12 @@ function inspectChain()
                     //console.log('Adding producer_info.owner=', producer_info.owner);
                     //console.log('typeof producer_info.total_votes=', typeof producer_info.total_votes);
                     //console.log('producer_info=', producer_info);
+                    /*
                     block_producers_collection.replaceOne({'id': producer_info.owner}, {'id': producer_info.owner,
                                                                                         'name': producer_info.owner,
                                                                                         'votes': producer_info.total_votes,
                                                                                         'statement': producer_info.url}, {upsert: true});
+                    */
                 }
                  //setTimeout(inspectChain, (first_run ? 5 : 60) * 1000);
                  //first_run = false;
@@ -186,6 +164,8 @@ function inspectChain()
 
     
 }
+
+inspectChain();
  
 // All API methods print help when called with no-arguments.
 //eos.getBlock()
