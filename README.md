@@ -17,13 +17,24 @@ pip install fabric3==1.13.1.post1  # We use fabric3 to automate tasks
 fab development.setup
 ```
 
+To resume developing. Cd to the eos-voter project directory
+```
+source venv/bin/activate
+```
+
 To start the webserver in development
 
 ```
 fab development.runserver
 ```
 
-To run the bash console inside the docker container
+You also need webpack continually running in development. Open another console and cd to the eos-voter directory
+
+```
+fab development.webpack
+```
+
+To run the bash console inside the docker container (eg to do npm install)
 ```
 fab development.bash
 ```
