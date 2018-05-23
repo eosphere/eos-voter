@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var blockproducers = require('./blockproducers');
 var chaininpector = require('../tasks/chainInspector');
 var settings = require('../config/settings.js');
 var utils = require('../utils/utils.js');
@@ -39,18 +38,6 @@ router.get('/', function(req, res, next) {
                          'chainaddr': settings.chain_addr,
                          'chainport': settings.chain_port,
                          });
-
-    /*
-    return blockproducers.get_block_producers_from_db().then(
-        (result) => {
-                       res.render('vote', { title: 'EOS Voter - Cast my vote',
-                                            chainname: chaininpector.chain_name,
-                                            'allblockproducers': result,
-                                             //'backupblockproducers': blockproducers.getBackupBlockProducers(),
-                                             });
-                     }
-    );
-    */
 
 });
 
