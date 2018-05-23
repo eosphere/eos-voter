@@ -51,24 +51,6 @@ function recalcVotes() {
 }
 
 function cast_vote() {
-    /*
-    const requiredFields = {
-        //personal:['firstname', 'email'],
-        accounts:[
-            {blockchain:'eos', host:'dev.cryptolions.io', port:28888},
-        ]
-    };
-
-    scatter.getIdentity(requiredFields).then(identity => {
-        //alert('scatter.getIdentity() worked identity=', identity);
-        console.log('scatter.getIdentity() identityr=', identity);
-
-
-    }).catch(error => {
-        alert('scatter.getIdentity() gave error=', error);
-        console.log('scatter.getIdentity() gave error=', error);
-    });
-    */
     confirming_vote = true;
 }
 
@@ -119,64 +101,30 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
     const network = {
         blockchain:'eos',
-        //host:'dev.cryptolions.io', // ( or null if endorsed chainId )
-        //port:28888, // ( or null if defaulting to 80 )
         host: chain_addr, // ( or null if endorsed chainId )
         port: chain_port, // ( or null if defaulting to 80 )
-        //chainId:1 || 'abcd', // Or null to fetch automatically ( takes longer )
     }
 
-    console.log('network=', network);
-
     scatter.suggestNetwork(network).then((result) => {
-            //console.log('Suggested network was accepted result=', result);
-            //...
-            //scatter_status = ScatterStatus.CONNECTED;
-
             const requiredFields = {
-                //personal:['firstname', 'email'],
                 accounts:[
                     {blockchain:'eos', host:chain_addr, port:chain_port},
                 ]
             };
 
             scatter.getIdentity(requiredFields).then(identity => {
-                //alert('scatter.getIdentity() worked identity=', identity);
-                console.log('scatter.getIdentity() identityr=', identity);
-
                 // Set up any extra options you want to use eosjs with. 
                 const eosOptions = {};
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
                 eos = scatter.eos( network, Eos.Localnet, eosOptions );
 
-                //console.log('eos=', eos);
-
-                //console.log('eos.getTableRows=', eos.getTableRows);
-                /*
-                eos.getCode({'account_name': identity.accounts[0].name}).then((result) => {
-                    console.log('getCode result=', result);
-                    eos.getCurrencyBalance({'code': 'EOS', 'account': identity.accounts[0].name})
-                    .then((result) => {console.log('getCurrencyBalance acryptolions result=', result);})
-                    .catch((error) => {console.log('getCurrencyBalance acryptolions error=', error);})
-                });
-                */
-
-                /*
-                eos.getAccount({'account_name': 'acryptolions'}).then((result) => { 
-                        console.log('getAccount acryptolions result=', result);
-                })
-                */              
-
-                eos.getAccount({'account_name': /*'capycapybara'*/identity.accounts[0].name}).then((result) => { 
+                eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
                         console.log('getAccount result=', result);
                         if (result.voter_info) {
                             account_producers = result.voter_info.producers;
                             account_proxy = result.voter_info.proxy;
-                            //for (var i = 0 ; i < account_producers.length ; i++) {
-                            //    console.log('Producer = ', account_producers[i]);
-                            //}
                         } else {
                             account_producers = [];
                             account_proxy = '';
@@ -196,23 +144,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                                     }
                     );
     
-                /*
-                eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'voters', 'limit': 100, 'table_key': 'owner', 'lower_bound': 'a', 'upper_bound': 'z'}).then(
-                    (result) => {
-                                 console.log('getTableRows returned rows= ', result.rows);
-                                 console.log('getTableRows returned rows.length= ', result.rows.length);
-                                 var fun = result.rows.filter((x) => x.producers.length > 1);
-                                 console.log('fun=', fun);
-                                }
-                    ).catch(
-                        (result) => {
-                                    console.error('Error result=', result);
-                                    }
-                    );
-                */
-    
             }).catch(error => {
-                //alert('scatter.getIdentity() gave error=', error);
                 console.log('scatter.getIdentity() gave error=', error);
             });
 
@@ -222,7 +154,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
 
         }).catch((result) => {
-        console.log('Suggested network was rejected result=', result);
+            console.log('Suggested network was rejected result=', result);
         });
 })
 
@@ -245,8 +177,6 @@ function addcustomcandidate() {
 }
 
 function block_producers_grid(block_producer_list, description) {
-    //console.log(' block_producers_grid account_producers-', account_producers);
-    //console.log(' block_producers_grid block_producer_list-', block_producer_list);
     if (block_producer_list.length == 0)
         return [];
     else
@@ -286,13 +216,6 @@ function vote_now(e) {
     if (is_voting)
         return;
     is_voting = true;
-    /*
-    setTimeout(() => {
-        confirming_vote = false;
-        is_voting = false;
-        m.redraw();
-    }, 3000);*/
-    console.log('vote_now called');
 
     eos.contract('eosio').then(c => {
         console.log('contract c=', c);
