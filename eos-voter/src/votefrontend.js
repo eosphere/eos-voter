@@ -221,9 +221,9 @@ function block_producers_grid(block_producer_list, description) {
            m('div', {'class': 'block-producer-list'}, [
              m('div', {'class': 'block-producer-row'}, [
                m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, 'Vote'),
-               m('div', {'class': 'block-producer-cell block-producer-cell-2 block-producer-column-header'}, m.trust('&nbsp;')),
-               m('div', {'class': 'block-producer-cell block-producer-cell-3 block-producer-column-header'}, m.trust('&nbsp;')),
-               m('div', {'class': 'block-producer-cell block-producer-cell-4 block-producer-column-header'}, m.trust('&nbsp;')),
+               m('div', {'class': 'block-producer-cell block-producer-cell-2 block-producer-column-header'}, 'Block Producer'),
+               m('div', {'class': 'block-producer-cell block-producer-cell-3 block-producer-column-header'}, 'Current Vote Total'),
+               m('div', {'class': 'block-producer-cell block-producer-cell-4 block-producer-column-header'}, 'Information'),
              ]),
 
            ].concat(block_producer_list.map((block_producer) => {
