@@ -1,7 +1,7 @@
 var exports = module.exports = {};
 
-exports.chain_addr = 'dev.cryptolions.io'
-exports.chain_port = '18888'
+exports.chain_addr = '13.251.3.82'
+exports.chain_port = '8888'
 
-exports.chain_name = 'Jungle Testnet';
+exports.chain_name = 'Eosio.sg TestNet';
 

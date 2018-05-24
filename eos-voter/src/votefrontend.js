@@ -14,6 +14,12 @@ var proxy_name = '';
 var is_voting = false;
 var account_producers = []; // The producers the current user voted for
 var account_proxy = ''; //The proxy the current user voted for
+var balance = 'Unknown';
+var delegated_cpu_weight = 'Unknown';
+var delegated_net_weight = 'Unknown';
+var is_staking = false;
+var needs_to_stake = false;
+
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -54,8 +60,9 @@ var confirming_vote = false;
 
 var eos = null; // The eosjs instance provided by scatter
 
-function eos_to_float() {
-    return 0;
+function eos_to_float(s) {
+    var ret = s ? s.split(" ")[0] : 0;
+    return parseFloat(ret);
 }
 
 document.addEventListener('scatterLoaded', scatterExtension => {
@@ -91,6 +98,8 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     }
 
     scatter.suggestNetwork(network).then((result) => {
+            //console.log('suggestNetwork result=',result);
+            //console.log('suggestNetwork scatter=',scatter);
             const requiredFields = {
                 accounts:[
                     {blockchain:'eos', host:chain_addr, port:chain_port},
@@ -106,7 +115,29 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        //console.log('getAccount result=', result);
+                        console.log('getAccount result=', result);
+
+                        // Get our EOS balance
+                        eos.getTableRows({
+                            json:true,
+                            code:'eosio.token',
+                            scope:identity.accounts[0].name,
+                            table:'accounts',
+                            limit:500
+                        }).then(
+                            (result) => {
+                                const row = result.rows.find(row => row.balance.split(" ")[1].toLowerCase() === 'eos');
+                                balance = row ? row.balance.split(" ")[0] : 0;
+                                m.redraw();
+                            
+                                //console.log('getTableRows result = ', result);
+                                //console.log('getTableRows balance = ', balance);
+                        }).catch(
+                            (error) => {
+                                alert('Scatter returned an error from getTableRows\nmessage:' + error.message);
+                                console.error('getTableRows error = ', error);
+                        })
+
                         if (result.voter_info) {
                             account_producers = result.voter_info.producers;
                             account_proxy = result.voter_info.proxy;
@@ -114,10 +145,17 @@ document.addEventListener('scatterLoaded', scatterExtension => {
                             account_producers = [];
                             account_proxy = '';
                         }
-                        if (result.delegated_bandwidth === null || (eos_to_float(result.delegated_bandwidth.cpu_weight) === 0
-                            && eos_to_float(result.delegated_bandwidth.net_weight) === 0))
+                        console.log('Testing delegation result=', result);
+                        if (result.delegated_bandwidth === null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
+                            && eos_to_float(result.delegated_bandwidth.net_weight) == 0))
                         {
                             console.log('You have not staked any EOS and therefore cannot vote');
+                            delegated_cpu_weight = '0';
+                            delegated_net_weight = '0';
+                            needs_to_stake = true;
+                        } else {
+                            delegated_cpu_weight = result ? result.delegated_bandwidth.cpu_weight.split(" ")[0] : 0;
+                            delegated_net_weight = result ? result.delegated_bandwidth.net_weight.split(" ")[0] : 0;
                         }
         
                         votes = account_producers; 
@@ -202,6 +240,66 @@ function block_producers_grid(block_producer_list, description) {
     ];
 }
 
+function stake_now(e) {
+    console.log('stake_now called');
+    if (is_staking)
+        return;
+    is_staking = true;
+
+    const requiredFields = {
+        accounts:[
+            {blockchain:'eos', host:chain_addr, port:chain_port},
+        ]
+    };
+
+    const network = {
+        blockchain:'eos',
+        host: chain_addr, // ( or null if endorsed chainId )
+        port: chain_port, // ( or null if defaulting to 80 )
+    }
+
+    scatter.suggestNetwork(network).then((result) => {
+        scatter.getIdentity(requiredFields).then(identity => {
+            // Set up any extra options you want to use eosjs with. 
+            const eosOptions = {};
+            // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
+            eos = scatter.eos( network, Eos.Localnet, eosOptions );
+            console.log('stake_now identity=', identity);
+            //const account = identity.networkedAccount(eos.fromJson(network));
+            //console.log('stake_now account=', account);
+             
+            eos.contract('eosio', requiredFields).then(c => {
+                console.log('contract c=', c);
+                console.log('stake_now scatter.identity.accounts[0].name=',identity.accounts[0].name);
+                
+                c.delegatebw({'from':identity.accounts[0].name, 'receiver':identity.accounts[0].name,
+                             'stake_net_quantity': delegated_net_weight + ' EOS', 'stake_cpu_quantity': delegated_cpu_weight + ' EOS', 'transfer':1, requiredFields})
+                    .then((result) => {
+                    console.log('delegatebw result=', result);
+                    needs_to_stake = false;
+                    m.redraw();
+                    })
+                    .catch(e => {
+                        alert('eosio.delegatebw returned an error\nmessage:' + e.message);
+                        console.log('delegatebw error e=', e)
+                    });
+                })
+                .catch(e => {
+                    alert('get contract returned an error\nmessage:' + e.message);
+                    console.log('contract error e=', e)
+                });
+            })
+            .catch(e => {
+                alert('getidentity returned an error\nmessage:' + e.message);
+                console.log('getidentity error e=', e)
+            });
+        })
+        .catch(e => {
+            alert('suggestNetwork returned an error\nmessage:' + e.message);
+            console.log('suggestNetwork error e=', e)
+        });
+}
+
 function vote_now(e) {
     if (is_voting)
         return;
@@ -223,10 +321,13 @@ function vote_now(e) {
             /*})
             .catch(e => {console.log('delegatebw error e=', e)});*/
         })
-        .catch(e => {console.log('contract error e=', e)});
+        .catch(e => {
+            alert('get contract returned an error\nmessage:' + error.message);
+            console.log('contract error e=', e)
+        });
 }
 
-var Hello = {
+var View = {
     view: function() {
         return m("main", [
                  m("div", {'class': 'pageheader'}, [
@@ -245,6 +346,7 @@ var Hello = {
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
                    current_vote(),
                    m("p", 'Currently connected to the ' + chain_name + ' network'),
+                   m("p", 'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight + ' EOS. Delegated Net = ' + delegated_net_weight + ' EOS.'),
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).
                  concat(block_producers_grid(backup_block_producers, "Backup Producers")).
                  concat(block_producers_grid(custom_candidates, "Custom Candidates")).concat([
@@ -333,9 +435,52 @@ var Hello = {
                      ])
                    )
                  ]
-                 ) : [])
+                 ) : []
+             ).concat( (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0) ? (
+                 [
+                   m('.dialog', {'onclick': e => confirming_vote = false}, 
+                     m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
+                       m('div', {'class': 'scatterPopupText'}, [
+                         m('h2', {'style': {'text-align': 'center'}}, 'Stake your EOS'),
+                         m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
+                           m('h2', {'style': {'text-align': 'center'}}, 'You must stake EOS to CPU and Net to vote'),
+                           m("p", 'Your EOS balance is ' + balance + ' EOS.'),
+                           m('div', {'style': {'margin-bottom': '3px'}}, [
+                             m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
+                               m('label', {'for': 'id-CPU-stake'}, 'CPU stake'),
+                             ]),
+                             m('input', {'type': 'text', 'id': 'id-CPU-stake',
+                                         'value': delegated_cpu_weight == 'Unknown' ? '0' : delegated_cpu_weight,
+                                         'onchange': (e) => { delegated_cpu_weight = e.target.value; console.log('onchange called e=', e)},
+                                         }),
+                             m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                           ]),
+                           m('div', {'style': {'margin-bottom': '3px'}}, [
+                             m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
+                               m('label', {'for': 'id-Net-stake', 'style': {'width': '70px'}}, 'Net stake'),
+                             ]),
+                             m('input', {'type': 'text', 'id': 'id-Net-stake',
+                                         'value': delegated_net_weight == 'Unknown' ? '0' : delegated_net_weight,
+                                         'onchange': (e) => { delegated_net_weight = e.target.value; console.log('onchange called e=', e)},
+                                        }),   
+                             m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                           ]),
+                         ]),
+                         m('div', {'style': {'width': '100%', 'height': '120px'}}, [
+                           m('div', {'style': {'text-align': 'center'}}, [
+                             m("Button", {'class': 'big-vote-now-button', 'onclick': stake_now}, 
+                               (is_staking == false ? "Stake EOS" : "Staking")),
+                           ]),
+                         ]),
+
+                       ])
+                     ])
+                   )
+                 ]
+                 ) : []
+             )
         )
     }
 }   
-m.mount(root, Hello)
+m.mount(root, View)
 
