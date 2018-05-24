@@ -272,13 +272,13 @@ function stake_now(e) {
             const eosOptions = {};
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             eos = scatter.eos( network, Eos.Localnet, eosOptions );
-            console.log('stake_now identity=', identity);
+            //console.log('stake_now identity=', identity);
             //const account = identity.networkedAccount(eos.fromJson(network));
             //console.log('stake_now account=', account);
              
             eos.contract('eosio', requiredFields).then(c => {
-                console.log('contract c=', c);
-                console.log('stake_now scatter.identity.accounts[0].name=',identity.accounts[0].name);
+                //console.log('contract c=', c);
+                //console.log('stake_now scatter.identity.accounts[0].name=',identity.accounts[0].name);
                 
                 c.delegatebw({'from':identity.accounts[0].name, 'receiver':identity.accounts[0].name,
                              'stake_net_quantity': delegated_net_weight + ' EOS', 'stake_cpu_quantity': delegated_cpu_weight + ' EOS', 'transfer':1, requiredFields})
@@ -314,7 +314,7 @@ function vote_now(e) {
     is_voting = true;
 
     eos.contract('eosio').then(c => {
-        console.log('contract c=', c);
+        //console.log('contract c=', c);
         
         /*c.delegatebw({'from':scatter.identity.accounts[0].name, 'receiver':scatter.identity.accounts[0].name,
                      'stake_net_quantity': '50.0000 EOS', 'stake_cpu_quantity':'50.0000 EOS', 'transfer':1})
@@ -480,7 +480,7 @@ var View = {
                              ]),
                              m('input', {'type': 'text', 'id': 'id-CPU-stake',
                                          'value': delegated_cpu_weight == 'Unknown' ? '0' : delegated_cpu_weight,
-                                         'onchange': (e) => { delegated_cpu_weight = e.target.value; console.log('onchange called e=', e)},
+                                         'onchange': (e) => { delegated_cpu_weight = e.target.value; },
                                          }),
                              m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                            ]),
@@ -490,7 +490,7 @@ var View = {
                              ]),
                              m('input', {'type': 'text', 'id': 'id-Net-stake',
                                          'value': delegated_net_weight == 'Unknown' ? '0' : delegated_net_weight,
-                                         'onchange': (e) => { delegated_net_weight = e.target.value; console.log('onchange called e=', e)},
+                                         'onchange': (e) => { delegated_net_weight = e.target.value; },
                                         }),   
                              m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                            ]),
