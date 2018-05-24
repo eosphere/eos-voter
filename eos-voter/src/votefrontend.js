@@ -109,6 +109,12 @@ function redrawAll() {
 
             scatter.getIdentity(requiredFields).then(identity => {
                 // Set up any extra options you want to use eosjs with. 
+
+                if (identity.accounts[0].authority != 'active'){
+                    alert('You have chosen an account with the ' + identity.accounts[0].authority + 
+                          ' authority only the active authority can stake EOS. You should change identity');
+                }
+
                 const eosOptions = {};
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
@@ -116,7 +122,7 @@ function redrawAll() {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        console.log('getAccount result=', result);
+                        //console.log('getAccount result=', result);
 
                         // Get our EOS balance
                         eos.getTableRows({
@@ -146,11 +152,11 @@ function redrawAll() {
                             votes = [];
                             proxy_name = '';
                         }
-                        console.log('Testing delegation result=', result);
+                        //console.log('Testing delegation result=', result);
                         if (result.delegated_bandwidth === null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
                             && eos_to_float(result.delegated_bandwidth.net_weight) == 0))
                         {
-                            console.log('You have not staked any EOS and therefore cannot vote');
+                            //console.log('You have not staked any EOS and therefore cannot vote');
                             delegated_cpu_weight = '0';
                             delegated_net_weight = '0';
                             needs_to_stake = true;
