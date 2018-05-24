@@ -12,8 +12,6 @@ var chain_name = document.getElementById('allblockproducers').getAttribute('data
 var votes = [];
 var proxy_name = ''; 
 var is_voting = false;
-var account_producers = []; // The producers the current user voted for
-var account_proxy = ''; //The proxy the current user voted for
 var balance = 'Unknown';
 var delegated_cpu_weight = 'Unknown';
 var delegated_net_weight = 'Unknown';
@@ -142,11 +140,11 @@ function redrawAll() {
                         })
 
                         if (result.voter_info) {
-                            account_producers = result.voter_info.producers;
-                            account_proxy = result.voter_info.proxy;
+                            votes = result.voter_info.producers;
+                            proxy_name = result.voter_info.proxy;
                         } else {
-                            account_producers = [];
-                            account_proxy = '';
+                            votes = [];
+                            proxy_name = '';
                         }
                         console.log('Testing delegation result=', result);
                         if (result.delegated_bandwidth === null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
@@ -161,8 +159,6 @@ function redrawAll() {
                             delegated_net_weight = result ? result.delegated_bandwidth.net_weight.split(" ")[0] : 0;
                         }
         
-                        votes = account_producers; 
-                        proxy_name = account_proxy;                       
                         m.redraw();
                     })
                     .catch(   (result) => {
@@ -227,7 +223,7 @@ function block_producers_grid(block_producer_list, description) {
                  m('label', {'class': 'checkbox-container'}, [
                    m.trust('&nbsp;'),
                    m('input', Object.assign({}, {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes}, 
-                        ((account_producers.includes(block_producer.id)) ? {'checked': 'checked'} : {}))),
+                        ((votes.includes(block_producer.id)) ? {'checked': 'checked'} : {}))),
                    m('span', {'class': 'checkmark'}),
                  ]),
                ]),
@@ -364,7 +360,7 @@ var View = {
                          m("span", "Proxy my vote to another user"),
                        ]),
                        m("span", "@"),
-                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': account_proxy}),
+                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': proxy_name}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': recalcVotes}, "Set Proxy"),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
