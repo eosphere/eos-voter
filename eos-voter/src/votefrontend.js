@@ -90,7 +90,10 @@ document.addEventListener('scatterLoaded', scatterExtension => {
         //scatter.forgetIdentity();
     }
     */
+    redrawAll();
+})
 
+function redrawAll() {
     const network = {
         blockchain:'eos',
         host: chain_addr, // ( or null if endorsed chainId )
@@ -184,7 +187,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
             console.error('Suggested network was rejected result=', error);
             alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
         });
-})
+}
 
 setTimeout(() => { if (scatter_status == ScatterStatus.DETECTING) {
                      scatter_status = ScatterStatus.FAILED; 
@@ -313,7 +316,12 @@ function vote_now(e) {
             .then(() => {
             console.log('delegatebw result=', result);*/
             c.voteproducer(scatter.identity.accounts[0].name, proxy_name, votes)
-                .then((result) => {console.log('voteproducer result=', result);})
+                .then((result) => {
+                    console.log('voteproducer result=', result);
+                    alert('Your vote was cast successfully');
+                    confirming_vote = false;
+                    redrawAll();
+                })
                 .catch((error) => {
                     console.error('voteproducer error=', error);
                     alert('eosio.voteproducer returned an error\nmessage:' + error.message);
