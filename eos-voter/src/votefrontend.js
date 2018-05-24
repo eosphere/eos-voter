@@ -311,7 +311,7 @@ function vote_now(e) {
                      'stake_net_quantity': '50.0000 EOS', 'stake_cpu_quantity':'50.0000 EOS', 'transfer':1})
             .then(() => {
             console.log('delegatebw result=', result);*/
-            c.voteproducer(scatter.identity.accounts[0].name, proxy_name, votes)
+            c.voteproducer(scatter.identity.accounts[0].name, proxy_name, proxy_name != '' ? [] : votes)
                 .then((result) => {
                     console.log('voteproducer result=', result);
                     alert('Your vote was cast successfully');
