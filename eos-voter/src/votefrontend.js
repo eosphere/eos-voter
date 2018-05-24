@@ -17,7 +17,7 @@ var delegated_cpu_weight = 'Unknown';
 var delegated_net_weight = 'Unknown';
 var is_staking = false;
 var needs_to_stake = false;
-
+var allow_staking_close = false;
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -159,11 +159,14 @@ function redrawAll() {
                             //console.log('You have not staked any EOS and therefore cannot vote');
                             delegated_cpu_weight = '0';
                             delegated_net_weight = '0';
-                            needs_to_stake = true;
+                            allow_staking_close = false;
                         } else {
+                            //console.log('You have staked EOS');
                             delegated_cpu_weight = result ? result.delegated_bandwidth.cpu_weight.split(" ")[0] : 0;
                             delegated_net_weight = result ? result.delegated_bandwidth.net_weight.split(" ")[0] : 0;
+                            allow_staking_close = true;
                         }
+                        needs_to_stake = (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0);
         
                         m.redraw();
                     })
@@ -356,7 +359,6 @@ var View = {
                    m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
                    current_vote(),
                    m("p", 'Currently connected to the ' + chain_name + ' network'),
-                   m("p", 'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight + ' EOS. Delegated Net = ' + delegated_net_weight + ' EOS.'),
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).
                  concat(block_producers_grid(backup_block_producers, "Backup Producers")).
                  concat(block_producers_grid(custom_candidates, "Custom Candidates")).concat([
@@ -376,6 +378,13 @@ var View = {
                        m("span", "@"),
                        m("input", {'id': 'id-add-custom-candidate', 'type': 'text', 'style': 'height:25px;width:200px;'}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': addcustomcandidate}, "Add candidate"),
+                     ]),
+                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
+                       m('div', {'style': 'display: inline-block; max-width: 458.2px;'}, [
+                         'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight + 
+                         ' EOS. Delegated Net = ' + delegated_net_weight + ' EOS.',
+                       ]),
+                       m('button', {'class': 'vote-helper-button', 'onclick': (e) => { needs_to_stake = true; }}, 'Stake now'),
                      ]),
                      current_vote(),
                    ]),
@@ -446,15 +455,25 @@ var View = {
                    )
                  ]
                  ) : []
-             ).concat( (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0) ? (
+             ).concat( needs_to_stake ? (
                  [
-                   m('.dialog', {'onclick': e => confirming_vote = false}, 
+                   m('.dialog', {'onclick': (e) => {
+                        if (allow_staking_close) 
+                            needs_to_stake = false;
+                     }}, 
                      m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
                        m('div', {'class': 'scatterPopupText'}, [
                          m('h2', {'style': {'text-align': 'center'}}, 'Stake your EOS'),
                          m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                            m('h2', {'style': {'text-align': 'center'}}, 'You must stake EOS to CPU and Net to vote'),
-                           m("p", 'Your EOS balance is ' + balance + ' EOS.'),
+                         ]
+                         .concat((delegated_cpu_weight == 0 && delegated_net_weight == 0) ? [
+                           m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked EOS'),
+                         ]
+                         :
+                         [
+                         ]).concat([
+                           m("p", 'Your available EOS balance is ' + balance + ' EOS.'),
                            m('div', {'style': {'margin-bottom': '3px'}}, [
                              m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
                                m('label', {'for': 'id-CPU-stake'}, 'CPU stake'),
@@ -475,15 +494,21 @@ var View = {
                                         }),   
                              m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                            ]),
-                         ]),
-                         m('div', {'style': {'width': '100%', 'height': '120px'}}, [
-                           m('div', {'style': {'text-align': 'center'}}, [
-                             m("Button", {'class': 'big-vote-now-button', 'onclick': stake_now}, 
-                               (is_staking == false ? "Stake EOS" : "Staking")),
-                           ]),
-                         ]),
+                         ])),
 
-                       ])
+                       ].concat([
+                           m('div', {'style': {'width': '100%', 'height': '120px'}}, [
+                             m('div', {'style': {'text-align': 'center'}}, [
+                               m("Button", {'class': 'big-vote-now-button', 'onclick': stake_now}, 
+                                 (is_staking == false ? "Stake EOS" : "Staking")),
+                             ]),
+                           ].concat(allow_staking_close ? [
+                             m('div', [
+                               m("Button", {'class': 'vote-helper-button', 'onclick': e => needs_to_stake = false,
+                                            'style': {'float': 'right'}}, "Cancel"),
+                             ]),
+                           ] : [])),
+                       ]))
                      ])
                    )
                  ]
