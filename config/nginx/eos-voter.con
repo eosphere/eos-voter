@@ -1,0 +1,56 @@
+server {
+    listen 80;  # ipv4
+    listen [::]:80;  # ipv6
+    server_name "eos-voter.example.com";
+
+    location / {
+        return 301 https://eos-voter.example.com$request_uri;
+    }
+
+    location /.well-known/ {
+        alias /srv/eos-voter/public/.well-known/;
+    }
+
+}
+
+
+server {
+
+    listen 443 ssl;  # ipv4
+    listen [::]:443 ssl;  # ipv6
+    server_name "eos-voter.example.com";
+
+    gzip off;
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/eos-voter.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/eos-voter.example.com/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+     }
+
+    location /images/ {
+      alias /srv/eos-voter/eos-voter/public/images/;
+    }
+
+    location /bin/ {
+      alias /srv/eos-voter/eos-voter/public/bin/;
+    }
+
+    location /js/ {
+      alias /srv/eos-voter/eos-voter/public/js/;
+    }
+
+    location /stylesheets/ {   
+      alias /srv/eos-voter/eos-voter/public/stylesheets/;
+    }
+
+    location /.well-known/ {
+        alias /srv/eos-voter/public/.well-known/;
+    }
+}
