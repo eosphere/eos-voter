@@ -1,5 +1,5 @@
 import m from "mithril";
-import Eos from 'eosjs'
+import api from 'eosjs-api'
 
 var root = document.body
 
@@ -118,7 +118,11 @@ function redrawAll() {
                 const eosOptions = {};
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                eos = scatter.eos( network, Eos.Localnet, eosOptions );
+                console.log('api.Localnet=',api.Localnet);
+                //console.log('Eos.Mainnet=',Eos.Mainnet);
+                //console.log('Eos=', Eos);
+                console.log('scatter=', scatter);
+                eos = scatter.eos( network, api.Localnet, eosOptions );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
