@@ -147,10 +147,40 @@ Run webpack to generate the static files
 
 ```
 cd /srv/eos-voter/eos-voter/
-sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js -d
+sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
 ```
 
 ### Server is set up
 
 You are now up and running with your own eos-voter install
+
+## Upgrade the server
+
+First merge all necessary changes into the master branch of the git repo and push to github.
+
+ssh into the server. Then change to the software directory and pull the updates
+
+```
+cd /srv/eos-voter
+git pull
+```
+
+Install any updated npm requirements
+
+```
+cd /srv/eos-voter/eos-voter
+sudo npm install
+```
+
+Run webpack to regenerate the client side javascript
+
+```
+sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
+cd /srv/eos-voter/eos-voter
+```
+
+Restart the app
+```
+sudo pm2 restart all
+```
 
