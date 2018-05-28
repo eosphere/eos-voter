@@ -54,7 +54,6 @@ function current_vote() {
 }
 
 var scatter = null;
-var custom_candidates = [];
 var confirming_vote = false;
 
 var eos = null; // The eosjs instance provided by scatter
@@ -205,18 +204,6 @@ setTimeout(() => { if (scatter_status == ScatterStatus.DETECTING) {
                    }
                   }, 2000);
 
-function addcustomcandidate() {
-    var name = document.getElementById('id-add-custom-candidate').value;
-    var existingnames = active_block_producers.concat(backup_block_producers).concat(custom_candidates).map((x) => x.name);
-    if (name != '' && !existingnames.includes(name)) {
-        custom_candidates.push({'id': name, 'name': name, 'votes': '0', 'statement': ''});
-        recalcVotes();
-        m.redraw();
-    } else {
-        alert('Block producer ' + name + ' is already in the list');
-    }
-}
-
 function block_producers_grid(block_producer_list, description) {
     if (block_producer_list.length == 0)
         return [];
@@ -366,7 +353,7 @@ var View = {
                    m("p", 'Currently connected to the ' + chain_name + ' network'),
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).
                  concat(block_producers_grid(backup_block_producers, "Backup Producers")).
-                 concat(block_producers_grid(custom_candidates, "Custom Candidates")).concat([
+                 concat([
                    m("div", [
                      m("div", {'style': 'margin-top: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 240px;'}, [
@@ -375,14 +362,6 @@ var View = {
                        m("span", "@"),
                        m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': proxy_name}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': recalcVotes}, "Set Proxy"),
-                     ]),
-                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
-                       m('div', {'style': 'display: inline-block; width: 240px;'}, [
-                         m("span", {'style': 'min-width:240px;'}, "You can add a candidate to the list"),
-                       ]),
-                       m("span", "@"),
-                       m("input", {'id': 'id-add-custom-candidate', 'type': 'text', 'style': 'height:25px;width:200px;'}),
-                       m("Button", {'class': 'vote-helper-button', 'onclick': addcustomcandidate}, "Add candidate"),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; max-width: 458.2px;'}, [
