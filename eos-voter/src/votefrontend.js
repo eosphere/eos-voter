@@ -37,6 +37,7 @@ function recalcVotes() {
     proxy_name = document.getElementById('id-proxy-name').value;
     var checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
     votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'));
+    votes.sort()
 }
 
 function cast_vote() {
@@ -174,8 +175,8 @@ function redrawAll() {
         
                         m.redraw();
                     })
-                    .catch(   (result) => {
-                                    console.error('Error returned by getAccount = ', result);
+                    .catch(   (e) => {
+                                    console.error('Error returned by getAccount = ', e);
                                     let error = JSON.parse(result['message']);
                                     alert('Scatter returned an error from getAccount\nmessage:' + error.message + 
                                            '\nDetails: ' + error.error.details.map((d) => d.message).join(' ') );
@@ -339,7 +340,7 @@ function vote_now(e) {
             .catch(e => {console.log('delegatebw error e=', e)});*/
         })
         .catch(e => {
-            alert('get contract returned an error\nmessage:' + error.message);
+            alert('get contract returned an error\nmessage:' + e.message);
             console.log('contract error e=', e)
         });
 }
