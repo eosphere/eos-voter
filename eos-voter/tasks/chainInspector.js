@@ -1,19 +1,17 @@
 var exports = module.exports = {};
 
 // Connect to EOS
-var Eos = require('eosjs') // Eos = require('./src')
-var settings = require('../config/settings.js');
+var Eos = require('eosjs'); // Eos = require('./src')
+var config = require('../config/index.js');
  
 var options = {
-  httpEndpoint: 'http://' + settings.chain_addr + ':' + settings.chain_port, 
+  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_port, 
   debug: false,
   fetchConfiguration: {}
 }
 
 eos = Eos.Testnet(options) // testnet at eos.io
 
-var db = null;
-var block_producers_collection = [];
 var active_block_producers = [];
 var last_irreversible_block_num = 0;
 var recent_blocks = {};
@@ -52,7 +50,7 @@ function inspectChain()
                 for (let i = 0 ; i < result.rows.length ; i++ ) {
                     let producer_info = result.rows[i];
                 }
-                setTimeout(inspectChain, 5 * 1000);
+                setTimeout(inspectChain, config.refresh_secs * 1000);
             }
             );
         // Iterate over recent blocks. We consider a BP to be active if it has recently produced a block
@@ -86,7 +84,7 @@ function inspectChain()
     }).catch(
         (result) => {
                     console.error('Error result=', result);
-                     setTimeout(inspectChain, 5 * 1000);
+                     setTimeout(inspectChain, config.refresh_secs * 1000);
                     });
 
     

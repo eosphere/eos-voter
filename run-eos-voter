@@ -1,5 +1,5 @@
 #! /bin/bash
 
 cd /opt/project/eos-voter
-npm start
+npm run-script startdev
 
