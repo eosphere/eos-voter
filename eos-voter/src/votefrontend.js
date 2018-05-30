@@ -7,7 +7,8 @@ var active_block_producers = JSON.parse(document.getElementById('allblockproduce
 var backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
 var chain_addr = document.getElementById('allblockproducers').getAttribute('data-chain-addr');
 var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
-var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name')
+var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
+var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
 
 var votes = [];
 var proxy_name = ''; 
@@ -94,13 +95,14 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 function redrawAll() {
     const network = {
         blockchain:'eos',
-        host: chain_addr, // ( or null if endorsed chainId )
-        port: chain_port, // ( or null if defaulting to 80 )
+        host: chain_addr,
+        port: chain_port,
+        //chainId: chain_id,
     }
 
     scatter.suggestNetwork(network).then((result) => {
-            //console.log('suggestNetwork result=',result);
-            //console.log('suggestNetwork scatter=',scatter);
+            console.log('suggestNetwork result=',result);
+            console.log('suggestNetwork scatter=',scatter);
             const requiredFields = {
                 accounts:[
                     {blockchain:'eos', host:chain_addr, port:chain_port},
@@ -109,6 +111,7 @@ function redrawAll() {
 
             scatter.getIdentity(requiredFields).then(identity => {
                 // Set up any extra options you want to use eosjs with. 
+                console.log('getIdentity identity=',identity);
 
                 if (identity.accounts[0].authority != 'active'){
                     alert('You have chosen an account with the ' + identity.accounts[0].authority + 
@@ -126,7 +129,7 @@ function redrawAll() {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        //console.log('getAccount result=', result);
+                        console.log('getAccount result=', result);
 
                         // Get our EOS balance
                         eos.getTableRows({
@@ -256,6 +259,7 @@ function stake_now(e) {
         blockchain:'eos',
         host: chain_addr, // ( or null if endorsed chainId )
         port: chain_port, // ( or null if defaulting to 80 )
+        //chainId: chain_id,
     }
 
     scatter.suggestNetwork(network).then((result) => {
@@ -497,7 +501,15 @@ var View = {
                    )
                  ]
                  ) : []
-             )
+             ).concat([
+               m('p', [
+                 'A service provided by ',
+                 m('a', {'href':'https://eosphere.io', 'target':'_blank'}, 'EOSphere'),
+                 ' Source code licenced under Affero GNU GPL ', 
+                 m('a', {'href': 'https://github.com/eosphere/eos-voter', 'target':'_blank'},
+                 'Download source'),
+               ]),
+             ]),
         )
     }
 }   
