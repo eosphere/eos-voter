@@ -1,3 +1,5 @@
+var chaininspector = require('../tasks/chainInspector');
+
 var exports = module.exports = {};
 
 function to_engineering(f) {
@@ -27,9 +29,19 @@ function ValidURL(str) {
   }
 }
 
-exports.format_block_producer = (x) => {
+exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend
-    return { 'id': x.owner, 'name': x.owner, 'votes': to_engineering(x.total_votes),
+    return { 'id': x.owner, 'name': x.owner, 'votes_absolute': to_engineering(x.total_votes),
+              'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time };
 }
+
+exports.get_total_votes = function() {
+    var block_producers = chaininspector.get_all_block_producers();
+    if (block_producers.length == 0)
+        // Fake returning some votes for display purposes
+        return 1;
+    return block_producers.reduce((accumulator, x) => accumulator + parseFloat(x.total_votes), 0);
+}
+

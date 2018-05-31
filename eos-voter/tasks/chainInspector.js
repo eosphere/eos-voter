@@ -8,10 +8,10 @@ var chainid = null;
 var options = {
   httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_port, 
   debug: false,
-  fetchConfiguration: {}
+  fetchConfiguration: {},
 }
 
-eos = Eos.Testnet(options) // testnet at eos.io
+eos = Eos.Localnet(options) // testnet at eos.io
 
 var active_block_producers = [];
 
@@ -21,7 +21,10 @@ exports.get_active_block_producers = function() {
 
 exports.get_backup_block_producers = function() {
     return active_block_producers.slice(21);
+};
 
+exports.get_all_block_producers =  function() {
+    return active_block_producers;
 };
 
 exports.get_chainid = function() {
