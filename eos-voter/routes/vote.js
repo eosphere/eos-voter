@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
                          'protocol': config.protocol,
                          'chainaddr': config.chain_addr,
                          'chainport': config.chain_port,
-                         'chainid': chaininspector.chainid,
+                         'chainid': chaininspector.get_chainid(),
                          });
 
 });

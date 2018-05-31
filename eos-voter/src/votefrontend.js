@@ -1,5 +1,5 @@
 import m from "mithril";
-import api from 'eosjs-api'
+import Eos from 'eosjs'
 
 var root = document.body
 
@@ -19,6 +19,8 @@ var delegated_net_weight = 'Unknown';
 var is_staking = false;
 var needs_to_stake = false;
 var allow_staking_close = false;
+var new_delegated_cpu_weight = '0';
+var new_delegated_net_weight = '0';
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -26,11 +28,26 @@ var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'FAILED': 'FAILED',
                     }
 
+const network = {
+    blockchain:'eos',
+    host: chain_addr,
+    port: chain_port,
+    //chainId: chain_id,
+    //chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
+}
+
+const requiredFields = {
+    accounts:[ network ],
+};
+
+const eosOptions = {chainId: chain_id/*'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca'*/,};
+
 var scatter_status = ScatterStatus.DETECTING;
 
 // If the list of block producers is empty reload the page. This usually means the server just started and is loading it's list of
 // block producers
 if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
+    scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
     setTimeout(() => document.location.reload(true), 2000);
 }
 
@@ -67,6 +84,10 @@ function eos_to_float(s) {
 document.addEventListener('scatterLoaded', scatterExtension => {
     console.log('scatterLoaded called');
 
+    if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
+        scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
+        return;
+    }
     // Scatter will now be available from the window scope.
     // At this stage the connection to Scatter from the application is
     // already encrypted.
@@ -93,21 +114,13 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 })
 
 function redrawAll() {
-    const network = {
-        blockchain:'eos',
-        host: chain_addr,
-        port: chain_port,
-        //chainId: chain_id,
-    }
+    if (active_block_producers.length == 0 && backup_block_producers.length == 0)
+        return;
 
+    console.log('Calling suggest network = ', network);
     scatter.suggestNetwork(network).then((result) => {
             console.log('suggestNetwork result=',result);
             console.log('suggestNetwork scatter=',scatter);
-            const requiredFields = {
-                accounts:[
-                    {blockchain:'eos', host:chain_addr, port:chain_port},
-                ]
-            };
 
             scatter.getIdentity(requiredFields).then(identity => {
                 // Set up any extra options you want to use eosjs with. 
@@ -118,14 +131,13 @@ function redrawAll() {
                           ' authority only the active authority can stake EOS. You should change identity');
                 }
 
-                const eosOptions = {};
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                console.log('api.Localnet=',api.Localnet);
-                //console.log('Eos.Mainnet=',Eos.Mainnet);
-                //console.log('Eos=', Eos);
+                console.log('api.Localnet=',Eos.Localnet);
+                //console.log('eosjs.Mainnet=',eosjs.Mainnet);
+                //console.log('eosjs=', eosjs);
                 console.log('scatter=', scatter);
-                eos = scatter.eos( network, api.Localnet, eosOptions );
+                eos = scatter.eos( network, Eos.Localnet, eosOptions );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
@@ -159,8 +171,8 @@ function redrawAll() {
                             votes = [];
                             proxy_name = '';
                         }
-                        //console.log('Testing delegation result=', result);
-                        if (result.delegated_bandwidth === null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
+                        console.log('Testing delegation result=', result);
+                        if (result.delegated_bandwidth == null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
                             && eos_to_float(result.delegated_bandwidth.net_weight) == 0))
                         {
                             //console.log('You have not staked any EOS and therefore cannot vote');
@@ -169,8 +181,8 @@ function redrawAll() {
                             allow_staking_close = false;
                         } else {
                             //console.log('You have staked EOS');
-                            delegated_cpu_weight = result ? result.delegated_bandwidth.cpu_weight.split(" ")[0] : 0;
-                            delegated_net_weight = result ? result.delegated_bandwidth.net_weight.split(" ")[0] : 0;
+                            delegated_cpu_weight = result ? result.total_resources.cpu_weight.split(" ")[0] : 0;
+                            delegated_net_weight = result ? result.total_resources.net_weight.split(" ")[0] : 0;
                             allow_staking_close = true;
                         }
                         needs_to_stake = (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0);
@@ -250,34 +262,25 @@ function stake_now(e) {
     is_staking = true;
 
     const requiredFields = {
-        accounts:[
-            {blockchain:'eos', host:chain_addr, port:chain_port},
-        ]
+        accounts:[ network ],
     };
-
-    const network = {
-        blockchain:'eos',
-        host: chain_addr, // ( or null if endorsed chainId )
-        port: chain_port, // ( or null if defaulting to 80 )
-        //chainId: chain_id,
-    }
-
     scatter.suggestNetwork(network).then((result) => {
         scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with. 
-            const eosOptions = {};
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             eos = scatter.eos( network, Eos.Localnet, eosOptions );
             //console.log('stake_now identity=', identity);
             //const account = identity.networkedAccount(eos.fromJson(network));
             //console.log('stake_now account=', account);
-             
             eos.contract('eosio', requiredFields).then(c => {
-                //console.log('contract c=', c);
-                //console.log('stake_now scatter.identity.accounts[0].name=',identity.accounts[0].name);
+                console.log('contract c=', c);
+                console.log('stake_now scatter.identity.accounts[0].name=',scatter.identity.accounts[0].name);
+                console.log('stake_now delegated_net_weight=',delegated_net_weight);
+                console.log('stake_now delegated_cpu_weight=',delegated_cpu_weight);
                 
-                c.delegatebw({'from':identity.accounts[0].name, 'receiver':identity.accounts[0].name,
-                             'stake_net_quantity': delegated_net_weight + ' EOS', 'stake_cpu_quantity': delegated_cpu_weight + ' EOS', 'transfer':1, requiredFields})
+                //c.delegatebw({'from':identity.accounts[0].name, 'receiver':identity.accounts[0].name,
+                //             'stake_net_quantity': delegated_net_weight + ' EOS', 'stake_cpu_quantity': delegated_cpu_weight + ' EOS', 'transfer':0})
+                c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, new_delegated_net_weight + ' EOS', new_delegated_cpu_weight + ' EOS', 0)
                     .then((result) => {
                     console.log('delegatebw result=', result);
                     needs_to_stake = false;
@@ -305,34 +308,52 @@ function stake_now(e) {
 }
 
 function vote_now(e) {
-    if (is_voting)
-        return;
-    is_voting = true;
+    /*
+    const network = {
+        blockchain:'eos',
+        host: chain_addr, 
+        port: chain_port, 
+        chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
+    }
+    */
 
-    eos.contract('eosio').then(c => {
-        //console.log('contract c=', c);
-        
-        /*c.delegatebw({'from':scatter.identity.accounts[0].name, 'receiver':scatter.identity.accounts[0].name,
-                     'stake_net_quantity': '50.0000 EOS', 'stake_cpu_quantity':'50.0000 EOS', 'transfer':1})
-            .then(() => {
-            console.log('delegatebw result=', result);*/
-            c.voteproducer(scatter.identity.accounts[0].name, proxy_name, proxy_name != '' ? [] : votes)
-                .then((result) => {
-                    console.log('voteproducer result=', result);
-                    alert('Your vote was cast successfully');
-                    confirming_vote = false;
-                    redrawAll();
+    const requiredFields = {
+        accounts:[ network ],
+    };
+
+    scatter.suggestNetwork(network).then((result) => {
+        scatter.getIdentity(requiredFields).then(identity => {
+
+            eos = scatter.eos( network, Eos.Localnet, eosOptions );
+             
+            eos.contract('eosio', requiredFields).then(c => {
+                    c.voteproducer({'voter': scatter.identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes}/*,
+                                   { authorization: [scatter.identity.accounts[0].name]}*/ )
+                        .then((result) => {
+                            alert('Your vote was cast successfully');
+                            confirming_vote = false;
+                            redrawAll();
+                        })
+                        .catch((error) => {
+                            console.error('voteproducer error=', error);
+                            alert('eosio.voteproducer returned an error\nmessage:' + error.message);
+                        })
+                    /*})
+                    .catch(e => {console.log('delegatebw error e=', e)});*/
                 })
-                .catch((error) => {
-                    console.error('voteproducer error=', error);
-                    alert('eosio.voteproducer returned an error\nmessage:' + error.message);
-                })
-            /*})
-            .catch(e => {console.log('delegatebw error e=', e)});*/
+                .catch(e => {
+                    alert('get contract returned an error\nmessage:' + e.message);
+                    console.log('contract error e=', e)
+                });
+            })
+            .catch(e => {
+                alert('getidentity returned an error\nmessage:' + e.message);
+                console.log('getidentity error e=', e)
+            });
         })
         .catch(e => {
-            alert('get contract returned an error\nmessage:' + e.message);
-            console.log('contract error e=', e)
+            alert('suggestNetwork returned an error\nmessage:' + e.message);
+            console.log('suggestNetwork error e=', e)
         });
 }
 
@@ -462,13 +483,15 @@ var View = {
                          [
                          ]).concat([
                            m("p", 'Your available EOS balance is ' + balance + ' EOS.'),
+                           m("p", 'You currently have ' + delegated_cpu_weight + ' EOS staked to CPU.'),
+                           m("p", 'You currently have ' + delegated_net_weight + ' EOS staked to Net.'),
                            m('div', {'style': {'margin-bottom': '3px'}}, [
                              m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
                                m('label', {'for': 'id-CPU-stake'}, 'CPU stake'),
                              ]),
                              m('input', {'type': 'text', 'id': 'id-CPU-stake',
-                                         'value': delegated_cpu_weight == 'Unknown' ? '0' : delegated_cpu_weight,
-                                         'onchange': (e) => { delegated_cpu_weight = e.target.value; },
+                                         'value': new_delegated_cpu_weight,
+                                         'onchange': (e) => { new_delegated_cpu_weight = e.target.value; },
                                          }),
                              m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                            ]),
@@ -477,8 +500,8 @@ var View = {
                                m('label', {'for': 'id-Net-stake', 'style': {'width': '70px'}}, 'Net stake'),
                              ]),
                              m('input', {'type': 'text', 'id': 'id-Net-stake',
-                                         'value': delegated_net_weight == 'Unknown' ? '0' : delegated_net_weight,
-                                         'onchange': (e) => { delegated_net_weight = e.target.value; },
+                                         'value': new_delegated_net_weight == 'Unknown' ? '0' : new_delegated_net_weight,
+                                         'onchange': (e) => { new_delegated_net_weight = e.target.value; },
                                         }),   
                              m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                            ]),

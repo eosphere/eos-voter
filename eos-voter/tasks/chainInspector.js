@@ -24,6 +24,10 @@ exports.get_backup_block_producers = function() {
 
 };
 
+exports.get_chainid = function() {
+    return chainid;
+}
+
 var first_run = true;
 
 function inspectChain()
@@ -35,7 +39,7 @@ function inspectChain()
         chainid = result.chain_id;
         eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
             (result) => {
-                console.log('getTableRows returned');
+                console.log('getTableRows returned ') ;
                 active_block_producers = result.rows;
                 active_block_producers.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
                 setTimeout(inspectChain, config.refresh_secs * 1000);
