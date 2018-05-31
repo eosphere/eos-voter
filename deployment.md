@@ -67,7 +67,7 @@ sudo apt-get install python-certbot-nginx
 Copy in nginx configuration file to the /etc/nginx/sites-available directory
 
 ```
-sudo cp /srv/eos-voter/config/eos-voter.conf /etc/nginx/sites-available/eos-voter.conf
+sudo cp /srv/eos-voter/config/nginx/eos-voter.conf /etc/nginx/sites-available/eos-voter.conf
 ```
 
 Edit the /etc/nginx/sites-available/eos-voter.conf file and change the server name to your server's fully qualified domain name. It is in the file as eos-voter.example.com
@@ -120,11 +120,6 @@ sudo /srv/eos-voter/config/installation/install_node_ubuntu
 sudo apt-get install nodejs build-essential
 ```
 
-Mark the program as being exceutable
-```
-sudo chmod +x srv/eos-voter/eos-voter/app.js 
-```
-
 Install the npm requirements
 
 ```
@@ -139,7 +134,7 @@ sudo npm install -g pm2
 
 Start the application with pm2
 ```
-sudo pm2 start /srv/eos-voter/eos-voter/bin/www.js 
+sudo pm2 start /srv/eos-voter/eos-voter/bin/www
 ```
 
 Set the application to auto start
