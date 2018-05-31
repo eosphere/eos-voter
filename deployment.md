@@ -168,7 +168,7 @@ ssh into the server. Then change to the software directory and pull the updates
 
 ```
 cd /srv/eos-voter
-git pull
+sudo git pull
 ```
 
 Install any updated npm requirements
@@ -181,8 +181,8 @@ sudo npm install
 Run webpack to regenerate the client side javascript
 
 ```
-sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
 cd /srv/eos-voter/eos-voter
+sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
 ```
 
 Restart the app
