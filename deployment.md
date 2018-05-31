@@ -66,6 +66,12 @@ sudo apt-get install python-certbot-nginx
 
 Copy in nginx configuration file to the /etc/nginx/sites-available directory
 
+```
+sudo cp /srv/eos-voter/config/eos-voter.conf /etc/nginx/sites-available/eos-voter.conf
+```
+
+Edit the /etc/nginx/sites-available/eos-voter.conf file and change the server name to your server's fully qualified domain name. It is in the file as eos-voter.example.com
+
 Remove the default site from the active sites and add in the eos-voter site.
 
 ```
