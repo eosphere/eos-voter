@@ -3,6 +3,7 @@ from fabric.colors import green, red, yellow
 from sys import platform
 import os
 
+
 local_pwd = os.path.realpath(
     os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
 
@@ -43,6 +44,10 @@ def npm_install():
 def runserver():
     print(yellow('Running docker process webserver...'))
     with lcd('.'):
+        ret = local('docker ps --quiet --filter "label={project_name}-webpack"'.format(project_name=project_name), capture=True)
+        if len(ret) == 0:
+            abort(red('Could not runserver. Have you run '
+                      '\'fab development.webpack\'?'))
         local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
               '--entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 '
               '--network={project_name}-network '
@@ -54,7 +59,7 @@ def runserver():
 def webpack():
     print(yellow('Running docker process...'))
     with lcd('.'):
-        local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
+        local('docker run --tty --interactive --label {project_name}-webpack --volume "{local_pwd}":/opt/project '
               '--entrypoint="/opt/project/run-webpack" --user=$(id -u):$(id -g) '
               '"{project_name}"'.format(
                     local_pwd=local_pwd, project_name=project_name))
