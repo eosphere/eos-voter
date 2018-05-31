@@ -9,6 +9,7 @@ var chain_addr = document.getElementById('allblockproducers').getAttribute('data
 var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
 var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
+var voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
 
 var votes = [];
 var proxy_name = ''; 
@@ -373,7 +374,7 @@ var View = {
                  ]),
                  m('div', {'class': 'pageheader-spacer'}),
                  m("div", {'class': 'content-container'}, [
-                   m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
+                   m("div", m.trust(voting_page_content)),
                    current_vote(),
                    m("p", 'Currently connected to the ' + chain_name + ' network'),
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).

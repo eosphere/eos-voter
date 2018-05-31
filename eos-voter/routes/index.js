@@ -14,6 +14,7 @@ router.get('/', function(req, res, next) {
                          'activeblockproducers': active_block_producers,
                          'backupblockproducers': backup_block_producers,
                          'block_producer_list_empty': (active_block_producers.length + backup_block_producers.length) == 0,
+                         'landing_page_content': config.landing_page_content,
                          });
 });
 
