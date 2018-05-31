@@ -376,7 +376,8 @@ var View = {
                  m("div", {'class': 'content-container'}, [
                    m("div", m.trust(voting_page_content)),
                    current_vote(),
-                   m("p", 'Currently connected to the ' + chain_name + ' network'),
+                   m("p", {'class': 'centre'}, 'Currently connected to the ' + chain_name + ' network'),
+                   m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).
                  concat(block_producers_grid(backup_block_producers, "Backup Producers")).
                  concat([
