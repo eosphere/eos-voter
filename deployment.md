@@ -88,8 +88,19 @@ Install the certbot
 
 ```
 sudo mkdir /srv/certbot
-sudo cp /srv/eos-voter/config/certbot/certbot.sh /srv/certbot/certbot.sh
+sudo cp /srv/eos-voter/config/lets-encrypt/certbot.sh /srv/certbot/certbot.sh
 sudo chmod 700 /srv/certbot/certbot.sh
+```
+
+Create the well know directory for the certbot's output files
+```
+sudo mkdir /srv/eos-voter/public
+sudo mkdir /srv/eos-voter/public/.well-known
+```
+
+Edit the certbot file so it refers to the correct domain
+```
+sudo nano /srv/certbot/certbot.sh
 ```
 
 Run the certbot for the first time
