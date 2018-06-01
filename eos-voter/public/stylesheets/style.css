@@ -146,7 +146,7 @@ div.block-producer-row:nth-child(odd) {
     -ms-user-select: none;
     user-select: none;
     /*float: right;*/
-    left: 70px;
+    left: 40px;
 }
 
 /* Hide the browser's default checkbox */
