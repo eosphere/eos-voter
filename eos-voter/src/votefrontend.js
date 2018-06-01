@@ -26,6 +26,7 @@ var needs_to_stake = false;
 var allow_staking_close = false;
 var new_delegated_cpu_weight = '0';
 var new_delegated_net_weight = '0';
+var has_activated = parseFloat(activated_percent) > 15.0
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -390,9 +391,9 @@ var View = {
                    m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
                    m("p.centre", 'Percentage of EOS voting ' + activated_percent + '%'),
                    m("p.centre", Humanize.formatNumber(total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(min_activated_stake) + ' needed to activate the chain'),
-                   (parseFloat(activated_percent) > 15.0) ? [m("p.centre-activated", "The EOS block chain has activated ")] : [],
-                 ].concat(block_producers_grid(active_block_producers, "Active Producers")).
-                 concat(block_producers_grid(backup_block_producers, "Backup Producers")).
+                   (has_activated) ? [m("p.centre-activated", "The EOS block chain has activated ")] : [],
+                 ].concat(block_producers_grid(active_block_producers, has_activated ? "Active Block Producers" : "Block Producer Candidates")).
+                 concat(block_producers_grid(backup_block_producers, "Backup Block Producers")).
                  concat([
                    m("div", [
                      m("div", {'style': 'margin-top: 15px;'}, [

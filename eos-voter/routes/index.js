@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
                          'total_activated_stake': Humanize.formatNumber(chaininspector.get_total_activated_stake() / 10.0 / 1000),
                          'min_activated_stake': Humanize.formatNumber(config.min_activated_stake / 10.0 / 1000),
                          'activated_percent': (chaininspector.get_total_activated_stake() / config.min_activated_stake * (15.0 / 100.0) * 100.0).toFixed(2),
-                         'has_activated': chaininspector.get_total_activated_stake() > config.min_activated_stake,
+                         'has_activated': utils.has_activated(),
                          });
 });
 

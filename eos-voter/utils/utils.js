@@ -46,3 +46,7 @@ exports.get_total_votes = function() {
     return block_producers.reduce((accumulator, x) => accumulator + parseFloat(x.total_votes), 0);
 }
 
+exports.has_activated = function() {
+    return chaininspector.get_total_activated_stake() > config.min_activated_stake;
+}
+
