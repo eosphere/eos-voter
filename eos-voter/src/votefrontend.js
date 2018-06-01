@@ -1,5 +1,6 @@
 import m from "mithril";
-import Eos from 'eosjs'
+import Eos from 'eosjs';
+import Humanize from 'humanize-plus';
 
 var root = document.body
 
@@ -10,6 +11,9 @@ var chain_port = document.getElementById('allblockproducers').getAttribute('data
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
 var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
 var voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
+var total_activated_stake = document.getElementById('allblockproducers').getAttribute('data-total-activated-stake');
+var min_activated_stake = document.getElementById('allblockproducers').getAttribute('data-min-activated-stake');
+var activated_percent = document.getElementById('allblockproducers').getAttribute('data-activated-percent');
 
 var votes = [];
 var proxy_name = ''; 
@@ -312,6 +316,9 @@ function stake_now(e) {
 }
 
 function vote_now(e) {
+    if (is_voting)
+        return;
+    is_voting = true;
     /*
     const network = {
         blockchain:'eos',
@@ -381,6 +388,9 @@ var View = {
                    current_vote(),
                    m("p", {'class': 'centre'}, 'Currently connected to the ' + chain_name + ' network'),
                    m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
+                   m("p.centre", 'Percentage of EOS voting ' + activated_percent + '%'),
+                   m("p.centre", Humanize.formatNumber(total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(min_activated_stake) + ' needed to activate the chain'),
+                   (parseFloat(activated_percent) > 15.0) ? [m("p.centre-activated", "The EOS block chain has activated ")] : [],
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).
                  concat(block_producers_grid(backup_block_producers, "Backup Producers")).
                  concat([

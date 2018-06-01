@@ -76,6 +76,11 @@ a {
     text-align: center;
 }
 
+.centre-activated {
+    text-align: center;
+    color: red;
+}
+
 .centre-h1 {
     text-align: center;
     margin: 0px;

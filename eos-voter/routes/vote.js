@@ -19,6 +19,9 @@ router.get('/', function(req, res, next) {
                          'chainport': config.chain_port,
                          'chainid': chaininspector.get_chainid(),
                          'voting_page_content': config.voting_page_content,
+                         'total_activated_stake': chaininspector.get_total_activated_stake(),
+                         'min_activated_stake': config.min_activated_stake,
+                         'activated_percent': (chaininspector.get_total_activated_stake() / config.min_activated_stake * (15.0 / 100.0) * 100.0).toFixed(2),
                          });
 
 });
