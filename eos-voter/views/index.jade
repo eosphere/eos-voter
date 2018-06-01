@@ -14,8 +14,9 @@ block content
       button.signupbutton(onclick='window.location="/vote"') Sign in to vote
   div.pageheader-spacer
   div.content-container
-    p.centre EOS Voter is a provided as a free service to the community by EOSphere. You can use it to monitor the votes of block producers and to vote
-    p.centre Currently connected to the #{chainname} network
+    div !{landing_page_content}
+    p.centre Currently connected to the #{chainname} network. 
+    p.centre Chain id = #{chainid}.
     h2.centre Active Block Producers
 
     div.block-producer-list
@@ -30,7 +31,7 @@ block content
         div.block-producer-row
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2= blockproducer.name
-          div.block-producer-cell.block-producer-cell-3.right= blockproducer.votes
+          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}]
           div.block-producer-cell.block-producer-cell-4 
             if blockproducer.valid_url
               a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}
@@ -50,7 +51,7 @@ block content
         div.block-producer-row
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2= blockproducer.name
-          div.block-producer-cell.block-producer-cell-3.right= blockproducer.votes
+          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}]
           div.block-producer-cell.block-producer-cell-4 
             if blockproducer.valid_url
               a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}

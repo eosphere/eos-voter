@@ -1,6 +1,8 @@
 extends layout
 
 block content
-  div(id='allblockproducers', 'data-chain-name'=chainname, 'data-active-block-producers'=activeblockproducers, 'data-backup-block-producers'=backupblockproducers, 'data-chain-addr'=chainaddr, 'data-chain-port'=chainport, 'data-chain-id'=chainid )
+  div(id='allblockproducers', 'data-chain-name'=chainname, 'data-active-block-producers'=activeblockproducers,
+      'data-backup-block-producers'=backupblockproducers, 'data-chain-addr'=chainaddr, 'data-chain-port'=chainport,
+      'data-chain-id'=chainid, 'data-voting-page-content'=voting_page_content )
   script(src="/bin/app.js")
 

@@ -9,6 +9,7 @@ var chain_addr = document.getElementById('allblockproducers').getAttribute('data
 var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
 var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
+var voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
 
 var votes = [];
 var proxy_name = ''; 
@@ -244,7 +245,10 @@ function block_producers_grid(block_producer_list, description) {
                  ]),
                ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
-               m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, block_producer.votes),
+               m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, [
+                 block_producer.votes_percent, ' ',
+                 m('span.small-vote-total', block_producer.votes_absolute),
+               ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.valid_url ? 
                  [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
                    [block_producer.statement, m.trust('&nbsp;')]),
@@ -373,9 +377,10 @@ var View = {
                  ]),
                  m('div', {'class': 'pageheader-spacer'}),
                  m("div", {'class': 'content-container'}, [
-                   m("p", 'You may  vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.'),
+                   m("div", m.trust(voting_page_content)),
                    current_vote(),
-                   m("p", 'Currently connected to the ' + chain_name + ' network'),
+                   m("p", {'class': 'centre'}, 'Currently connected to the ' + chain_name + ' network'),
+                   m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
                  ].concat(block_producers_grid(active_block_producers, "Active Producers")).
                  concat(block_producers_grid(backup_block_producers, "Backup Producers")).
                  concat([

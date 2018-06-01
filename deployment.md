@@ -67,7 +67,7 @@ sudo apt-get install python-certbot-nginx
 Copy in nginx configuration file to the /etc/nginx/sites-available directory
 
 ```
-sudo cp /srv/eos-voter/config/eos-voter.conf /etc/nginx/sites-available/eos-voter.conf
+sudo cp /srv/eos-voter/config/nginx/eos-voter.conf /etc/nginx/sites-available/eos-voter.conf
 ```
 
 Edit the /etc/nginx/sites-available/eos-voter.conf file and change the server name to your server's fully qualified domain name. It is in the file as eos-voter.example.com
@@ -88,8 +88,19 @@ Install the certbot
 
 ```
 sudo mkdir /srv/certbot
-sudo cp /srv/eos-voter/config/certbot/certbot.sh /srv/certbot/certbot.sh
+sudo cp /srv/eos-voter/config/lets-encrypt/certbot.sh /srv/certbot/certbot.sh
 sudo chmod 700 /srv/certbot/certbot.sh
+```
+
+Create the well know directory for the certbot's output files
+```
+sudo mkdir /srv/eos-voter/public
+sudo mkdir /srv/eos-voter/public/.well-known
+```
+
+Edit the certbot file so it refers to the correct domain
+```
+sudo nano /srv/certbot/certbot.sh
 ```
 
 Run the certbot for the first time
@@ -120,11 +131,6 @@ sudo /srv/eos-voter/config/installation/install_node_ubuntu
 sudo apt-get install nodejs build-essential
 ```
 
-Mark the program as being exceutable
-```
-sudo chmod +x srv/eos-voter/eos-voter/app.js 
-```
-
 Install the npm requirements
 
 ```
@@ -139,7 +145,7 @@ sudo npm install -g pm2
 
 Start the application with pm2
 ```
-sudo pm2 start /srv/eos-voter/eos-voter/bin/www.js 
+sudo pm2 start /srv/eos-voter/eos-voter/bin/www
 ```
 
 Set the application to auto start
@@ -168,7 +174,7 @@ ssh into the server. Then change to the software directory and pull the updates
 
 ```
 cd /srv/eos-voter
-git pull
+sudo git pull
 ```
 
 Install any updated npm requirements
@@ -181,8 +187,8 @@ sudo npm install
 Run webpack to regenerate the client side javascript
 
 ```
-sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
 cd /srv/eos-voter/eos-voter
+sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
 ```
 
 Restart the app
