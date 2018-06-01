@@ -56,13 +56,14 @@ function inspectChain()
         eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
             (result) => {
                 console.log('getTableRows producers returned') ;
-                active_block_producers = result.rows;
-                active_block_producers.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
+                var new_block_producers = result.rows;
+                new_block_producers.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
                 eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'global', 'limit': 500}).then(
                     (result) => {
                         //console.log('getTableRows global returned result= ', result) ;
                         console.log('getTableRows global returned') ;
                         total_activated_stake = result.rows[0].total_activated_stake;
+                        active_block_producers = new_block_producers;
                         //total_activated_stake = 1;
                         setTimeout(inspectChain, config.refresh_secs * 1000);
                     });
