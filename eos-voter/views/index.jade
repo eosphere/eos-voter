@@ -35,7 +35,7 @@ block content
         div.block-producer-row
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2= blockproducer.name
-          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}]
+          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}M]
           div.block-producer-cell.block-producer-cell-4 
             if blockproducer.valid_url
               a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}
@@ -55,7 +55,7 @@ block content
         div.block-producer-row
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2= blockproducer.name
-          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}]
+          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}M]
           div.block-producer-cell.block-producer-cell-4 
             if blockproducer.valid_url
               a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}

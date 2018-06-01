@@ -47,7 +47,7 @@ function inspectChain()
         chainid = result.chain_id;
         eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
             (result) => {
-                console.log('getTableRows producers returned ') ;
+                console.log('getTableRows producers returned') ;
                 active_block_producers = result.rows;
                 active_block_producers.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
                 eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'global', 'limit': 500}).then(
@@ -58,6 +58,9 @@ function inspectChain()
                         setTimeout(inspectChain, config.refresh_secs * 1000);
                     });
             });
+        //var timefactor = Math.pow(2, ((new Date).getTime() - 946684800000.0) / 1000.0 / 86400.0 / 7.0 / 52.0);
+        var timefactor = Math.pow(2, ((new Date).getTime()) / 1000.0 / 86400.0 / 7.0 / 52.0);
+        console.log('timefactor=', timefactor, ' gettime()=', (new Date).getTime());
     }).catch(
         (result) => {
                     console.error('Error result=', result);

@@ -1,4 +1,5 @@
 var chaininspector = require('../tasks/chainInspector');
+var config = require('../config');
 
 var exports = module.exports = {};
 
@@ -31,7 +32,7 @@ function ValidURL(str) {
 
 exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend
-    return { 'id': x.owner, 'name': x.owner, 'votes_absolute': to_engineering(x.total_votes),
+    return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time };
