@@ -1,5 +1,6 @@
 import m from "mithril";
-import Eos from 'eosjs'
+import Eos from 'eosjs';
+import Humanize from 'humanize-plus';
 
 var root = document.body
 
@@ -10,6 +11,9 @@ var chain_port = document.getElementById('allblockproducers').getAttribute('data
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
 var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
 var voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
+var total_activated_stake = document.getElementById('allblockproducers').getAttribute('data-total-activated-stake');
+var min_activated_stake = document.getElementById('allblockproducers').getAttribute('data-min-activated-stake');
+var activated_percent = document.getElementById('allblockproducers').getAttribute('data-activated-percent');
 
 var votes = [];
 var proxy_name = ''; 
@@ -22,6 +26,7 @@ var needs_to_stake = false;
 var allow_staking_close = false;
 var new_delegated_cpu_weight = '0';
 var new_delegated_net_weight = '0';
+var has_activated = parseFloat(activated_percent) > 15.0
 
 var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'CONNECTING': 'CONNECTING', // Connecting to scatter
@@ -247,7 +252,7 @@ function block_producers_grid(block_producer_list, description) {
                m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
                m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, [
                  block_producer.votes_percent, ' ',
-                 m('span.small-vote-total', block_producer.votes_absolute),
+                 m('span.small-vote-total', block_producer.votes_absolute + 'M'),
                ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.valid_url ? 
                  [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
@@ -312,6 +317,9 @@ function stake_now(e) {
 }
 
 function vote_now(e) {
+    if (is_voting)
+        return;
+    is_voting = true;
     /*
     const network = {
         blockchain:'eos',
@@ -381,8 +389,11 @@ var View = {
                    current_vote(),
                    m("p", {'class': 'centre'}, 'Currently connected to the ' + chain_name + ' network'),
                    m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
-                 ].concat(block_producers_grid(active_block_producers, "Active Producers")).
-                 concat(block_producers_grid(backup_block_producers, "Backup Producers")).
+                   m("p.centre", 'Percentage of EOS voting ' + activated_percent + '%'),
+                   m("p.centre", Humanize.formatNumber(total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(min_activated_stake) + ' needed to activate the chain'),
+                   (has_activated) ? [m("p.centre-activated", "The EOS block chain has activated ")] : [],
+                 ].concat(block_producers_grid(active_block_producers, has_activated ? "Active Block Producers" : "Block Producer Candidates")).
+                 concat(block_producers_grid(backup_block_producers, "Backup Block Producers")).
                  concat([
                    m("div", [
                      m("div", {'style': 'margin-top: 15px;'}, [

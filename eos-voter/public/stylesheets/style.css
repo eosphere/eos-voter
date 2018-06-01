@@ -76,6 +76,11 @@ a {
     text-align: center;
 }
 
+.centre-activated {
+    text-align: center;
+    color: red;
+}
+
 .centre-h1 {
     text-align: center;
     margin: 0px;
@@ -102,7 +107,7 @@ div.block-producer-row:nth-child(odd) {
 
 .block-producer-cell-1 {
   width: 10%;
-  text-align: right;
+  /*text-align: right;*/
 }
 
 .block-producer-cell-2 {
@@ -146,7 +151,7 @@ div.block-producer-row:nth-child(odd) {
     -ms-user-select: none;
     user-select: none;
     /*float: right;*/
-    left: 70px;
+    left: 40px;
 }
 
 /* Hide the browser's default checkbox */
