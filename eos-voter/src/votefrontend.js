@@ -119,6 +119,24 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     redrawAll();
 })
 
+function errorDisplay(description, e) {
+    let error = JSON.parse(e['message']);
+    let message = 'Null message';
+    try {
+        message = error.message;
+    } catch (e) {
+        // Silently ignore if message does not exists
+    }
+    let details = 'Null details';
+    try {
+        details = error.error.details.map((d) => d.message).join(' ');
+    } catch (e) {
+        // Silently ignore if error details does not exists
+    }
+    alert(description + '\nmessage:' + message + 
+           '\nDetails: ' +  details);
+}
+
 function redrawAll() {
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
         return;
@@ -166,7 +184,8 @@ function redrawAll() {
                                 //console.log('getTableRows balance = ', balance);
                         }).catch(
                             (error) => {
-                                alert('Scatter returned an error from getTableRows\nmessage:' + error.message);
+                                errorDisplay('Scatter returned an error from getTableRows', error);
+                                //alert('Scatter returned an error from getTableRows\nmessage:' + error.message);
                                 console.error('getTableRows error = ', error);
                         })
 
@@ -197,15 +216,17 @@ function redrawAll() {
                     })
                     .catch(   (e) => {
                                     console.error('Error returned by getAccount = ', e);
-                                    let error = JSON.parse(result['message']);
-                                    alert('Scatter returned an error from getAccount\nmessage:' + error.message + 
-                                           '\nDetails: ' + error.error.details.map((d) => d.message).join(' ') );
+                                    errorDisplay('Scatter returned an error from getAccount', e);
+                                    //let error = JSON.parse(e['message']);
+                                    //alert('Scatter returned an error from getAccount\nmessage:' + error.message + 
+                                    //       '\nDetails: ' + error.error.details.map((d) => d.message).join(' ') );
                                     }
                     );
     
             }).catch(error => {
                 console.error('scatter.getIdentity() gave error=', error);
-                alert('Scatter returned an error from getIdentity\nmessage:' + error.message);
+                //alert('Scatter returned an error from getIdentity\nmessage:' + error.message);
+                errorDisplay('Scatter returned an error from getIdentity', error);
             });
 
 
@@ -215,7 +236,8 @@ function redrawAll() {
 
         }).catch((error) => {
             console.error('Suggested network was rejected result=', error);
-            alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
+            //alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
+            errorDisplay('Scatter returned an error from suggestNetwork', error);
         });
 }
 
@@ -293,25 +315,29 @@ function stake_now(e) {
                     .then((result) => {
                     console.log('delegatebw result=', result);
                     needs_to_stake = false;
-                    m.redraw();
+                    redrawAll();
                     })
                     .catch(e => {
-                        alert('eosio.delegatebw returned an error\nmessage:' + e.message);
+                        //alert('eosio.delegatebw returned an error\nmessage:' + e.message);
+                        errorDisplay('eosio.delegatebw returned an error', e);
                         console.log('delegatebw error e=', e)
                     });
                 })
                 .catch(e => {
-                    alert('get contract returned an error\nmessage:' + e.message);
+                    //alert('get contract returned an error\nmessage:' + e.message);
+                    errorDisplay('get contract returned an error', e);
                     console.log('contract error e=', e)
                 });
             })
             .catch(e => {
-                alert('getidentity returned an error\nmessage:' + e.message);
+                //alert('getidentity returned an error\nmessage:' + e.message);
+                errorDisplay('getidentity returned an error', e);
                 console.log('getidentity error e=', e)
             });
         })
         .catch(e => {
-            alert('suggestNetwork returned an error\nmessage:' + e.message);
+            //alert('suggestNetwork returned an error\nmessage:' + e.message);
+            errorDisplay('suggestNetwork returned an error', e);
             console.log('suggestNetwork error e=', e)
         });
 }
@@ -349,23 +375,27 @@ function vote_now(e) {
                         })
                         .catch((error) => {
                             console.error('voteproducer error=', error);
-                            alert('eosio.voteproducer returned an error\nmessage:' + error.message);
+                            //alert('eosio.voteproducer returned an error\nmessage:' + error.message);
+                            errorDisplay('eosio.voteproducer returned an error', error);
                         })
                     /*})
                     .catch(e => {console.log('delegatebw error e=', e)});*/
                 })
                 .catch(e => {
-                    alert('get contract returned an error\nmessage:' + e.message);
+                    //alert('get contract returned an error\nmessage:' + e.message);
+                    errorDisplay('get contract returned an error', e);
                     console.log('contract error e=', e)
                 });
             })
             .catch(e => {
-                alert('getidentity returned an error\nmessage:' + e.message);
+                //alert('getidentity returned an error\nmessage:' + e.message);
+                errorDisplay('getidentity returned an error', e);
                 console.log('getidentity error e=', e)
             });
         })
         .catch(e => {
-            alert('suggestNetwork returned an error\nmessage:' + e.message);
+            //alert('suggestNetwork returned an error\nmessage:' + e.message);
+            errorDisplay('suggestNetwork returned an error', e);
             console.log('suggestNetwork error e=', e)
         });
 }
