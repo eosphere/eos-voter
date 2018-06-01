@@ -187,8 +187,8 @@ function redrawAll() {
                             allow_staking_close = false;
                         } else {
                             //console.log('You have staked EOS');
-                            delegated_cpu_weight = result ? result.total_resources.cpu_weight.split(" ")[0] : 0;
-                            delegated_net_weight = result ? result.total_resources.net_weight.split(" ")[0] : 0;
+                            delegated_cpu_weight = result ? result.delegated_bandwidth.cpu_weight.split(" ")[0] : 0;
+                            delegated_net_weight = result ? result.delegated_bandwidth.net_weight.split(" ")[0] : 0;
                             allow_staking_close = true;
                         }
                         needs_to_stake = (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0);
@@ -342,7 +342,8 @@ function vote_now(e) {
                     c.voteproducer({'voter': scatter.identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes}/*,
                                    { authorization: [scatter.identity.accounts[0].name]}*/ )
                         .then((result) => {
-                            alert('Your vote was cast successfully');
+                            console.log('voteproducer result=', result);
+                            alert('Your vote was cast successfully. Transaction id = \'' + result.transaction_id + '\'');
                             confirming_vote = false;
                             redrawAll();
                         })
