@@ -129,7 +129,7 @@ div.block-producer-row:nth-child(odd) {
 .content-container {
   margin: 20px;
   padding: 20px;
-  border: 1px lightgrey solid;
+  border: 2px lightgrey solid;
 }
 
 .float-right-cell {
