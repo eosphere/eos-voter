@@ -107,7 +107,7 @@ div.block-producer-row:nth-child(odd) {
 
 .block-producer-cell-1 {
   width: 10%;
-  text-align: right;
+  /*text-align: right;*/
 }
 
 .block-producer-cell-2 {
