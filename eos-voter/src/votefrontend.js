@@ -1,3 +1,5 @@
+// This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
+
 import m from "mithril";
 import Eos from 'eosjs';
 import Humanize from 'humanize-plus';

@@ -1,3 +1,5 @@
+// This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
+
 var exports = module.exports = {};
 
 // Connect to EOS
