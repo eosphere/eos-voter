@@ -21,3 +21,4 @@ config.min_activated_stake = 1500000000000; // 150'000'000'0000
 //Magic number calculated by reverse engineering Jungle not sure why this disagrees with the above possible issue with upgrade from dawn4.0 -> dawn4.1 where this changed
 config.timefactor = 7218513226.892367735;
 
+config.bp_info_refresh_secs = 20;
