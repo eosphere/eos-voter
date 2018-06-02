@@ -315,6 +315,7 @@ function stake_now(e) {
                     .then((result) => {
                     console.log('delegatebw result=', result);
                     needs_to_stake = false;
+                    alert('Staking was succesfull');
                     redrawAll();
                     })
                     .catch(e => {
