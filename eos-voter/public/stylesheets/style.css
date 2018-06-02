@@ -309,5 +309,5 @@ a.statement:active {
 
 .small-vote-total {
   color: darkblue;
-  font-size: 9px;
+  /*font-size: 9px;*/
 }
