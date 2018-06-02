@@ -1,3 +1,5 @@
+# This file licenced under the Apach 2.0 licence
+
 from fabric.api import abort, lcd, local, task, warn_only
 from fabric.colors import green, red, yellow
 from sys import platform
