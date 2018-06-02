@@ -1,3 +1,5 @@
+// This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
+
 var express = require('express');
 var router = express.Router();
 var chaininspector = require('../tasks/chainInspector');

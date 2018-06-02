@@ -1,3 +1,5 @@
+// This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
+
 var chaininspector = require('../tasks/chainInspector');
 var config = require('../config');
 
@@ -16,7 +18,7 @@ function to_engineering(f) {
 }
 
 function ValidURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+  var pattern = new RegExp('^(https?:\\/\\/)'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
