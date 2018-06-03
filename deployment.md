@@ -145,13 +145,15 @@ sudo npm install -g pm2
 
 Start the application with pm2
 ```
-sudo pm2 start /srv/eos-voter/eos-voter/bin/www
+pm2 start /srv/eos-voter/eos-voter/bin/www
 ```
 
 Set the application to auto start
 ```
-sudo pm2 startup systemd
+pm2 startup systemd
 ```
+
+It will return to you a command you need to re-enter to the prompt to run as sudo.
 
 ### Run webpack to compress javascript
 
@@ -181,7 +183,7 @@ Install any updated npm requirements
 
 ```
 cd /srv/eos-voter/eos-voter
-sudo npm install
+npm install
 ```
 
 Run webpack to regenerate the client side javascript
