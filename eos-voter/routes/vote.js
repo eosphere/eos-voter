@@ -19,6 +19,8 @@ router.get('/', function(req, res, next) {
                          'protocol': config.protocol,
                          'chainaddr': config.chain_addr,
                          'chainport': config.chain_port,
+                         'chain_secure_port': config.chain_secure_port,
+                         'chain_protocol': config.protocol,
                          'chainid': chaininspector.get_chainid(),
                          'voting_page_content': config.voting_page_content,
                          'total_activated_stake': chaininspector.get_total_activated_stake() /10.0 / 1000.0,
