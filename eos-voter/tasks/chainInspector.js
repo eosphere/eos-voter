@@ -14,7 +14,7 @@ var options = {
   httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_port, 
   //httpEndpoint: 'https://node1.eosphere.io:443',
   debug: false,
-  //fetchConfiguration: {},
+  fetchConfiguration: {},
 }
 
 eos = Eos(options) // testnet at eos.io
