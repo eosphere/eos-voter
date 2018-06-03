@@ -68,3 +68,4 @@ config.chain_name = 'Eosio.sg';
 */
 
 module.exports = config;
+
