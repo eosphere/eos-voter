@@ -1,7 +1,7 @@
 // This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
 
 import m from "mithril";
-import Eos from 'eosjs';
+import eosjs from 'eosjs';
 import Humanize from 'humanize-plus';
 
 var root = document.body
@@ -122,18 +122,24 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 })
 
 function errorDisplay(description, e) {
-    let error = JSON.parse(e['message']);
+    console.log('errorDisplay e=', e);
     let message = 'Null message';
-    try {
-        message = error.message;
-    } catch (e) {
-        // Silently ignore if message does not exists
-    }
     let details = 'Null details';
     try {
-        details = error.error.details.map((d) => d.message).join(' ');
-    } catch (e) {
-        // Silently ignore if error details does not exists
+        let error = JSON.parse(e['message']);
+        try {
+            message = error.message;
+        } catch (e2) {
+            // Silently ignore if message does not exists
+        }
+        try {
+            details = error.error.details.map((d) => d.message).join(' ');
+        } catch (e2) {
+            // Silently ignore if error details does not exists
+        }
+    } catch (e2) {
+        // Silently ignore if error details does not exists Ie because the error message isn't JSON
+        message = e;
     }
     alert(description + '\nmessage:' + message + 
            '\nDetails: ' +  details);
@@ -159,11 +165,11 @@ function redrawAll() {
 
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                console.log('api.Localnet=',Eos.Localnet);
+                console.log('api.Localnet=',eosjs.Localnet);
                 //console.log('eosjs.Mainnet=',eosjs.Mainnet);
                 //console.log('eosjs=', eosjs);
                 console.log('scatter=', scatter);
-                eos = scatter.eos( network, Eos.Localnet, eosOptions );
+                eos = scatter.eos( network, eosjs.Localnet, eosOptions );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
@@ -301,7 +307,7 @@ function stake_now(e) {
         scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with. 
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-            eos = scatter.eos( network, Eos.Localnet, eosOptions );
+            eos = scatter.eos( network, eosjs.Localnet, eosOptions );
             //console.log('stake_now identity=', identity);
             //const account = identity.networkedAccount(eos.fromJson(network));
             //console.log('stake_now account=', account);
@@ -365,7 +371,7 @@ function vote_now(e) {
     scatter.suggestNetwork(network).then((result) => {
         scatter.getIdentity(requiredFields).then(identity => {
 
-            eos = scatter.eos( network, Eos.Localnet, eosOptions );
+            eos = scatter.eos( network, eosjs.Localnet, eosOptions );
              
             eos.contract('eosio', requiredFields).then(c => {
                     c.voteproducer({'voter': scatter.identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes}/*,
