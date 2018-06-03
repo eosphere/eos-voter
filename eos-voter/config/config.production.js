@@ -1,15 +1,14 @@
 var config = require('./config.global');
 
-// IP address or Domain of the API end point
-config.chain_addr = '13.251.3.82'
+config.chain_addr = 'jungle.eosphere.io'
 // Port to connect to the API
 config.chain_port = '8888'
 // Protocol to use. Valid choices are http or https
-config.protocol = 'http'
-// If https should be the secure port otherwise the same port as chain_port
-config.chain_secure_port = '8888'
+config.protocol = 'https'
+// If we are using https we need a different port here
+config.chain_secure_port = '443'
 
 // User readable name for the chain
-config.chain_name = 'Eosio.sg TestNet';
+config.chain_name = 'Jungle TestNet';
 
 module.exports = config;
