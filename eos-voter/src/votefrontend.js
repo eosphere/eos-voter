@@ -10,6 +10,7 @@ var active_block_producers = JSON.parse(document.getElementById('allblockproduce
 var backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
 var chain_addr = document.getElementById('allblockproducers').getAttribute('data-chain-addr');
 var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
+var chain_secure_port = document.getElementById('allblockproducers').getAttribute('data-chain-secure-port');
 var chain_protocol = document.getElementById('allblockproducers').getAttribute('data-chain-protocol');
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
 var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
@@ -45,6 +46,14 @@ const network = {
     //chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
 }
 
+const network_secure = {
+    blockchain:'eos',
+    host: chain_addr,
+    port: chain_secure_port,
+    //chainId: chain_id,
+    //chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
+}
+
 const requiredFields = {
     accounts:[ network ],
 };
@@ -55,12 +64,12 @@ var scatter_status = ScatterStatus.DETECTING;
 
 // If the list of block producers is empty reload the page. This usually means the server just started and is loading it's list of
 // block producers
-/*
+
 if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
     scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
     setTimeout(() => document.location.reload(true), 2000);
 }
-*/
+
 
 function recalcVotes() {
     proxy_name = document.getElementById('id-proxy-name').value;
@@ -95,12 +104,10 @@ function eos_to_float(s) {
 document.addEventListener('scatterLoaded', scatterExtension => {
     console.log('scatterLoaded called');
 
-    /*
     if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
         scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
         return;
     }
-    */
     // Scatter will now be available from the window scope.
     // At this stage the connection to Scatter from the application is
     // already encrypted.
@@ -152,12 +159,12 @@ function errorDisplay(description, e) {
 
 function redrawAll() {
     console.log('redrawAll called');
-    //if (active_block_producers.length == 0 && backup_block_producers.length == 0)
-    //    return;
+    if (active_block_producers.length == 0 && backup_block_producers.length == 0)
+        return;
 
     eos = scatter.eos( network, eosjs.Localnet, eosOptions, chain_protocol );
-    eos.getInfo({}).then((result) => { console.log('getInfo result=', result); })
-                   .catch((result) => { console.log('getInfo error=', result); });
+    //eos.getInfo({}).then((result) => { console.log('getInfo result=', result); })
+    //               .catch((result) => { console.log('getInfo error=', result); });
 
     console.log('Calling suggest network = ', network);
     scatter.suggestNetwork(network).then((result) => {
@@ -179,7 +186,9 @@ function redrawAll() {
                 //console.log('eosjs.Mainnet=',eosjs.Mainnet);
                 //console.log('eosjs=', eosjs);
                 console.log('scatter=', scatter);
-                eos = scatter.eos( network, eosjs.Localnet, eosOptions, chain_protocol );
+                console.log('network_secure=', network_secure);
+                console.log('chain_protocol=', chain_protocol);
+                eos = scatter.eos( network_secure, eosjs.Localnet, eosOptions, chain_protocol );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
@@ -317,7 +326,7 @@ function stake_now(e) {
         scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with. 
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-            eos = scatter.eos( network, eosjs.Localnet, eosOptions, chain_protocol );
+            eos = scatter.eos( network, eosjs.Localnet, eosOptions );
             //console.log('stake_now identity=', identity);
             //const account = identity.networkedAccount(eos.fromJson(network));
             //console.log('stake_now account=', account);
@@ -381,14 +390,14 @@ function vote_now(e) {
     scatter.suggestNetwork(network).then((result) => {
         scatter.getIdentity(requiredFields).then(identity => {
 
-            eos = scatter.eos( network, eosjs.Localnet, eosOptions, chain_protocol );
+            eos = scatter.eos( network, eosjs.Localnet, eosOptions );
              
             eos.contract('eosio', requiredFields).then(c => {
-                    c.voteproducer({'voter': scatter.identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes}/*,
+                    eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes}/*,
                                    { authorization: [scatter.identity.accounts[0].name]}*/ )
                         .then((result) => {
                             console.log('voteproducer result=', result);
-                            alert('Your vote was cast successfully. Transaction id = \'' + result.transaction_id + '\'');
+                            alert('Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'');
                             confirming_vote = false;
                             redrawAll();
                         })
@@ -397,8 +406,6 @@ function vote_now(e) {
                             //alert('eosio.voteproducer returned an error\nmessage:' + error.message);
                             errorDisplay('eosio.voteproducer returned an error', error);
                         })
-                    /*})
-                    .catch(e => {console.log('delegatebw error e=', e)});*/
                 })
                 .catch(e => {
                     //alert('get contract returned an error\nmessage:' + e.message);

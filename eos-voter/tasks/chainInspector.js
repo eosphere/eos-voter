@@ -11,7 +11,7 @@ var utils = require('../utils/utils.js');
 
 
 var options = {
-  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_port, 
+  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_secure_port, 
   //httpEndpoint: 'https://node1.eosphere.io:443',
   debug: false,
   fetchConfiguration: {},
