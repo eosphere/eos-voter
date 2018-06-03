@@ -68,8 +68,16 @@ function inspectChain()
                         active_block_producers = new_block_producers;
                         //total_activated_stake = 1;
                         setTimeout(inspectChain, config.refresh_secs * 1000);
+                    }).catch(
+                    (result) => {
+                        console.error('getTableRows global Error result=', result);
+                        setTimeout(inspectChain, config.refresh_secs * 1000);
                     });
-            });
+            }).catch(
+                (result) => {
+                    console.error('getTableRows global Error result=', result);
+                    setTimeout(inspectChain, config.refresh_secs * 1000);
+                });
         //var timefactor = Math.pow(2, ((new Date).getTime() - 946684800000.0) / 1000.0 / 86400.0 / 7.0 / 52.0);
         //var timefactor = Math.pow(2, ((new Date).getTime()) / 1000.0 / 86400.0 / 7.0 / 52.0);
         //console.log('timefactor=', timefactor, ' gettime()=', (new Date).getTime());
