@@ -484,7 +484,9 @@ var View = {
                            case ScatterStatus.FAILED:
                              return [
                                m('h2', 'You need to install Scatter'),
-                               m('a', { href: 'https://scatter-eos.com', target: '_blank'}, 'Download scatter')
+                               m('a', { href: 'https://scatter-eos.com', target: '_blank'}, 'Download scatter'),
+                               m('h2', 'Go back'),
+                               m('a', { href: '/'}, 'Go back'),
                              ]
                          }  
                        })())
