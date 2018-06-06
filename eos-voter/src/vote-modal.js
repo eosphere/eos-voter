@@ -5,6 +5,7 @@ var m = require("mithril");
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var globals = require('./globals.js');
 var eosjs = require('eosjs');
+var {modal_stack} = require('./eosvoter-modal.js');
 
 function errorDisplay(description, e) {
     console.log('errorDisplay e=', e);
@@ -62,7 +63,7 @@ class VoteModal extends EosVoterModal {
                                 console.log('voteproducer result=', result);
                                 alert('Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'');
                                 //confirming_vote = false;
-                                globals.modal_stack.pop();
+                                modal_stack.pop_modal();
                                 m.redraw();
                                 //redrawAll();
                             })

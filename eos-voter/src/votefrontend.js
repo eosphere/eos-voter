@@ -6,6 +6,7 @@ import Humanize from 'humanize-plus';
 import {DetectScatterModal} from './detect-scatter-modal.js';
 import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 import {VoteModal} from './vote-modal.js';
+import {modal_stack} from './eosvoter-modal.js';
 
 var globals = require('./globals.js');
 
@@ -82,7 +83,7 @@ if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
     scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
     setTimeout(() => document.location.reload(true), 2000);
 } else {
-    globals.modal_stack.push([DetectScatterModal, {}]);
+    modal_stack.push_modal([DetectScatterModal, {}, null]);
 }
 
 
@@ -95,7 +96,7 @@ function recalcVotes() {
 
 function cast_vote() {
     confirming_vote = true;
-    globals.modal_stack.push([VoteModal, {proxy_name: proxy_name, votes: votes}]);
+    modal_stack.push_modal([VoteModal, {proxy_name: proxy_name, votes: votes}, null]);
 }
 
 function current_vote() {
@@ -138,8 +139,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
     //scatter_status = ScatterStatus.CONNECTING;
     //Display the connecting screen
-    globals.modal_stack.pop();
-    globals.modal_stack.push([ConnectingToScatter, {}]);
+    modal_stack.push_modal([ConnectingToScatter, {on_close: modal_stack.pop_modal}, null]);
     m.redraw();
 
     /*
@@ -211,7 +211,9 @@ function redrawAll() {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        globals.modal_stack = [];
+                        while (!modal_stack.is_empty()) {
+                            modal_stack.pop_modal();
+                        }
                         console.log('getAccount result=', result);
 
                         // Get our EOS balance
@@ -440,11 +442,14 @@ function vote_now(e) {
 */
 
 function get_current_modal() {
+    if (modal_stack.is_empty()) return [];
     // Returns the modal on the top of the stack
-    let top = globals.modal_stack.slice(-1); // Returns an empty array if modal_stack is empty
-    if (top.length == 0) return [];
-    top = top[0];
-    return m(top[0] /*the class*/, top[1] /* the params*/)
+    let top = modal_stack.get_top();
+    let inst = m(top[0] /*the class*/, top[1] /* the params*/);
+    if (top[2] === null) {
+        top[2] = inst;
+    }
+    return inst;
 }
 
 var View = {
