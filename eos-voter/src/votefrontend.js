@@ -3,6 +3,9 @@
 import m from "mithril";
 import eosjs from 'eosjs';
 import Humanize from 'humanize-plus';
+import {DetectScatterModal} from './detect-scatter-modal.js';
+
+var globals = require('./globals.js');
 
 var root = document.body
 
@@ -68,6 +71,8 @@ var scatter_status = ScatterStatus.DETECTING;
 if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
     scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
     setTimeout(() => document.location.reload(true), 2000);
+} else {
+    globals.modal_stack.push(m(DetectScatterModal));
 }
 
 
@@ -426,6 +431,11 @@ function vote_now(e) {
         });
 }
 
+function get_current_modal() {
+    // Returns the modal on the top of the stack
+    return globals.modal_stack.slice(-1); // Returns an empty array if modal_stack is empty
+}
+
 var View = {
     view: function() {
         return m("main", [
@@ -471,7 +481,7 @@ var View = {
                      current_vote(),
                    ]),
                  ])),
-               ].concat( !(scatter_status != ScatterStatus.CONNECTED) ? [] : (
+               ]./*concat( !(scatter_status != ScatterStatus.CONNECTED) ? [] : (
                  [
                    m('.dialog', 
                      m('.dialogContent', [
@@ -494,7 +504,7 @@ var View = {
                    )
                  ]
                  )
-               ).concat( confirming_vote ? (
+               ).*/concat( confirming_vote ? (
                  [
                    m('.dialog', {'onclick': e => confirming_vote = false}, 
                      m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
@@ -599,6 +609,7 @@ var View = {
                    )
                  ]
                  ) : []
+             ).concat(get_current_modal()
              ).concat([
                m('p', [
                  'A service provided by ',
