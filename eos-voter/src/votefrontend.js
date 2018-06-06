@@ -5,6 +5,7 @@ import eosjs from 'eosjs';
 import Humanize from 'humanize-plus';
 import {DetectScatterModal} from './detect-scatter-modal.js';
 import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
+import {VoteModal} from './vote-modal.js';
 
 var globals = require('./globals.js');
 
@@ -50,6 +51,14 @@ const network = {
     //chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
 }
 
+globals.network = {
+    blockchain:'eos',
+    host: chain_addr,
+    port: chain_port,
+    //chainId: chain_id,
+    //chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
+}
+
 const network_secure = {
     blockchain:'eos',
     host: chain_addr,
@@ -62,7 +71,7 @@ const requiredFields = {
     accounts:[ network ],
 };
 
-const eosOptions = {chainId: chain_id/*'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca'*/,};
+globals.eosOptions = {chainId: chain_id/*'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca'*/,};
 
 var scatter_status = ScatterStatus.DETECTING;
 
@@ -73,7 +82,7 @@ if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
     scatter_status = ScatterStatus.CONNECTED; // Impersonate being connected so we don't display the connecting to scatter dialog
     setTimeout(() => document.location.reload(true), 2000);
 } else {
-    globals.modal_stack.push(m(DetectScatterModal));
+    globals.modal_stack.push([DetectScatterModal, {}]);
 }
 
 
@@ -86,6 +95,7 @@ function recalcVotes() {
 
 function cast_vote() {
     confirming_vote = true;
+    globals.modal_stack.push([VoteModal, {proxy_name: proxy_name, votes: votes}]);
 }
 
 function current_vote() {
@@ -97,7 +107,7 @@ function current_vote() {
            ) 
 }
 
-var scatter = null;
+//var scatter = null;
 var confirming_vote = false;
 
 var eos = null; // The eosjs instance provided by scatter
@@ -117,19 +127,19 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     // Scatter will now be available from the window scope.
     // At this stage the connection to Scatter from the application is
     // already encrypted.
-    scatter = window.scatter;
+    globals.scatter = window.scatter;
 
     // It is good practice to take this off the window once you have
     // a reference to it.
     window.scatter = null;
 
     // If you want to require a specific version of Scatter
-    var ret = scatter.requireVersion(4.0);
+    var ret = globals.scatter.requireVersion(4.0);
 
     //scatter_status = ScatterStatus.CONNECTING;
     //Display the connecting screen
     globals.modal_stack.pop();
-    globals.modal_stack.push(m(ConnectingToScatter));
+    globals.modal_stack.push([ConnectingToScatter, {}]);
     m.redraw();
 
     /*
@@ -171,16 +181,16 @@ function redrawAll() {
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
         return;
 
-    eos = scatter.eos( network, eosjs.Localnet, eosOptions, chain_protocol );
+    eos = globals.scatter.eos( network, eosjs.Localnet, globals.eosOptions, chain_protocol );
     //eos.getInfo({}).then((result) => { console.log('getInfo result=', result); })
     //               .catch((result) => { console.log('getInfo error=', result); });
 
     console.log('Calling suggest network = ', network);
-    scatter.suggestNetwork(network).then((result) => {
+    globals.scatter.suggestNetwork(network).then((result) => {
             console.log('suggestNetwork result=',result);
-            console.log('suggestNetwork scatter=',scatter);
+            console.log('suggestNetwork globals.scatter=',globals.scatter);
 
-            scatter.getIdentity(requiredFields).then(identity => {
+            globals.scatter.getIdentity(requiredFields).then(identity => {
                 // Set up any extra options you want to use eosjs with. 
                 console.log('getIdentity identity=',identity);
 
@@ -194,10 +204,10 @@ function redrawAll() {
                 console.log('api.Localnet=',eosjs.Localnet);
                 //console.log('eosjs.Mainnet=',eosjs.Mainnet);
                 //console.log('eosjs=', eosjs);
-                console.log('scatter=', scatter);
+                console.log('globals.scatter=', globals.scatter);
                 console.log('network_secure=', network_secure);
                 console.log('chain_protocol=', chain_protocol);
-                eos = scatter.eos( network_secure, eosjs.Localnet, eosOptions, chain_protocol );
+                eos = globals.scatter.eos( network_secure, eosjs.Localnet, globals.eosOptions, chain_protocol );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
@@ -332,17 +342,17 @@ function stake_now(e) {
     const requiredFields = {
         accounts:[ network ],
     };
-    scatter.suggestNetwork(network).then((result) => {
-        scatter.getIdentity(requiredFields).then(identity => {
+    globals.scatter.suggestNetwork(network).then((result) => {
+        globals.scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with. 
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-            eos = scatter.eos( network, eosjs.Localnet, eosOptions );
+            eos = globals.scatter.eos( network, eosjs.Localnet, globals.eosOptions );
             //console.log('stake_now identity=', identity);
             //const account = identity.networkedAccount(eos.fromJson(network));
             //console.log('stake_now account=', account);
             eos.contract('eosio', requiredFields).then(c => {
                 console.log('contract c=', c);
-                console.log('stake_now scatter.identity.accounts[0].name=',scatter.identity.accounts[0].name);
+                console.log('stake_now globals.scatter.identity.accounts[0].name=',globals.scatter.identity.accounts[0].name);
                 console.log('stake_now delegated_net_weight=',delegated_net_weight);
                 console.log('stake_now delegated_cpu_weight=',delegated_cpu_weight);
                 
@@ -380,18 +390,11 @@ function stake_now(e) {
         });
 }
 
+/*
 function vote_now(e) {
     if (is_voting)
         return;
     is_voting = true;
-    /*
-    const network = {
-        blockchain:'eos',
-        host: chain_addr, 
-        port: chain_port, 
-        chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
-    }
-    */
 
     const requiredFields = {
         accounts:[ network ],
@@ -400,11 +403,10 @@ function vote_now(e) {
     scatter.suggestNetwork(network).then((result) => {
         scatter.getIdentity(requiredFields).then(identity => {
 
-            eos = scatter.eos( network, eosjs.Localnet, eosOptions );
+            eos = scatter.eos( network, eosjs.Localnet, globals.eosOptions );
              
             eos.contract('eosio', requiredFields).then(c => {
-                    eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes}/*,
-                                   { authorization: [scatter.identity.accounts[0].name]}*/ )
+                    eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': proxy_name, 'producers': proxy_name != '' ? [] : votes} )
                         .then((result) => {
                             console.log('voteproducer result=', result);
                             alert('Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'');
@@ -435,10 +437,14 @@ function vote_now(e) {
             console.log('suggestNetwork error e=', e)
         });
 }
+*/
 
 function get_current_modal() {
     // Returns the modal on the top of the stack
-    return globals.modal_stack.slice(-1); // Returns an empty array if modal_stack is empty
+    let top = globals.modal_stack.slice(-1); // Returns an empty array if modal_stack is empty
+    if (top.length == 0) return [];
+    top = top[0];
+    return m(top[0] /*the class*/, top[1] /* the params*/)
 }
 
 var View = {
@@ -509,7 +515,7 @@ var View = {
                    )
                  ]
                  )
-               ).*/concat( confirming_vote ? (
+               ).*//*concat( confirming_vote ? (
                  [
                    m('.dialog', {'onclick': e => confirming_vote = false}, 
                      m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
@@ -554,7 +560,7 @@ var View = {
                    )
                  ]
                  ) : []
-             ).concat( needs_to_stake ? (
+             ).*/concat( needs_to_stake ? (
                  [
                    m('.dialog', {'onclick': (e) => {
                         if (allow_staking_close) 

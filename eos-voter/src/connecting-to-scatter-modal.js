@@ -5,6 +5,7 @@ var m = require("mithril");
 var {EosVoterModal} = require('./eosvoter-modal.js');
 
 class ConnectingToScatter extends EosVoterModal {
+    canclose() { return false; };
     get_internal_content() {
         return [
                  m('h2', {'style': {'text-align': 'center'}}, 'Connecting Scatter to EOS'),

@@ -4,3 +4,6 @@
 let globals = module.exports = {};
 
 globals.modal_stack = [];
+globals.scatter = null;
+globals.network = {};
+globals.eosOptions = {};
