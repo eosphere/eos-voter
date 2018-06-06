@@ -7,6 +7,7 @@ import {DetectScatterModal} from './detect-scatter-modal.js';
 import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 import {VoteModal} from './vote-modal.js';
 import {modal_stack} from './eosvoter-modal.js';
+import {StakeModal} from './stake-modal.js';
 
 var globals = require('./globals.js');
 
@@ -84,6 +85,7 @@ if (active_block_producers.length == 0 && backup_block_producers.length == 0) {
     setTimeout(() => document.location.reload(true), 2000);
 } else {
     modal_stack.push_modal([DetectScatterModal, {}, null]);
+    modal_stack.set_pop_listener_fn(redrawAll);
 }
 
 
@@ -335,6 +337,7 @@ function block_producers_grid(block_producer_list, description) {
     ];
 }
 
+/*
 function stake_now(e) {
     console.log('stake_now called');
     if (is_staking)
@@ -391,6 +394,7 @@ function stake_now(e) {
             console.log('suggestNetwork error e=', e)
         });
 }
+*/
 
 /*
 function vote_now(e) {
@@ -492,7 +496,7 @@ var View = {
                          'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight + 
                          ' EOS. Delegated Net = ' + delegated_net_weight + ' EOS.',
                        ]),
-                       m('button', {'class': 'vote-helper-button', 'onclick': (e) => { needs_to_stake = true; }}, 'Stake now'),
+                       m('button', {'class': 'vote-helper-button', 'onclick': (e) => { modal_stack.push_modal([StakeModal, {delegated_cpu_weight: delegated_cpu_weight, delegated_net_weight: delegated_net_weight, balance: balance}, null]); }}, 'Stake now'),
                      ]),
                      current_vote(),
                    ]),
@@ -565,7 +569,7 @@ var View = {
                    )
                  ]
                  ) : []
-             ).*/concat( needs_to_stake ? (
+             ).*//*concat( needs_to_stake ? (
                  [
                    m('.dialog', {'onclick': (e) => {
                         if (allow_staking_close) 
@@ -625,7 +629,7 @@ var View = {
                    )
                  ]
                  ) : []
-             ).concat(get_current_modal()
+             ).*/concat(get_current_modal()
              ).concat([
                m('p', [
                  'A service provided by ',
