@@ -4,13 +4,13 @@ let exports = module.exports = {};
 var m = require("mithril");
 var {EosVoterModal} = require('./eosvoter-modal.js');
 
-class DetectScatterModal extends EosVoterModal {
+class ConnectingToScatter extends EosVoterModal {
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Detecting Scatter'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Connecting Scatter to EOS'),
                ];
     }
 }
 
-exports.DetectScatterModal = DetectScatterModal;
+exports.ConnectingToScatter = ConnectingToScatter;
 

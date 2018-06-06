@@ -4,6 +4,7 @@ import m from "mithril";
 import eosjs from 'eosjs';
 import Humanize from 'humanize-plus';
 import {DetectScatterModal} from './detect-scatter-modal.js';
+import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 
 var globals = require('./globals.js');
 
@@ -125,7 +126,10 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     // If you want to require a specific version of Scatter
     var ret = scatter.requireVersion(4.0);
 
-    scatter_status = ScatterStatus.CONNECTING;
+    //scatter_status = ScatterStatus.CONNECTING;
+    //Display the connecting screen
+    globals.modal_stack.pop();
+    globals.modal_stack.push(m(ConnectingToScatter));
     m.redraw();
 
     /*
@@ -197,6 +201,7 @@ function redrawAll() {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
+                        globals.modal_stack = [];
                         console.log('getAccount result=', result);
 
                         // Get our EOS balance
