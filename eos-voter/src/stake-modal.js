@@ -35,48 +35,29 @@ class StakeModal extends EosVoterModal {
             // Set up any extra options you want to use eosjs with. 
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions );
-            //console.log('stake_now identity=', identity);
-            //const account = identity.networkedAccount(eos.fromJson(network));
-            //console.log('stake_now account=', account);
             eos.contract('eosio', requiredFields).then(c => {
-                console.log('contract c=', c);
-                console.log('stake_now globals.scatter.identity.accounts[0].name=',globals.scatter.identity.accounts[0].name);
-                console.log('stake_now delegated_net_weight=',this.delegated_net_weight);
-                console.log('stake_now delegated_cpu_weight=',this.delegated_cpu_weight);
-                
-                //c.delegatebw({'from':identity.accounts[0].name, 'receiver':identity.accounts[0].name,
-                //             'stake_net_quantity': delegated_net_weight + ' EOS', 'stake_cpu_quantity': delegated_cpu_weight + ' EOS', 'transfer':0})
                 c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS', 0)
                     .then((result) => {
                     console.log('delegatebw result=', result);
-                    //needs_to_stake = false;
                     modal_stack.push_modal([OKModal, {info_message: 'Staking was succesful'}, null]);
                     m.redraw();
-                    //alert('Staking was succesfull');
-                    //modal_stack.pop_modal();
-                    //m.redraw();
-                    //redrawAll();
                     })
                     .catch(e => {
-                        //alert('eosio.delegatebw returned an error\nmessage:' + e.message);
                         errorDisplay('eosio.delegatebw returned an error', e);
                         console.log('delegatebw error e=', e)
                     });
                 })
                 .catch(e => {
-                    //alert('get contract returned an error\nmessage:' + e.message);
                     errorDisplay('get contract returned an error', e);
                     console.log('contract error e=', e)
                 });
             })
             .catch(e => {
-                //alert('getidentity returned an error\nmessage:' + e.message);
                 errorDisplay('getidentity returned an error', e);
                 console.log('getidentity error e=', e)
             });
         })
         .catch(e => {
-            //alert('suggestNetwork returned an error\nmessage:' + e.message);
             errorDisplay('suggestNetwork returned an error', e);
             console.log('suggestNetwork error e=', e)
         });

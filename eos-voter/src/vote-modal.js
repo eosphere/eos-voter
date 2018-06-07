@@ -34,38 +34,28 @@ class VoteModal extends EosVoterModal {
                 var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions );
                  
                 eos.contract('eosio', requiredFields).then(c => {
-                        eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes}/*,
-                                       { authorization: [scatter.identity.accounts[0].name]}*/ )
+                        eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )
                             .then((result) => {
                                 console.log('voteproducer result=', result);
                                 modal_stack.push_modal([OKModal, {info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\''}, null]);
                                 m.redraw();
-                                //alert('Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'');
-                                //confirming_vote = false;
-                                //modal_stack.pop_modal();
-                                //m.redraw();
-                                //redrawAll();
                             })
                             .catch((error) => {
                                 console.error('voteproducer error=', error);
-                                //alert('eosio.voteproducer returned an error\nmessage:' + error.message);
                                 errorDisplay('eosio.voteproducer returned an error', error);
                             })
                     })
                     .catch(e => {
-                        //alert('get contract returned an error\nmessage:' + e.message);
                         errorDisplay('get contract returned an error', e);
                         console.log('contract error e=', e)
                     });
                 })
                 .catch(e => {
-                    //alert('getidentity returned an error\nmessage:' + e.message);
                     errorDisplay('getidentity returned an error', e);
                     console.log('getidentity error e=', e)
                 });
             })
             .catch(e => {
-                //alert('suggestNetwork returned an error\nmessage:' + e.message);
                 errorDisplay('suggestNetwork returned an error', e);
                 console.log('suggestNetwork error e=', e)
             });

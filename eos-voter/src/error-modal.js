@@ -49,9 +49,6 @@ function errorDisplay(description, e) {
     }
     modal_stack.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}, null]);
     m.redraw();
-
-    //alert(description + '\nmessage:' + message + 
-    //       '\nDetails: ' +  details);
 }
 
 exports.ErrorModal = ErrorModal;
