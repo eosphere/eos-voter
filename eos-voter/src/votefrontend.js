@@ -46,14 +46,6 @@ var ScatterStatus = {'DETECTING': 'DETECTING', // Detecting scatter
                      'FAILED': 'FAILED',
                     }
 
-const network = {
-    blockchain:'eos',
-    host: chain_addr,
-    port: chain_port,
-    //chainId: chain_id,
-    //chainId: 'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca',
-}
-
 globals.network = {
     blockchain:'eos',
     host: chain_addr,
@@ -71,7 +63,7 @@ const network_secure = {
 }
 
 const requiredFields = {
-    accounts:[ network ],
+    accounts:[ globals.network ],
 };
 
 globals.eosOptions = {chainId: chain_id/*'a628a5a6123d6ed60242560f23354c557f4a02826e223bb38aad79ddeb9afbca'*/,};
@@ -184,12 +176,12 @@ function redrawAll() {
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
         return;
 
-    eos = globals.scatter.eos( network, eosjs.Localnet, globals.eosOptions, chain_protocol );
+    eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions, chain_protocol );
     //eos.getInfo({}).then((result) => { console.log('getInfo result=', result); })
     //               .catch((result) => { console.log('getInfo error=', result); });
 
-    console.log('Calling suggest network = ', network);
-    globals.scatter.suggestNetwork(network).then((result) => {
+    console.log('Calling suggest network = ', globals.network);
+    globals.scatter.suggestNetwork(globals.network).then((result) => {
             console.log('suggestNetwork result=',result);
             console.log('suggestNetwork globals.scatter=',globals.scatter);
 
