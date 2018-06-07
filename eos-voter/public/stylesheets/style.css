@@ -115,19 +115,23 @@ div.block-producer-row:nth-child(odd) {
 }
 
 .block-producer-cell-2 {
-  width: 40%;
+  width: 30%;
 }
 
 .block-producer-cell-3 {
   width: 20%;
 }
 
+.block-producer-cell-4 {
+  width: 7%;
+}
+
 .right {
   text-align: right;
 }
 
-.block-producer-cell-4 {
-  width: calc(30% - 89px);
+.block-producer-cell-5 {
+  width: calc(30% - 85px);
 }
 
 .content-container {
