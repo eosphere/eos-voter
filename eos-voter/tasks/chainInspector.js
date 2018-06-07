@@ -13,12 +13,13 @@ var total_activated_stake = 0;
 var bp_info = {};
 
 var options = {
-  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_port, 
+  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_secure_port, 
+  //httpEndpoint: 'https://node1.eosphere.io:443',
   debug: false,
   fetchConfiguration: {},
 }
 
-eos = Eos.Localnet(options) // testnet at eos.io
+eos = Eos(options) // testnet at eos.io
 
 var active_block_producers = [];
 
@@ -136,8 +137,16 @@ function inspectChain()
                         active_block_producers = new_block_producers;
                         //total_activated_stake = 1;
                         setTimeout(inspectChain, config.refresh_secs * 1000);
+                    }).catch(
+                    (result) => {
+                        console.error('getTableRows global Error result=', result);
+                        setTimeout(inspectChain, config.refresh_secs * 1000);
                     });
-            });
+            }).catch(
+                (result) => {
+                    console.error('getTableRows global Error result=', result);
+                    setTimeout(inspectChain, config.refresh_secs * 1000);
+                });
         //var timefactor = Math.pow(2, ((new Date).getTime() - 946684800000.0) / 1000.0 / 86400.0 / 7.0 / 52.0);
         //var timefactor = Math.pow(2, ((new Date).getTime()) / 1000.0 / 86400.0 / 7.0 / 52.0);
         //console.log('timefactor=', timefactor, ' gettime()=', (new Date).getTime());

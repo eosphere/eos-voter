@@ -19,11 +19,14 @@ router.get('/', function(req, res, next) {
                          'protocol': config.protocol,
                          'chainaddr': config.chain_addr,
                          'chainport': config.chain_port,
+                         'chain_secure_port': config.chain_secure_port,
+                         'chain_protocol': config.protocol,
                          'chainid': chaininspector.get_chainid(),
                          'voting_page_content': config.voting_page_content,
                          'total_activated_stake': chaininspector.get_total_activated_stake() /10.0 / 1000.0,
                          'min_activated_stake': config.min_activated_stake /10.0 / 1000.0,
                          'activated_percent': (chaininspector.get_total_activated_stake() / config.min_activated_stake * (15.0 / 100.0) * 100.0).toFixed(2),
+                         'has_activated_message': config.has_activated_message,
                          });
 
 });

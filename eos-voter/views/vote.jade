@@ -3,8 +3,9 @@ extends layout
 block content
   div(id='allblockproducers', 'data-chain-name'=chainname, 'data-active-block-producers'=activeblockproducers,
       'data-backup-block-producers'=backupblockproducers, 'data-chain-addr'=chainaddr, 'data-chain-port'=chainport,
-      'data-chain-id'=chainid, 'data-voting-page-content'=voting_page_content,
-      'data-total-activated-stake'=total_activated_stake, 'data-min-activated-stake'=min_activated_stake,
-      'data-activated-percent'=activated_percent)
+      'data-chain-id'=chainid, 'data-chain-protocol'=chain_protocol, 'data-chain-secure-port'=chain_secure_port,
+      'data-voting-page-content'=voting_page_content, 'data-total-activated-stake'=total_activated_stake,
+      'data-min-activated-stake'=min_activated_stake, 'data-activated-percent'=activated_percent,
+      'data-has-activated-message'= has_activated_message)
   script(src="/bin/app.js")
 

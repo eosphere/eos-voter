@@ -20,7 +20,7 @@ block content
     p.centre Percentage of EOS voting #{activated_percent}%
     p.centre #{total_activated_stake} EOS have voted #{min_activated_stake} needed to activate the chain
     if has_activated
-        p.centre-activated The EOS block chain has activated
+        div !{has_activated_message}
         h2.centre Active Block Producers
     else
         h2.centre Block Producer Candidates
@@ -38,7 +38,7 @@ block content
         div.block-producer-row
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2= blockproducer.name
-          div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}M]
+          div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
           div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
           div.block-producer-cell.block-producer-cell-5 
             if blockproducer.valid_url
@@ -61,7 +61,7 @@ block content
             div.block-producer-row
               div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
               div.block-producer-cell.block-producer-cell-2= blockproducer.name
-              div.block-producer-cell.block-producer-cell-3.right #{blockproducer.votes_percent} #[span(class='small-vote-total') #{blockproducer.votes_absolute}M]
+              div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
               div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
               div.block-producer-cell.block-producer-cell-5 
                 if blockproducer.valid_url
