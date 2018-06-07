@@ -90,7 +90,10 @@ class VoteModal extends EosVoterModal {
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.vote_now()}, 
-                       (this.is_voting == false ? "Cast Vote" : "Voting")),
+                       (this.is_voting == false ? "Cast Vote" : [
+                       m('span', {'style': {'display': 'inline-block'}}, "Voting"),
+                       m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
+                     ])),
                    ]),
                  ].concat(this.is_voting ? [] : [
                    m('div', [

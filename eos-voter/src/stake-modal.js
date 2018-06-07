@@ -99,7 +99,10 @@ class StakeModal extends EosVoterModal {
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.stake_now()}, 
-                       (this.is_staking == false ? "Stake EOS" : "Staking")),
+                       (this.is_staking == false ? "Stake EOS" : [
+                       m('span', {'style': {'display': 'inline-block'}}, "Staking"),
+                       m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
+                     ])),
                    ]),
                    m('div', [
                      m("Button", {'class': 'vote-helper-button', 'onclick': e => this.close(),
