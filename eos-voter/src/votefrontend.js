@@ -115,7 +115,6 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 })
 
 function redrawAll() {
-    console.log('redrawAll called');
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
         return;
 
@@ -163,7 +162,6 @@ function redrawAll() {
                             votes = [];
                             proxy_name = '';
                         }
-                        console.log('Testing delegation result=', result);
                         if (result.delegated_bandwidth == null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
                             && eos_to_float(result.delegated_bandwidth.net_weight) == 0))
                         {
