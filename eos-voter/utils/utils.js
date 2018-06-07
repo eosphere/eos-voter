@@ -41,7 +41,13 @@ exports.format_block_producer = (x, total_votes) => {
     if (x.owner in bp_info) {
         country_code = bp_info[x.owner].org.location.country;
     }
-    country_code = country_code.slice(0, 2);
+    console.log('country_code=', country_code);
+    console.log('typeod country_code=', typeof country_code);
+    if (typeof country_code === 'string' || country_code instanceof String)
+        // Some BPs have populated this field with non-strings
+        country_code = country_code.slice(0, 2);
+    else
+        country_code = '';
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
