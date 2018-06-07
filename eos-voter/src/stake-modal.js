@@ -6,6 +6,7 @@ var {EosVoterModal} = require('./eosvoter-modal.js');
 var globals = require('./globals.js');
 var eosjs = require('eosjs');
 var {modal_stack} = require('./eosvoter-modal.js');
+var {OKModal} = require('./ok-modal.js');
 
 function errorDisplay(description, e) {
     console.log('errorDisplay e=', e);
@@ -73,9 +74,11 @@ class StakeModal extends EosVoterModal {
                     .then((result) => {
                     console.log('delegatebw result=', result);
                     //needs_to_stake = false;
-                    alert('Staking was succesfull');
-                    modal_stack.pop_modal();
+                    modal_stack.push_modal([OKModal, {info_message: 'Staking was succesful'}, null]);
                     m.redraw();
+                    //alert('Staking was succesfull');
+                    //modal_stack.pop_modal();
+                    //m.redraw();
                     //redrawAll();
                     })
                     .catch(e => {
