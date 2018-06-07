@@ -8,7 +8,7 @@ import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 import {VoteModal} from './vote-modal.js';
 import {modal_stack} from './eosvoter-modal.js';
 import {StakeModal} from './stake-modal.js';
-import {ErrorScatterIsLocked} from './error-scatter-is-locked.js';
+import {ErrorModal} from './error-modal.js';
 
 var globals = require('./globals.js');
 
@@ -281,7 +281,7 @@ function redrawAll() {
             console.error('Suggested network was rejected result=', error);
             //alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
             if (error.type == "locked") {
-                modal_stack.push_modal([ErrorScatterIsLocked, {}, null]);
+                modal_stack.push_modal([ErrorModal, {error_message: 'Scatter is locked. Please unlock it and then retry'}, null]);
                 m.redraw();
             } else
                 errorDisplay('Scatter returned an error from suggestNetwork', error);

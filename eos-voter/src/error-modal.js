@@ -2,10 +2,13 @@
 let exports = module.exports = {};
 
 var m = require("mithril");
-var {EosVoterModal} = require('./eosvoter-modal.js');
-var {modal_stack} = require('./eosvoter-modal.js');
+var {EosVoterModal, modal_stack} = require('./eosvoter-modal.js');
 
-class ErrorScatterIsLocked extends EosVoterModal {
+class ErrorModal extends EosVoterModal {
+    constructor(vnode) {
+        super(vnode);
+        this.error_message = vnode.attrs.error_message;
+    }
     canclose() { return false; };
     retry_now() {
         document.location.reload(true)
@@ -13,7 +16,7 @@ class ErrorScatterIsLocked extends EosVoterModal {
     get_internal_content() {
         return [
                  m('h2', {'style': {'text-align': 'center'}}, 'Error'),
-                 m('p', {'class': 'error-paragraph'}, 'Scatter is locked. Please unlock it and then retry'),
+                 m('p', {'class': 'error-paragraph'}, this.error_message),
                  m('div', {'style': {'text-align': 'center'}}, [
                    m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.retry_now()}, "Retry"),
                  ]),
@@ -21,5 +24,5 @@ class ErrorScatterIsLocked extends EosVoterModal {
     }
 }
 
-exports.ErrorScatterIsLocked = ErrorScatterIsLocked;
+exports.ErrorModal = ErrorModal;
 
