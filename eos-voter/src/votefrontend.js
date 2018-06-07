@@ -8,7 +8,7 @@ import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 import {VoteModal} from './vote-modal.js';
 import {modal_stack} from './eosvoter-modal.js';
 import {StakeModal} from './stake-modal.js';
-import {ErrorModal, errorDisplay} from './error-modal.js';
+import {ErrorModal, errorDisplay, ErrorOKModal} from './error-modal.js';
 
 var globals = require('./globals.js');
 
@@ -72,7 +72,10 @@ function recalcVotes() {
 }
 
 function cast_vote() {
-    modal_stack.push_modal([VoteModal, {proxy_name: proxy_name, votes: votes}, null]);
+    if (proxy_name === '' && votes.length > 30)
+        modal_stack.push_modal([ErrorOKModal, {error_messages: ['Too many votes. You can only vote for 30 producers']}, null]);
+    else
+        modal_stack.push_modal([VoteModal, {proxy_name: proxy_name, votes: votes}, null]);
 }
 
 function current_vote() {

@@ -27,6 +27,26 @@ class ErrorModal extends EosVoterModal {
     }
 }
 
+class ErrorOKModal extends EosVoterModal {
+    constructor(vnode) {
+        super(vnode);
+        this.error_messages = vnode.attrs.error_messages;
+    }
+    canclose() { return true; };
+    ok_now() {
+        modal_stack.pop_modal();
+    }
+    get_internal_content() {
+        return [
+                 m('h2', {'style': {'text-align': 'center'}}, 'Error'),
+                 this.error_messages.map((message) => m('p', {'class': 'error-paragraph'}, message)),
+                 m('div', {'style': {'text-align': 'center'}}, [
+                   m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.ok_now()}, "OK"),
+                 ]),
+               ];
+    }
+}
+
 function errorDisplay(description, e) {
     console.log('errorDisplay e=', e);
     let message = 'Null message';
@@ -53,4 +73,5 @@ function errorDisplay(description, e) {
 
 exports.ErrorModal = ErrorModal;
 exports.errorDisplay = errorDisplay;
+exports.ErrorOKModal = ErrorOKModal;
 
