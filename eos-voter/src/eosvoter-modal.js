@@ -37,6 +37,12 @@ class ModalStack {
     get_top() {
         return this.modal_stack.slice(-1)[0];
     }
+
+    pop_entire_stack() {
+        while (!this.is_empty()) {
+            this.pop_modal();
+        }
+    }
 }
 
 var modal_stack = exports.modal_stack = new ModalStack();

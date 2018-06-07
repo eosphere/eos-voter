@@ -81,6 +81,10 @@ a {
     color: red;
 }
 
+.error-paragraph {
+    color: red;
+}
+
 .centre-h1 {
     text-align: center;
     margin: 0px;

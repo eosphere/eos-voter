@@ -8,6 +8,7 @@ import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 import {VoteModal} from './vote-modal.js';
 import {modal_stack} from './eosvoter-modal.js';
 import {StakeModal} from './stake-modal.js';
+import {ErrorScatterIsLocked} from './error-scatter-is-locked.js';
 
 var globals = require('./globals.js');
 
@@ -206,9 +207,7 @@ function redrawAll() {
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         scatter_status = ScatterStatus.CONNECTED;
-                        while (!modal_stack.is_empty()) {
-                            modal_stack.pop_modal();
-                        }
+                        modal_stack.pop_entire_stack();
                         console.log('getAccount result=', result);
 
                         // Get our EOS balance
@@ -281,7 +280,11 @@ function redrawAll() {
         }).catch((error) => {
             console.error('Suggested network was rejected result=', error);
             //alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
-            errorDisplay('Scatter returned an error from suggestNetwork', error);
+            if (error.type == "locked") {
+                modal_stack.push_modal([ErrorScatterIsLocked, {}, null]);
+                m.redraw();
+            } else
+                errorDisplay('Scatter returned an error from suggestNetwork', error);
         });
 }
 
