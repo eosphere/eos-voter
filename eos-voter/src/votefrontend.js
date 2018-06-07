@@ -18,6 +18,7 @@ var voting_page_content = document.getElementById('allblockproducers').getAttrib
 var total_activated_stake = document.getElementById('allblockproducers').getAttribute('data-total-activated-stake');
 var min_activated_stake = document.getElementById('allblockproducers').getAttribute('data-min-activated-stake');
 var activated_percent = document.getElementById('allblockproducers').getAttribute('data-activated-percent');
+var has_activated_message = document.getElementById('allblockproducers').getAttribute('data-has-activated-message');
 
 var votes = [];
 var proxy_name = ''; 
@@ -448,7 +449,7 @@ var View = {
                    m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
                    m("p.centre", 'Percentage of EOS voting ' + activated_percent + '%'),
                    m("p.centre", Humanize.formatNumber(total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(min_activated_stake) + ' needed to activate the chain'),
-                   (has_activated) ? [m("p.centre-activated", "The EOS block chain has activated ")] : [],
+                   (has_activated) ? [m("div", m.trust(has_activated_message))] : [],
                  ].concat(block_producers_grid(active_block_producers, has_activated ? "Active Block Producers" : "Block Producer Candidates")).
                  concat(block_producers_grid(backup_block_producers, "Backup Block Producers")).
                  concat([

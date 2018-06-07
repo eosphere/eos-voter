@@ -26,6 +26,7 @@ router.get('/', function(req, res, next) {
                          'total_activated_stake': chaininspector.get_total_activated_stake() /10.0 / 1000.0,
                          'min_activated_stake': config.min_activated_stake /10.0 / 1000.0,
                          'activated_percent': (chaininspector.get_total_activated_stake() / config.min_activated_stake * (15.0 / 100.0) * 100.0).toFixed(2),
+                         'has_activated_message': config.has_activated_message,
                          });
 
 });

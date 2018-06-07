@@ -20,7 +20,7 @@ block content
     p.centre Percentage of EOS voting #{activated_percent}%
     p.centre #{total_activated_stake} EOS have voted #{min_activated_stake} needed to activate the chain
     if has_activated
-        p.centre-activated The EOS block chain has activated
+        div !{has_activated_message}
         h2.centre Active Block Producers
     else
         h2.centre Block Producer Candidates
