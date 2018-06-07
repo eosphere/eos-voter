@@ -7,31 +7,7 @@ var globals = require('./globals.js');
 var eosjs = require('eosjs');
 var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
-
-function errorDisplay(description, e) {
-    console.log('errorDisplay e=', e);
-    let message = 'Null message';
-    let details = 'Null details';
-    try {
-        let error = JSON.parse(e['message']);
-        try {
-            message = error.message;
-        } catch (e2) {
-            // Silently ignore if message does not exists
-        }
-        try {
-            details = error.error.details.map((d) => d.message).join(' ');
-        } catch (e2) {
-            // Silently ignore if error details does not exists
-        }
-    } catch (e2) {
-        // Silently ignore if error details does not exists Ie because the error message isn't JSON
-        message = e;
-    }
-    alert(description + '\nmessage:' + message + 
-           '\nDetails: ' +  details);
-}
-
+var {errorDisplay} = require('./error-modal.js');
 
 class StakeModal extends EosVoterModal {
     constructor(vnode) {

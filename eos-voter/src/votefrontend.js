@@ -8,7 +8,7 @@ import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
 import {VoteModal} from './vote-modal.js';
 import {modal_stack} from './eosvoter-modal.js';
 import {StakeModal} from './stake-modal.js';
-import {ErrorModal} from './error-modal.js';
+import {ErrorModal, errorDisplay} from './error-modal.js';
 
 var globals = require('./globals.js');
 
@@ -148,30 +148,6 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     redrawAll();
 })
 
-function errorDisplay(description, e) {
-    console.log('errorDisplay e=', e);
-    let message = 'Null message';
-    let details = 'Null details';
-    try {
-        let error = JSON.parse(e['message']);
-        try {
-            message = error.message;
-        } catch (e2) {
-            // Silently ignore if message does not exists
-        }
-        try {
-            details = error.error.details.map((d) => d.message).join(' ');
-        } catch (e2) {
-            // Silently ignore if error details does not exists
-        }
-    } catch (e2) {
-        // Silently ignore if error details does not exists Ie because the error message isn't JSON
-        message = e;
-    }
-    alert(description + '\nmessage:' + message + 
-           '\nDetails: ' +  details);
-}
-
 function redrawAll() {
     console.log('redrawAll called');
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
@@ -270,7 +246,7 @@ function redrawAll() {
                 console.error('scatter.getIdentity() gave error=', error);
                 //alert('Scatter returned an error from getIdentity\nmessage:' + error.message);
                 if (error.type == 'identity_rejected') {
-                    modal_stack.push_modal([ErrorModal, {error_message: 'No identity was chosen. Please config an identity in Scatter and link it to your private key'}, null]);
+                    modal_stack.push_modal([ErrorModal, {error_messages: ['No identity was chosen. Please config an identity in Scatter and link it to your private key'], show_retry: true}, null]);
                     m.redraw();
                 } else
                     errorDisplay('Scatter returned an error from getIdentity', error);
@@ -285,7 +261,7 @@ function redrawAll() {
             console.error('Suggested network was rejected result=', error);
             //alert('Scatter returned an error from suggestNetwork\nmessage:' + error.message);
             if (error.type == "locked") {
-                modal_stack.push_modal([ErrorModal, {error_message: 'Scatter is locked. Please unlock it and then retry'}, null]);
+                modal_stack.push_modal([ErrorModal, {error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}, null]);
                 m.redraw();
             } else
                 errorDisplay('Scatter returned an error from suggestNetwork', error);
