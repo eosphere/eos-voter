@@ -237,7 +237,7 @@ function block_producers_grid(block_producer_list, description) {
                  m('span.small-vote-total', block_producer.votes_absolute + 'M'),
                  ' ', block_producer.votes_percent,
                ]),
-               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, block_producer.country_code),
+               m('div', {'class': 'block-producer-cell block-producer-cell-4'}, [block_producer.country_code, m.trust('&nbsp;')]),
                m('div', {'class': 'block-producer-cell block-producer-cell-5'}, block_producer.valid_url ? 
                  [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
                    [block_producer.statement, m.trust('&nbsp;')]),
