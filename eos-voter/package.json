@@ -17,6 +17,8 @@
     "mithril": "^1.1.6",
     "morgan": "~1.9.0",
     "nodemon": "^1.17.5",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
     "sprintf": "^0.1.5",
     "webpack": "^4.9.1",
     "webpack-cli": "^2.1.4"

@@ -32,12 +32,27 @@ function ValidURL(str) {
   }
 }
 
+exports.ValidURL = ValidURL;
+
 exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend
+    let bp_info = chaininspector.get_bp_info();
+    var country_code = '';
+    if (x.owner in bp_info) {
+        country_code = bp_info[x.owner].org.location.country;
+    }
+    console.log('country_code=', country_code);
+    console.log('typeod country_code=', typeof country_code);
+    if (typeof country_code === 'string' || country_code instanceof String)
+        // Some BPs have populated this field with non-strings
+        country_code = country_code.slice(0, 2);
+    else
+        country_code = '';
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
-              'last_produced_block_time': x.last_produced_block_time };
+              'last_produced_block_time': x.last_produced_block_time,
+              'country_code' : country_code };
 }
 
 exports.get_total_votes = function() {

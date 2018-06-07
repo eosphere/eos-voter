@@ -5,10 +5,12 @@ var exports = module.exports = {};
 // Connect to EOS
 var Eos = require('eosjs'); // Eos = require('./src')
 var config = require('../config/index.js');
-var chainid = null;
-var total_activated_stake = 0;
+var rp = require('request-promise');
 var utils = require('../utils/utils.js');
 
+var chainid = null;
+var total_activated_stake = 0;
+var bp_info = {};
 
 var options = {
   httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_secure_port, 
@@ -47,7 +49,73 @@ exports.get_total_activated_stake = function() {
     return total_activated_stake;
 }
 
+exports.get_bp_info = function() {
+    return bp_info;
+}
+
 var first_run = true;
+
+function updateBpInfo() {
+    console.log('updateBpInfo called');
+    //Iterate over all of the block producers and update their bp info
+    active_block_producers.map((bp) => {
+        if (utils.ValidURL(bp.url)) {
+            // Only try this if a valid URL
+            var url = bp.url;
+            if (url.substr(-1) != '/') url += '/';
+            //request_options.uri = url + chainid + '/bp.json';
+            const request_options = {
+                uri: url + chainid + '/bp.json',
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+            function request_bp_info_stage2(bp, result) {
+                // bp is the block producers we all getting info for
+                // result is the result from the first stage. An empty dict if no valid result
+                const request_options = {
+                    uri: url + 'bp.json',
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response
+                };
+                //console.log('called stage2 for bp=', bp.url);
+                rp(request_options)
+                .then(function (result2) {
+                    var is_bp_info = 'producer_account_name' in result2 && 'producer_public_key' in result2 && 'org' in result2
+                        && 'location' in result2.org && 'country' in result2.org.location;
+                    //console.log('Result for stage2 url ', bp.url, ' = ', is_bp_info);
+                    if (is_bp_info) {
+                        bp_info[bp.owner] = Object.assign({}, result2, result);
+                    }
+                })
+                .catch(function (err) {
+                    // Ignore errors since bp_info is optional
+                    //console.error('Error for url ', bp.url, ' = ', err);
+                    //console.error('Error for stage2 url ', bp.url);
+                    // API call failed...
+                });  
+            };
+            rp(request_options)
+            .then(function (result) {
+                var is_bp_info = 'producer_account_name' in result && 'producer_public_key' in result && 'org' in result
+                    && 'location' in result.org && 'country' in result.org.location;
+                //console.log('Result for url ', bp.url, ' = ', is_bp_info);
+                request_bp_info_stage2(bp, is_bp_info ? result : {});
+            })
+            .catch(function (err) {
+                // Ignore errors since bp_info is optional
+                //console.error('Error for url ', bp.url, ' = ', err);
+                //console.error('Error for url ', bp.url);
+                request_bp_info_stage2(bp, {});
+                // API call failed...
+            });  
+        }      
+    });
+    setTimeout(updateBpInfo, config.bp_info_refresh_secs * 1000);
+}
 
 function inspectChain()
 {
@@ -92,4 +160,6 @@ function inspectChain()
 }
 
 inspectChain();
+setTimeout(updateBpInfo, config.refresh_secs * 1000);
+
 
