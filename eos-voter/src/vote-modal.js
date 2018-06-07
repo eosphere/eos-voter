@@ -6,6 +6,7 @@ var {EosVoterModal} = require('./eosvoter-modal.js');
 var globals = require('./globals.js');
 var eosjs = require('eosjs');
 var {modal_stack} = require('./eosvoter-modal.js');
+var {OKModal} = require('./ok-modal.js');
 
 function errorDisplay(description, e) {
     console.log('errorDisplay e=', e);
@@ -61,10 +62,12 @@ class VoteModal extends EosVoterModal {
                                        { authorization: [scatter.identity.accounts[0].name]}*/ )
                             .then((result) => {
                                 console.log('voteproducer result=', result);
-                                alert('Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'');
-                                //confirming_vote = false;
-                                modal_stack.pop_modal();
+                                modal_stack.push_modal([OKModal, {info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\''}, null]);
                                 m.redraw();
+                                //alert('Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'');
+                                //confirming_vote = false;
+                                //modal_stack.pop_modal();
+                                //m.redraw();
                                 //redrawAll();
                             })
                             .catch((error) => {
