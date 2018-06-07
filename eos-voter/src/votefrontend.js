@@ -269,7 +269,11 @@ function redrawAll() {
             }).catch(error => {
                 console.error('scatter.getIdentity() gave error=', error);
                 //alert('Scatter returned an error from getIdentity\nmessage:' + error.message);
-                errorDisplay('Scatter returned an error from getIdentity', error);
+                if (error.type == 'identity_rejected') {
+                    modal_stack.push_modal([ErrorModal, {error_message: 'No identity was chosen. Please config an identity in Scatter and link it to your private key'}, null]);
+                    m.redraw();
+                } else
+                    errorDisplay('Scatter returned an error from getIdentity', error);
             });
 
 
