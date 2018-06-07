@@ -125,8 +125,10 @@ function redrawAll() {
             globals.scatter.getIdentity(requiredFields).then(identity => {
                 // Set up any extra options you want to use eosjs with. 
                 if (identity.accounts[0].authority != 'active'){
-                    alert('You have chosen an account with the ' + identity.accounts[0].authority + 
-                          ' authority only the active authority can stake EOS. You should change identity');
+                    modal_stack.push_modal([ErrorModal, {error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority + 
+                          ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}, null]);
+                    m.redraw();
+                    return;
                 }
 
                  
