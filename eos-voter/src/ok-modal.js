@@ -16,7 +16,7 @@ class OKModal extends EosVoterModal {
     }
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Error'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Success'),
                  m('p', {'class': 'error-paragraph'}, this.info_message),
                  m('div', {'style': {'text-align': 'center'}}, [
                    m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.ok_now()}, "OK"),
