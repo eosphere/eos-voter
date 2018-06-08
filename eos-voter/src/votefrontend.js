@@ -9,6 +9,7 @@ import {VoteModal} from './vote-modal.js';
 import {modal_stack} from './eosvoter-modal.js';
 import {StakeModal} from './stake-modal.js';
 import {ErrorModal, errorDisplay, ErrorOKModal} from './error-modal.js';
+import {NotDetectedModal} from './not-detected-modal.js';
 
 var globals = require('./globals.js');
 
@@ -116,6 +117,13 @@ document.addEventListener('scatterLoaded', scatterExtension => {
 
     redrawAll();
 })
+
+setTimeout(() => {
+    if (globals.scatter === null) {
+        modal_stack.push_modal([NotDetectedModal, {}, null]);
+        m.redraw();
+    }
+    } ,2000);
 
 function redrawAll() {
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
