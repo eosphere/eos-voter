@@ -190,7 +190,7 @@ Run webpack to regenerate the client side javascript
 
 ```
 cd /srv/eos-voter/eos-voter
-nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
+nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production -d
 ```
 
 Restart the app
