@@ -89,6 +89,7 @@ function current_vote() {
 }
 
 function eos_to_float(s) {
+    //console.log('eos_to_float s=', s);
     var ret = s ? s.split(" ")[0] : 0;
     return parseFloat(ret);
 }
@@ -118,12 +119,14 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     redrawAll();
 })
 
+
 setTimeout(() => {
     if (globals.scatter === null) {
         modal_stack.push_modal([NotDetectedModal, {}, null]);
         m.redraw();
     }
     } ,2000);
+
 
 function redrawAll() {
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
@@ -146,6 +149,7 @@ function redrawAll() {
                 eos = globals.scatter.eos( network_secure, eosjs.Localnet, globals.eosOptions, chain_protocol );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
+                        //console.log('getAccount result=', result);
                         modal_stack.pop_entire_stack();
 
                         // Get our EOS balance
@@ -173,18 +177,21 @@ function redrawAll() {
                             votes = [];
                             proxy_name = '';
                         }
-                        if (result.delegated_bandwidth == null || (eos_to_float(result.delegated_bandwidth.cpu_weight) == 0
-                            && eos_to_float(result.delegated_bandwidth.net_weight) == 0))
+                        if (/*result.delegated_bandwidth == null || */(eos_to_float(result.total_resources.cpu_weight) == 0
+                            && eos_to_float(result.total_resources.net_weight) == 0))
                         {
                             delegated_cpu_weight = '0';
                             delegated_net_weight = '0';
                         } else {
-                            delegated_cpu_weight = result ? result.delegated_bandwidth.cpu_weight.split(" ")[0] : 0;
-                            delegated_net_weight = result ? result.delegated_bandwidth.net_weight.split(" ")[0] : 0;
+                            delegated_cpu_weight = result ? result.total_resources.cpu_weight.split(" ")[0] : 0;
+                            delegated_net_weight = result ? result.total_resources.net_weight.split(" ")[0] : 0;
                         }
+                        /*
+                        Comment out due to last minute problems with this dialog popping up unexpectly 
                         if (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0) {
                             modal_stack.push_modal([StakeModal, {delegated_cpu_weight: delegated_cpu_weight, delegated_net_weight: delegated_net_weight, balance: balance}, null]);
                         }
+                        */
         
                         m.redraw();
                     })
