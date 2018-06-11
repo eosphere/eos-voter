@@ -41,18 +41,34 @@ exports.format_block_producer = (x, total_votes) => {
     if (x.owner in bp_info) {
         country_code = bp_info[x.owner].org.location.country;
     }
-    console.log('country_code=', country_code);
-    console.log('typeod country_code=', typeof country_code);
+    //console.log('country_code=', country_code);
+    //console.log('typeod country_code=', typeof country_code);
     if (typeof country_code === 'string' || country_code instanceof String)
         // Some BPs have populated this field with non-strings
         country_code = country_code.slice(0, 2);
     else
         country_code = '';
+    let bp_logo_256 = '';
+    try {
+        bp_logo_256 = bp_info[x.owner].org.branding.logo_256;
+        if (!(typeof bp_logo_256 === 'string' || bp_logo_256 instanceof String))
+            bp_logo_256 = '';
+    } catch (err) {
+        console.log('format_block_producer err=', err);
+        // Lots of BPs don't conform to the standard just continue as best as possible
+    }
+    console.log('bp_logo_256=',bp_logo_256);
+    if (!(bp_logo_256.slice(0, 7) === 'http://' || bp_logo_256.slice(0, 8) === 'https://') && ValidURL(x.url) &&  bp_logo_256 != '') {
+        console.log('INvalid fixable url=',bp_logo_256);
+        let url = x.url;
+        if (url.substr(-1) != '/') url += '/';
+        bp_logo_256 = url + bp_logo_256;
+    }
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
-              'country_code' : country_code };
+              'country_code' : country_code, 'bp_logo_256': bp_logo_256 };
 }
 
 exports.get_total_votes = function() {

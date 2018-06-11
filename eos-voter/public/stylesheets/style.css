@@ -117,24 +117,24 @@ div.block-producer-row {
 }
 
 .block-producer-cell-1 {
-  width: 10%;
+  width: 5%;
   /*text-align: right;*/
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .block-producer-cell-2 {
-  width: 30%;
-  overflow-x: hidden;
+  width: 35%;
+  overflow: hidden;
 }
 
 .block-producer-cell-3 {
   width: 20%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .block-producer-cell-4 {
   width: 7%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .right {
@@ -142,8 +142,8 @@ div.block-producer-row {
 }
 
 .block-producer-cell-5 {
-  width: calc(30% - 75px);
-  overflow-x: hidden;
+  width: calc(30% - 89px);
+  overflow: hidden;
 }
 
 .content-container {
@@ -171,7 +171,7 @@ div.block-producer-row {
     -ms-user-select: none;
     user-select: none;
     /*float: right;*/
-    left: 40px;
+    left: 10px;
 }
 
 /* Hide the browser's default checkbox */
@@ -352,3 +352,11 @@ a.statement:active {
   color: darkblue;
   /*font-size: 9px;*/
 }
+
+.bp-small-logo {
+    height: 20px;
+    max-width: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
