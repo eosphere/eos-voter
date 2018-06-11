@@ -34,7 +34,8 @@ var proxy_name = '';
 var balance = 'Unknown';
 var delegated_cpu_weight = 'Unknown';
 var delegated_net_weight = 'Unknown';
-var has_activated = parseFloat(activated_percent) > 15.0
+var has_activated = parseFloat(activated_percent) > 15.0;
+window.block_producer_invalid_images = [];
 
 globals.network = {
     blockchain:'eos',
@@ -250,7 +251,13 @@ function block_producers_grid(block_producer_list, description) {
                    m('span', {'class': 'checkmark'}),
                  ]),
                ]),
-               m('div', {'class': 'block-producer-cell block-producer-cell-2'}, block_producer.name),
+               m('div', {'class': 'block-producer-cell block-producer-cell-2'}, [
+                //img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
+               ((window.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : [
+                  m('img.bp-small-logo', {'src':(block_producer.name in window.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {window.block_producer_invalid_images.push(block_producer.name); m.redraw(); /*x.target.src = '';*/ }}),
+                ]),
+                m('span', block_producer.name), 
+               ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, [
                  m('span.small-vote-total', block_producer.votes_absolute + 'M'),
                  ' ', block_producer.votes_percent,

@@ -38,7 +38,7 @@ block content
         div.block-producer-row
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2
-            img.bp-small-logo(src=blockproducer.bp_logo_256)
+            img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
             span #{blockproducer.name}
           div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
           div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
@@ -63,7 +63,7 @@ block content
             div.block-producer-row
               div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
               div.block-producer-cell.block-producer-cell-2
-                img.bp-small-logo(src='http://www.eosphere.io/eospherelogosquare256.png')
+                img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
                 span #{blockproducer.name}
               div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
               div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
