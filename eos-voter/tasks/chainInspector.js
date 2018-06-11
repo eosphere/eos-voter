@@ -126,7 +126,7 @@ function inspectChain()
         chainid = result.chain_id;
         eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
             (result) => {
-                console.log('getTableRows producers returned') ;
+                console.log('getTableRows producers returned result') ;
                 var new_block_producers = result.rows;
                 new_block_producers.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
                 eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'global', 'limit': 500}).then(

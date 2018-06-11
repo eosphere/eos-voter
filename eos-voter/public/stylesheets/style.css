@@ -101,6 +101,13 @@ div.block-producer-row:nth-child(odd) {
   background-color: #EEE;
 }
 
+div.block-producer-row {
+    /*max-height: 40px;*/
+    overflow-x: hidden;
+    /*padding-bottom: -2px;*/
+    margin-bottom: -3px;
+}
+
 .block-producer-cell {
   border: 1px solid white;
   display: inline-block;
@@ -112,18 +119,22 @@ div.block-producer-row:nth-child(odd) {
 .block-producer-cell-1 {
   width: 10%;
   /*text-align: right;*/
+  overflow-x: hidden;
 }
 
 .block-producer-cell-2 {
   width: 30%;
+  overflow-x: hidden;
 }
 
 .block-producer-cell-3 {
   width: 20%;
+  overflow-x: hidden;
 }
 
 .block-producer-cell-4 {
   width: 7%;
+  overflow-x: hidden;
 }
 
 .right {
@@ -131,7 +142,8 @@ div.block-producer-row:nth-child(odd) {
 }
 
 .block-producer-cell-5 {
-  width: calc(30% - 85px);
+  width: calc(30% - 75px);
+  overflow-x: hidden;
 }
 
 .content-container {
