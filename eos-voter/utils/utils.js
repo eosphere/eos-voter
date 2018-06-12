@@ -60,7 +60,7 @@ exports.format_block_producer = (x, total_votes) => {
         if (!(typeof bp_logo_256 === 'string' || bp_logo_256 instanceof String))
             bp_logo_256 = '';
     } catch (err) {
-        console.log('format_block_producer err=', err);
+        //console.log('format_block_producer err=', err);
         // Lots of BPs don't conform to the standard just continue as best as possible
     }
     //console.log('bp_logo_256=',bp_logo_256);
@@ -82,7 +82,7 @@ exports.format_block_producer = (x, total_votes) => {
     try {
         fake_bp = bp_info[x.owner].producer_account_name != x.owner;
     } catch (err) {
-        console.log('format_block_producer err=', err);
+        //console.log('format_block_producer err=', err);
         // Lots of BPs don't conform to the standard just continue as best as possible
     }
 

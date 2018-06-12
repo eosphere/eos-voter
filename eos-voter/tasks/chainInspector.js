@@ -84,7 +84,7 @@ function updateBpInfo() {
                     json: true // Automatically parses the JSON string in the response
                 };
                 //console.log('called stage2 for bp=', bp.url);
-                rp(request_options)
+                return rp(request_options)
                 .then(function (result2) {
                     var is_bp_info = 'producer_account_name' in result2 && 'producer_public_key' in result2 && 'org' in result2
                         && 'location' in result2.org && 'country' in result2.org.location;
@@ -105,7 +105,7 @@ function updateBpInfo() {
                 var is_bp_info = 'producer_account_name' in result && 'producer_public_key' in result && 'org' in result
                     && 'location' in result.org && 'country' in result.org.location;
                 //console.log('Result for url ', bp.url, ' = ', is_bp_info);
-                request_bp_info_stage2(bp, is_bp_info ? result : {});
+                return request_bp_info_stage2(bp, is_bp_info ? result : {});
             })
             .catch(function (err) {
                 // Ignore errors since bp_info is optional
