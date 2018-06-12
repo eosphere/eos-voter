@@ -6,7 +6,7 @@ var config = require('../config');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.render('whatsthis', {'message': config.whats_this_bp_name_mismatch});
+    res.render('whatsthisbpnamemismatch', {'message': config.whats_this_bp_name_mismatch});
 })
 
 module.exports = router;
