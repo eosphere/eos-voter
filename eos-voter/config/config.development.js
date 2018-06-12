@@ -32,7 +32,7 @@ config.chain_secure_port = '8888'
 */
 
 
-config.chain_addr = 'jungle.eosphere.io'
+config.chain_addr = 'node1.eosphere.io'
 // Port to connect to the API
 config.chain_port = '8888'
 // Protocol to use. Valid choices are http or https
