@@ -2,6 +2,7 @@
 
 var chaininspector = require('../tasks/chainInspector');
 var config = require('../config');
+var countrycodes = require('./country-codes.js');
 
 var exports = module.exports = {};
 
@@ -41,13 +42,6 @@ exports.format_block_producer = (x, total_votes) => {
     if (x.owner in bp_info) {
         country_code = bp_info[x.owner].org.location.country;
     }
-    //console.log('country_code=', country_code);
-    //console.log('typeod country_code=', typeof country_code);
-    if (typeof country_code === 'string' || country_code instanceof String)
-        // Some BPs have populated this field with non-strings
-        country_code = country_code.slice(0, 2);
-    else
-        country_code = '';
     let bp_logo_256 = '';
     try {
         bp_logo_256 = bp_info[x.owner].org.branding.logo_256;
@@ -71,11 +65,19 @@ exports.format_block_producer = (x, total_votes) => {
         console.log('format_block_producer err=', err);
         // Lots of BPs don't conform to the standard just continue as best as possible
     }
+
+    var country_name = country_code;
+    if (country_code in countrycodes) {
+        country_name = countrycodes[country_code];
+    } else {
+        country_name = country_code;
+    }
+
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
-              'country_code' : country_code, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp };
+              'country_code' : country_name, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp };
 }
 
 exports.get_total_votes = function() {

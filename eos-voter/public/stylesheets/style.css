@@ -120,21 +120,25 @@ div.block-producer-row {
   width: 5%;
   /*text-align: right;*/
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .block-producer-cell-2 {
-  width: 35%;
+  width: 30%;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .block-producer-cell-3 {
   width: 20%;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .block-producer-cell-4 {
-  width: 7%;
+  width: 12%;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .right {
@@ -144,6 +148,7 @@ div.block-producer-row {
 .block-producer-cell-5 {
   width: calc(30% - 89px);
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .content-container {
