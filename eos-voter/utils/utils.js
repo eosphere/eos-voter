@@ -57,18 +57,25 @@ exports.format_block_producer = (x, total_votes) => {
         console.log('format_block_producer err=', err);
         // Lots of BPs don't conform to the standard just continue as best as possible
     }
-    console.log('bp_logo_256=',bp_logo_256);
+    //console.log('bp_logo_256=',bp_logo_256);
     if (!(bp_logo_256.slice(0, 7) === 'http://' || bp_logo_256.slice(0, 8) === 'https://') && ValidURL(x.url) &&  bp_logo_256 != '') {
-        console.log('INvalid fixable url=',bp_logo_256);
+        //console.log('INvalid fixable url=',bp_logo_256);
         let url = x.url;
         if (url.substr(-1) != '/') url += '/';
         bp_logo_256 = url + bp_logo_256;
+    }
+    let fake_bp = false;
+    try {
+        fake_bp = bp_info[x.owner].producer_account_name != x.owner;
+    } catch (err) {
+        console.log('format_block_producer err=', err);
+        // Lots of BPs don't conform to the standard just continue as best as possible
     }
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
-              'country_code' : country_code, 'bp_logo_256': bp_logo_256 };
+              'country_code' : country_code, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp };
 }
 
 exports.get_total_votes = function() {

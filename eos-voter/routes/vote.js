@@ -9,7 +9,7 @@ var utils = require('../utils/utils.js');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     let total_votes = utils.get_total_votes();
-    console.log('total_votes=', total_votes);
+    //console.log('total_votes=', total_votes);
     let active_block_producers = chaininspector.get_active_block_producers().map((x) => utils.format_block_producer(x, total_votes));
     let backup_block_producers = chaininspector.get_backup_block_producers().map((x) => utils.format_block_producer(x, total_votes));
     res.render('vote', { title: 'EOS Voter - Cast my vote',

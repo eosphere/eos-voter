@@ -360,3 +360,16 @@ a.statement:active {
     vertical-align: middle;
 }
 
+.fake-bp-title {
+  text-decoration: line-through;
+  color: darkgray;
+}
+
+.fake-bp-warning {
+  color: red;
+}
+
+.fake-bp-whats-this {
+  font-size: 9px;
+}
+
