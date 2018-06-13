@@ -31,7 +31,8 @@ block content
         div.block-producer-cell.block-producer-cell-2.block-producer-column-header Block Producer
         div.block-producer-cell.block-producer-cell-3.block-producer-column-header Current Vote Total
         div.block-producer-cell.block-producer-cell-4.block-producer-column-header Country
-        div.block-producer-cell.block-producer-cell-5.block-producer-column-header Information
+        div.block-producer-cell.block-producer-cell-5.block-producer-column-header Comp
+        div.block-producer-cell.block-producer-cell-6.block-producer-column-header Information
 
       - var n = 1
       each blockproducer in activeblockproducers
@@ -40,14 +41,20 @@ block content
           div.block-producer-cell.block-producer-cell-2
             if !blockproducer.fake_bp
               img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
-              span #{blockproducer.name}
+              span #{blockproducer.name} 
             if blockproducer.fake_bp
               span(class='fake-bp-title') #{blockproducer.name} 
               span(class='fake-bp-warning') #{' !CAUTION! '}
               a(class='fake-bp-whats-this', href='/whats-this-bp-name-mismatch', target='_blank') Whats this
           div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
           div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
-          div.block-producer-cell.block-producer-cell-5 
+          div.block-producer-cell.block-producer-cell-5
+            if blockproducer.full_compliance
+              span.compliance_ok !{'&#10004;'}
+            else
+              span.compliance_failed !{'&#10008;'}
+              
+          div.block-producer-cell.block-producer-cell-6 
             if blockproducer.valid_url
               a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}
             else
@@ -62,7 +69,8 @@ block content
             div.block-producer-cell.block-producer-cell-2.block-producer-column-header Block Producer
             div.block-producer-cell.block-producer-cell-3.block-producer-column-header Current Vote Total
             div.block-producer-cell.block-producer-cell-4.block-producer-column-header Country
-            div.block-producer-cell.block-producer-cell-5.block-producer-column-header Information
+            div.block-producer-cell.block-producer-cell-5.block-producer-column-header Comp
+            div.block-producer-cell.block-producer-cell-6.block-producer-column-header Information
 
           each blockproducer in backupblockproducers
             div.block-producer-row
@@ -77,7 +85,12 @@ block content
               a(class='fake-bp-whats-this', href='/whats-this-bp-name-mismatch', target='_blank') Whats this
               div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
               div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
-              div.block-producer-cell.block-producer-cell-5 
+              div.block-producer-cell.block-producer-cell-5
+                if blockproducer.full_compliance
+                  span.compliance_ok !{'&#10004;'}
+                else
+                  span.compliance_failed !{'&#10008;'}
+              div.block-producer-cell.block-producer-cell-6 
                 if blockproducer.valid_url
                   a.statement(href=blockproducer.statement, target='_blank') #{blockproducer.statement}
                 else

@@ -124,13 +124,13 @@ div.block-producer-row {
 }
 
 .block-producer-cell-2 {
-  width: 30%;
+  width: 26%;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .block-producer-cell-3 {
-  width: 20%;
+  width: 16%;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -141,11 +141,18 @@ div.block-producer-row {
   white-space: nowrap;
 }
 
+.block-producer-cell-5 {
+  width: 6%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+}
+
 .right {
   text-align: right;
 }
 
-.block-producer-cell-5 {
+.block-producer-cell-6 {
   width: calc(30% - 89px);
   overflow: hidden;
   white-space: nowrap;
@@ -377,4 +384,14 @@ a.statement:active {
 .fake-bp-whats-this {
   font-size: 9px;
 }
+
+.compliance_ok {
+  color:green;
+  font-size: 22px;
+}
+
+.compliance_failed {
+  color:red;
+}
+
 

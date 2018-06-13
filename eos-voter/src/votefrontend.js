@@ -238,7 +238,8 @@ function block_producers_grid(block_producer_list, description) {
                m('div', {'class': 'block-producer-cell block-producer-cell-2 block-producer-column-header'}, 'Block Producer'),
                m('div', {'class': 'block-producer-cell block-producer-cell-3 block-producer-column-header'}, 'Current Vote Total'),
                m('div', {'class': 'block-producer-cell block-producer-cell-4 block-producer-column-header'}, 'Country'),
-               m('div', {'class': 'block-producer-cell block-producer-cell-5 block-producer-column-header'}, 'Information'),
+               m('div', {'class': 'block-producer-cell block-producer-cell-5 block-producer-column-header'}, 'Comp'),
+               m('div', {'class': 'block-producer-cell block-producer-cell-6 block-producer-column-header'}, 'Information'),
              ]),
 
            ].concat(block_producer_list.map((block_producer) => {
@@ -267,7 +268,16 @@ function block_producers_grid(block_producer_list, description) {
                  ' ', block_producer.votes_percent,
                ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-4'}, [block_producer.country_code, m.trust('&nbsp;')]),
-               m('div', {'class': 'block-producer-cell block-producer-cell-5'}, block_producer.valid_url ? 
+               m('div', {'class': 'block-producer-cell block-producer-cell-5'}, (block_producer.full_compliance ? [
+                 m('span.compliance_ok', [
+                   m.trust('&#10004;'),
+                 ]),
+               ] : [
+                 m('span.compliance_failed', [
+                   m.trust('&#10008;'),
+                 ]),               
+               ])),
+               m('div', {'class': 'block-producer-cell block-producer-cell-6'}, block_producer.valid_url ? 
                  [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
                    [block_producer.statement, m.trust('&nbsp;')]),
              ]);              

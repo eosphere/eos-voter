@@ -38,6 +38,7 @@ exports.ValidURL = ValidURL;
 exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend
     let bp_info = chaininspector.get_bp_info();
+    let bp_verification = chaininspector.get_bp_verification();
     var country_code = '';
     if (x.owner in bp_info) {
         country_code = bp_info[x.owner].org.location.country;
@@ -73,11 +74,22 @@ exports.format_block_producer = (x, total_votes) => {
         country_name = country_code;
     }
 
+    let available_endpoints = 0;
+    if (x.owner in bp_verification) {
+        // bp_verification[x.owner] is an array of dicts. Each dict has two boolean members http_ok and ssl_ok
+        // We calculate the total by using map to produce an array of integers by interogating the member of the dict
+        // Then use reduce to sum that array
+        available_endpoints = bp_verification[x.owner].map((x) => (x.http_ok ? 1 : 0) + (x.ssl_ok ? 1 : 0)).reduce((total, num) => total + num);
+    }
+
+    let full_compliance = available_endpoints == 4;
+
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
-              'country_code' : country_name, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp };
+              'country_code' : country_name, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp,
+              'full_compliance': full_compliance };
 }
 
 exports.get_total_votes = function() {

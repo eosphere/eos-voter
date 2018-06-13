@@ -11,6 +11,7 @@ var utils = require('../utils/utils.js');
 var chainid = null;
 var total_activated_stake = 0;
 var bp_info = {};
+var bp_verification = {};
 
 var options = {
   httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_secure_port, 
@@ -53,7 +54,52 @@ exports.get_bp_info = function() {
     return bp_info;
 }
 
+exports.get_bp_verification = function() {
+    return bp_verification;
+}
+
 var first_run = true;
+
+function validate_bp_api_node(owner, nodeid) {
+    function verify_http_node(node) {
+        var end_point = node.api_endpoint;
+        if (end_point.slice(0, 7) != 'http://')
+            end_point = 'http://' + end_point;
+        if (end_point.substr(-1) != '/') end_point += '/';
+        const request_options = {
+            uri: end_point + 'v1/chain/get_info',
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+        return rp(request_options).then((x) => { bp_verification[owner][nodeid].http_ok = 
+            x.chain_id == 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'; })
+            .catch((e) => { bp_verification[owner][nodeid].http_ok = false; }); 
+    };
+
+    function verify_ssl_node(node) {
+        var end_point = node.ssl_endpoint;
+        if (end_point.slice(0, 8) != 'https://')
+            end_point = 'https://' + end_point;
+        if (end_point.substr(-1) != '/') end_point += '/';
+        const request_options = {
+            uri: end_point + 'v1/chain/get_info',
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+        return rp(request_options).then((x) => { bp_verification[owner][nodeid].ssl_ok = 
+            x.chain_id == 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'; })
+            .catch((e) => { bp_verification[owner][nodeid].ssl_ok = false; }); 
+    };
+
+    // Returns a promise which validates the api end points
+    var node = bp_info[owner].nodes[nodeid];
+    
+    return Promise.all([verify_http_node(node), verify_ssl_node(node)])
+}
 
 function updateBpInfo() {
     console.log('updateBpInfo called');
@@ -89,6 +135,10 @@ function updateBpInfo() {
                     //console.log('Result for stage2 url ', bp.url, ' = ', is_bp_info);
                     if (is_bp_info) {
                         bp_info[bp.owner] = Object.assign({}, result2, result);
+                        bp_verification[bp.owner] = [ {http_ok: false, ssl_ok: false},
+                                                      {http_ok: false, ssl_ok: false}
+                                                    ]
+                        return Promise.all([validate_bp_api_node(bp.owner, 0), validate_bp_api_node(bp.owner, 1)])
                     }
                 })
                 .catch(function (err) {
