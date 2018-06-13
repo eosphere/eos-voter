@@ -59,6 +59,9 @@ exports.format_block_producer = (x, total_votes) => {
         if (url.substr(-1) != '/') url += '/';
         bp_logo_256 = url + bp_logo_256;
     }
+    if (bp_logo_256.slice(0, 7) === 'http://') {
+        bp_logo_256 = "";
+    }
     let fake_bp = false;
     try {
         fake_bp = bp_info[x.owner].producer_account_name != x.owner;
