@@ -95,26 +95,55 @@ function validate_bp_api_node(owner, nodeid) {
             .catch((e) => { bp_verification[owner][nodeid].ssl_ok = false; }); 
     };
 
+    function verify_p2p_node(node) {
+        var end_point = node.p2p_endpoint;
+        bp_verification[owner][nodeid].p2p_ok = utils.ValidP2P(end_point)
+    }
+
     // Returns a promise which validates the api end points
     var node = bp_info[owner].nodes[nodeid];
     
-    return Promise.all([verify_http_node(node), verify_ssl_node(node)])
+    return Promise.all([verify_http_node(node), verify_ssl_node(node), verify_p2p_node(node)])
 }
 
 function updateBpInfo() {
+    function redirectOn302or301(body, response, resolveWithFullResponse) {
+        
+        //console.log('redirectOn302or301 called response.request.uri.host=', response.request.uri.host);
+        if (response.request.uri.host.indexOf('meet.one') != -1) {
+             //console.log('redirectOn302or301 called response.request.uri=', response.request.uri);
+             if (response.request.uri.href == 'https://www.eoscanada.com/bp.json') {
+               //console.log('redirectOn302or301 called response=', response);
+             }
+        }
+        if (response.statusCode === 302 || response.statusCode === 301) {
+            console.log('A redirect was received response=',response);
+            // Set the new url (this is the options object)
+            this.url = response['the redirect url somehow'];
+            return rp(options);
+        } else {
+            return resolveWithFullResponse ? response : body;
+        }
+    }
+
     console.log('updateBpInfo called');
     //Iterate over all of the block producers and update their bp info
     active_block_producers.map((bp) => {
         if (utils.ValidURL(bp.url)) {
             // Only try this if a valid URL
             var url = bp.url;
+            //console.log('url=+' + url + '+');
+            //console.log('url.substr(-1)=+' + url.substr(-1) + '+');
             if (url.substr(-1) != '/') url += '/';
+            //console.log('new url=+' + url + '+');
             //request_options.uri = url + chainid + '/bp.json';
             const request_options = {
-                uri: url + chainid + '/bp.json',
+                uri: url + 'bp.' + chainid + '.json',
                 headers: {
-                    'User-Agent': 'Request-Promise'
+                    'User-Agent': 'Request-Promise',
+                    'Accept': '*/*'
                 },
+                transform: redirectOn302or301,
                 json: true // Automatically parses the JSON string in the response
             };
             function request_bp_info_stage2(bp, result) {
@@ -123,20 +152,25 @@ function updateBpInfo() {
                 const request_options = {
                     uri: url + 'bp.json',
                     headers: {
-                        'User-Agent': 'Request-Promise'
+                        'User-Agent': 'Request-Promise',
+                        'Accept': '*/*'
                     },
+                    transform: redirectOn302or301,
                     json: true // Automatically parses the JSON string in the response
                 };
                 //console.log('called stage2 for bp=', bp.url);
                 return rp(request_options)
                 .then(function (result2) {
+                    if (bp.owner == 'eosiomeetone') {
+                        //console.log('result2 from eosiomeetone=', result2);
+                    }
                     var is_bp_info = 'producer_account_name' in result2 && 'producer_public_key' in result2 && 'org' in result2
                         && 'location' in result2.org && 'country' in result2.org.location;
                     //console.log('Result for stage2 url ', bp.url, ' = ', is_bp_info);
                     if (is_bp_info) {
                         bp_info[bp.owner] = Object.assign({}, result2, result);
-                        bp_verification[bp.owner] = [ {http_ok: false, ssl_ok: false},
-                                                      {http_ok: false, ssl_ok: false}
+                        bp_verification[bp.owner] = [ {http_ok: false, ssl_ok: false, p2p_ok: false},
+                                                      {http_ok: false, ssl_ok: false, p2p_ok: false}
                                                     ]
                         return Promise.all([validate_bp_api_node(bp.owner, 0), validate_bp_api_node(bp.owner, 1)])
                     }
@@ -157,7 +191,7 @@ function updateBpInfo() {
             })
             .catch(function (err) {
                 // Ignore errors since bp_info is optional
-                //console.error('Error for url ', bp.url, ' = ', err);
+                //console.error('Stage 1 Error for url ', bp.url, ' = ', err);
                 //console.error('Error for url ', bp.url);
                 request_bp_info_stage2(bp, {});
                 // API call failed...

@@ -26,6 +26,12 @@ config.whats_this_bp_name_mismatch = `
 <p>Ask the entity to update their producer name to match the name in the bp.json on their website or contact EOSphere for help.</p>
 `
 
+config.whats_this_bp_json_missing = `
+<p> The bp.json file is either missing or badly formed</p>
+
+<p> Information about this block producer cannot be accurately determined</p>
+`
+
 config.min_activated_stake = 1500000000000; // 150'000'000'0000
 
 // Votes are weighted by how far in the future they are cast. They double in value for every year later.
@@ -39,4 +45,4 @@ config.min_activated_stake = 1500000000000; // 150'000'000'0000
 //Magic number calculated by reverse engineering Jungle not sure why this disagrees with the above possible issue with upgrade from dawn4.0 -> dawn4.1 where this changed
 config.timefactor = 7218513226.892367735;
 
-config.bp_info_refresh_secs = 20;
+config.bp_info_refresh_secs = 60;

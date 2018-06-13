@@ -227,6 +227,39 @@ function redrawAll() {
 }
 
 function block_producers_grid(block_producer_list, description) {
+    function get_formatted_block_producer_name(block_producer) {
+
+        if (!block_producer.fake_bp) {
+            if (block_producer.has_bp_info) {
+                return [
+                         ((window.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : 
+                         [
+                           m('img.bp-small-logo', {'src':(block_producer.name in window.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 
+                                                   'onerror': (x) => {window.block_producer_invalid_images.push(block_producer.name); 
+                                                                      m.redraw(); 
+                                                                      }
+                                                   }),
+                         ]), 
+                         m('span', block_producer.name), 
+                       ];
+            } else {
+                return [ 
+                         m('span.bp-json-missing', block_producer.name), 
+                         m('span.bp-json-missing-warning', ' !WARNING! '), 
+                         m('a', {'class': 'fake-bp-whats-this', 'href':'/whats-this-bp-json-missing', 'target':'_blank'}, 'Whats this'), 
+                       ];
+            }
+        } else {
+            //return ['AAAA'];
+            //return [m('span.fake-bp-title', block_producer.name), ];
+            return [ 
+                     m('span.fake-bp-title', block_producer.name),
+                     m('span.fake-bp-warning', ' !CAUTION! '), 
+                     m('a', {'class': 'fake-bp-whats-this', 'href':'/whats-this-bp-name-mismatch', 'target':'_blank'}, 'Whats this'), 
+                   ];
+        }
+    }
+
     if (block_producer_list.length == 0)
         return [];
     else
@@ -252,9 +285,10 @@ function block_producers_grid(block_producer_list, description) {
                    m('span', {'class': 'checkmark'}),
                  ]),
                ]),
+               /*
                m('div', {'class': 'block-producer-cell block-producer-cell-2'}, (!block_producer.fake_bp ? [
                ((window.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : [
-                  m('img.bp-small-logo', {'src':(block_producer.name in window.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {window.block_producer_invalid_images.push(block_producer.name); m.redraw(); /*x.target.src = '';*/ }}),
+                  m('img.bp-small-logo', {'src':(block_producer.name in window.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {window.block_producer_invalid_images.push(block_producer.name); m.redraw(); }}),
                 ]),
                 m('span', block_producer.name), 
                 
@@ -262,7 +296,8 @@ function block_producers_grid(block_producer_list, description) {
                  m('span.fake-bp-title', block_producer.name),
                  m('span.fake-bp-warning', ' !CAUTION! '),
                  m('a', {'class': 'fake-bp-whats-this', 'href':'/whats-this-bp-name-mismatch', 'target':'_blank'}, 'Whats this'),
-               ])),
+               ])),*/
+               m('div', {'class': 'block-producer-cell block-producer-cell-2'}, get_formatted_block_producer_name(block_producer)), 
                m('div', {'class': 'block-producer-cell block-producer-cell-3 right'}, [
                  m('span.small-vote-total', block_producer.votes_absolute + 'M'),
                  ' ', block_producer.votes_percent,

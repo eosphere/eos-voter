@@ -25,22 +25,27 @@ function ValidURL(str) {
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
     '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
-  if(!pattern.test(str)) {
-    //alert("Please enter a valid URL.");
-    return false;
-  } else {
-    return true;
-  }
+  return pattern.test(str);
+}
+
+function ValidP2P(str) {
+  var pattern = new RegExp('^'+
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)$','i'); // fragment locater
+  return pattern.test(str);
 }
 
 exports.ValidURL = ValidURL;
+exports.ValidP2P = ValidP2P;
 
 exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend
     let bp_info = chaininspector.get_bp_info();
     let bp_verification = chaininspector.get_bp_verification();
     var country_code = '';
-    if (x.owner in bp_info) {
+    let has_bp_info = x.owner in bp_info;
+    if (has_bp_info) {
         country_code = bp_info[x.owner].org.location.country;
     }
     let bp_logo_256 = '';
@@ -97,7 +102,7 @@ exports.format_block_producer = (x, total_votes) => {
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
               'country_code' : country_name, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp,
-              'full_compliance': full_compliance };
+              'full_compliance': full_compliance, 'has_bp_info': has_bp_info };
 }
 
 exports.get_total_votes = function() {

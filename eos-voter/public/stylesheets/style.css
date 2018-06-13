@@ -394,4 +394,12 @@ a.statement:active {
   color:red;
 }
 
+.bp-json-missing {
+  color: #333;
+}
+
+.bp-json-missing-warning {
+  color: DarkGoldenRod ;
+}
+
 
