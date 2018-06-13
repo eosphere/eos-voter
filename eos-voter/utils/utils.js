@@ -62,6 +62,11 @@ exports.format_block_producer = (x, total_votes) => {
     if (bp_logo_256.slice(0, 7) === 'http://') {
         bp_logo_256 = "";
     }
+    if (bp_logo_256.indexOf('cypherglass') > -1) {
+        // A temporary work around since cypherglasses logo just timesout instead we ignore it.
+        // Fix in a better way later
+        bp_logo_256 = "";
+    }
     let fake_bp = false;
     try {
         fake_bp = bp_info[x.owner].producer_account_name != x.owner;
