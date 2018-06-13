@@ -27,9 +27,15 @@ config.whats_this_bp_name_mismatch = `
 `
 
 config.whats_this_bp_json_missing = `
-<p> The bp.json file is either missing or badly formed</p>
+<p>The bp.json file is either missing or badly formed</p>
 
-<p> Information about this block producer cannot be accurately determined</p>
+<p>Information about this block producer cannot be accurately determined</p>
+`
+
+config.whats_this_constitutional_compliance = `
+<p>This column represents constitutional compliance</p>
+<p>The Eos consitution requires each block producer to have two nodes and each node to keep p2p and api end points open</p>
+<p>A green tick here means that eos-voter has tested that the p2p address is valid and the api addresses are working</p>
 `
 
 config.min_activated_stake = 1500000000000; // 150'000'000'0000
