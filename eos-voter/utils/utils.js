@@ -44,7 +44,8 @@ exports.format_block_producer = (x, total_votes) => {
     let bp_info = chaininspector.get_bp_info();
     let bp_verification = chaininspector.get_bp_verification();
     var country_code = '';
-    if (x.owner in bp_info) {
+    let has_bp_info = x.owner in bp_info;
+    if (has_bp_info) {
         country_code = bp_info[x.owner].org.location.country;
     }
     let bp_logo_256 = '';
@@ -93,7 +94,7 @@ exports.format_block_producer = (x, total_votes) => {
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
               'country_code' : country_name, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp,
-              'full_compliance': full_compliance };
+              'full_compliance': full_compliance, 'has_bp_info': has_bp_info };
 }
 
 exports.get_total_votes = function() {

@@ -40,8 +40,13 @@ block content
           div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)} 
           div.block-producer-cell.block-producer-cell-2
             if !blockproducer.fake_bp
-              img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
-              span #{blockproducer.name} 
+              if blockproducer.has_bp_info
+                img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
+                span #{blockproducer.name}
+              else
+                span(class='bp-json-missing') #{blockproducer.name}
+                span(class='bp-json-missing-warning') #{' !WARNING! '}
+                a(class='fake-bp-whats-this', href='/whats-this-bp-json-missing', target='_blank') Whats this
             if blockproducer.fake_bp
               span(class='fake-bp-title') #{blockproducer.name} 
               span(class='fake-bp-warning') #{' !CAUTION! '}

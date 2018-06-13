@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var voteRouter = require('./routes/vote');
 var chainInpectorTask = require('./tasks/chainInspector.js')
 var whatsthisbpnamemismatchRouter = require('./routes/whatsthisbpnamemismatch');
+var whats_this_bp_json_missing_Router = require('./routes/whats-this-bp-json-missing');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/vote', voteRouter);
 app.use('/whats-this-bp-name-mismatch', whatsthisbpnamemismatchRouter);
+app.use('/whats-this-bp-json-missing', whats_this_bp_json_missing_Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
