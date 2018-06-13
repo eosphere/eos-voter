@@ -386,12 +386,13 @@ a.statement:active {
 }
 
 .compliance_ok {
-  color:green;
-  font-size: 22px;
+  color:mediumseagreen;
+  font-size: 26px;
 }
 
 .compliance_failed {
-  color:red;
+  font-size: 12px;
+  color:#777;
 }
 
 .bp-json-missing {
