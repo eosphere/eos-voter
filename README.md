@@ -1,7 +1,30 @@
 # eos-voter
 Website for voting for EOS Block Producers
 
-To set up this project
+## Install Operating System Level packages
+
+Install the necessary operation system packages - these instructions work only for Ubuntu
+
+```
+sudo apt-get install git docker.io python3-dev python3-pip python3-setuptools virtualenv
+```
+
+Set docker to start automatically
+
+```
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+Give your user full access to docker
+
+```
+sudo usermod -aG docker $USER
+```
+
+You should log out and back in to update group membership. You must completely end the session I had to reboot
+
+## Set up the python environment
 
 ```
 virtualenv venv -p python3 
