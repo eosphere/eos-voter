@@ -28,7 +28,16 @@ function ValidURL(str) {
   return pattern.test(str);
 }
 
+function ValidP2P(str) {
+  var pattern = new RegExp('^'+
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)$','i'); // fragment locater
+  return pattern.test(str);
+}
+
 exports.ValidURL = ValidURL;
+exports.ValidP2P = ValidP2P;
 
 exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend

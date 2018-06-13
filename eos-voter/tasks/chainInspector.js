@@ -95,10 +95,15 @@ function validate_bp_api_node(owner, nodeid) {
             .catch((e) => { bp_verification[owner][nodeid].ssl_ok = false; }); 
     };
 
+    function verify_p2p_node(node) {
+        var end_point = node.p2p_endpoint;
+        bp_verification[owner][nodeid].p2p_ok = utils.ValidP2P(end_point)
+    }
+
     // Returns a promise which validates the api end points
     var node = bp_info[owner].nodes[nodeid];
     
-    return Promise.all([verify_http_node(node), verify_ssl_node(node)])
+    return Promise.all([verify_http_node(node), verify_ssl_node(node), verify_p2p_node(node)])
 }
 
 function updateBpInfo() {
@@ -135,8 +140,8 @@ function updateBpInfo() {
                     //console.log('Result for stage2 url ', bp.url, ' = ', is_bp_info);
                     if (is_bp_info) {
                         bp_info[bp.owner] = Object.assign({}, result2, result);
-                        bp_verification[bp.owner] = [ {http_ok: false, ssl_ok: false},
-                                                      {http_ok: false, ssl_ok: false}
+                        bp_verification[bp.owner] = [ {http_ok: false, ssl_ok: false, p2p_ok: false},
+                                                      {http_ok: false, ssl_ok: false, p2p_ok: false}
                                                     ]
                         return Promise.all([validate_bp_api_node(bp.owner, 0), validate_bp_api_node(bp.owner, 1)])
                     }
