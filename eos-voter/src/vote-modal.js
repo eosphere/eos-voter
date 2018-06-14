@@ -8,6 +8,7 @@ var eosjs = require('eosjs');
 var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
+var chain_protocol = document.getElementById('allblockproducers').getAttribute('data-chain-protocol');
 
 class VoteModal extends EosVoterModal {
     constructor(vnode) {
@@ -31,7 +32,7 @@ class VoteModal extends EosVoterModal {
         globals.scatter.suggestNetwork(globals.network).then((result) => {
             globals.scatter.getIdentity(requiredFields).then(identity => {
 
-                var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions );
+                var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, chain_protocol );
                  
                 eos.contract('eosio', requiredFields).then(c => {
                         eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )

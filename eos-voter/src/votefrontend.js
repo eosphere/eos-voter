@@ -41,12 +41,14 @@ globals.network = {
     blockchain:'eos',
     host: chain_addr,
     port: chain_port,
+    chainId: chain_id,
 }
 
-const network_secure = {
+globals.network_secure = {
     blockchain:'eos',
     host: chain_addr,
     port: chain_secure_port,
+    chainId: chain_id,
 }
 
 const requiredFields = {
@@ -147,7 +149,7 @@ function redrawAll() {
 
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                eos = globals.scatter.eos( network_secure, eosjs.Localnet, globals.eosOptions, chain_protocol );
+                eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, chain_protocol );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         //console.log('getAccount result=', result);

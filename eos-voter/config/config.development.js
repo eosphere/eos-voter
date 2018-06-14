@@ -36,9 +36,9 @@ config.chain_addr = 'node1.eosphere.io'
 // Port to connect to the API
 config.chain_port = '8888'
 // Protocol to use. Valid choices are http or https
-config.protocol = 'http'
+config.protocol = 'https'
 // If we are using https we need a different port here
-config.chain_secure_port = '8888'
+config.chain_secure_port = '443'
 
 
 /*
