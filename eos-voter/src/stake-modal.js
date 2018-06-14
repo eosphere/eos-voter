@@ -34,7 +34,7 @@ class StakeModal extends EosVoterModal {
         globals.scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with. 
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-            var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions );
+            var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
             eos.contract('eosio', requiredFields).then(c => {
                 c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS', 0)
                     .then((result) => {

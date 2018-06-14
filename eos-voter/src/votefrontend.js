@@ -20,7 +20,7 @@ var backup_block_producers = JSON.parse(document.getElementById('allblockproduce
 var chain_addr = document.getElementById('allblockproducers').getAttribute('data-chain-addr');
 var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
 var chain_secure_port = document.getElementById('allblockproducers').getAttribute('data-chain-secure-port');
-var chain_protocol = document.getElementById('allblockproducers').getAttribute('data-chain-protocol');
+globals.chain_protocol = document.getElementById('allblockproducers').getAttribute('data-chain-protocol');
 var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
 var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
 var voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
@@ -41,12 +41,14 @@ globals.network = {
     blockchain:'eos',
     host: chain_addr,
     port: chain_port,
+    chainId: chain_id,
 }
 
-const network_secure = {
+globals.network_secure = {
     blockchain:'eos',
     host: chain_addr,
     port: chain_secure_port,
+    chainId: chain_id,
 }
 
 const requiredFields = {
@@ -111,7 +113,7 @@ document.addEventListener('scatterLoaded', scatterExtension => {
     window.scatter = null;
 
     // If you want to require a specific version of Scatter
-    var ret = globals.scatter.requireVersion(4.0);
+    var ret = globals.scatter.requireVersion(5.0);
 
     //Display the connecting screen
     modal_stack.push_modal([ConnectingToScatter, {on_close: modal_stack.pop_modal}, null]);
@@ -133,7 +135,7 @@ function redrawAll() {
     if (active_block_producers.length == 0 && backup_block_producers.length == 0)
         return;
 
-    var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions, chain_protocol );
+    var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
     globals.scatter.suggestNetwork(globals.network).then((result) => {
             globals.scatter.getIdentity(requiredFields).then(identity => {
@@ -147,7 +149,7 @@ function redrawAll() {
 
                  
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                eos = globals.scatter.eos( network_secure, eosjs.Localnet, globals.eosOptions, chain_protocol );
+                eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
                 eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
                         //console.log('getAccount result=', result);
