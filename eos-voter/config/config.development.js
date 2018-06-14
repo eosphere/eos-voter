@@ -50,7 +50,7 @@ config.protocol = 'https'
 */
 
 // User readable name for the chain
-config.chain_name = 'Jungle TestNet';
+config.chain_name = 'EOS Mainnet';
 
 
 // eosio.sj TestNet
