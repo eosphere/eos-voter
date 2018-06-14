@@ -62,31 +62,46 @@ class VoteModal extends EosVoterModal {
     }
 
     get_internal_content() {
+        /*
+        get_constitution_agreement
+
+                 m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
+                   'By voting you are agreeing to the ', 
+                   m('a', {'class': 'constitution-agreement-link',
+                           'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
+                           'target': '_blank'},
+                           'EOS Constitution detailed here'),
+                 ]),
+        */
+
         return [
                  m('h2', {'style': {'text-align': 'center'}}, 'Confirm your vote'),
-                 (this.proxy_name != '' ? 
-                   m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
-                     m('h2', {'style': {'text-align':'center'}}, 'You are voting for proxy - ' + this.proxy_name)
-                   )
-                 :
-                 (this.votes.length > 0 ?
-                 m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
-                   this.votes.map((x) => {
-                     return  m('div', {'style': {'width': '165px',
-                                                 'height': '48px',
-                                                 'overflow': 'hidden',
-                                                 'display': 'inline-block',
-                                                 'border': '1px solid black',
-                                                 'padding-left': '6px', 'padding-right': '6px'}}, [
-                               m('h3', x)
-                             ]);
-                   }),
-                 )
-                 :
-                   m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}},
-                     m('h2', {'style': {'text-align':'center'}}, 'You are voting for no block producer')
-                   )
-                 )),
+                 m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
+                   m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
+                     'By voting you are agreeing to the ', 
+                     m('a', {'class': 'constitution-agreement-link',
+                             'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
+                             'target': '_blank'},
+                             'EOS Constitution detailed here'),
+                   ]),
+                 ].concat(
+                   (this.proxy_name != '' ? 
+                       [ m('h2', {'style': {'text-align':'center'}}, 'You are voting for proxy - ' + this.proxy_name) ]
+                   :
+                   (this.votes.length > 0 ?
+                     this.votes.map((x) => {
+                       return  m('div', {'style': {'width': '165px',
+                                                   'height': '48px',
+                                                   'overflow': 'hidden',
+                                                   'display': 'inline-block',
+                                                   'border': '1px solid black',
+                                                   'padding-left': '6px', 'padding-right': '6px'}}, [
+                                 m('h3', x)
+                               ]);
+                     })
+                   :
+                       [ m('h2', {'style': {'text-align':'center'}}, 'You are voting for no block producer') ]
+                   )))),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.vote_now()}, 

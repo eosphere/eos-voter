@@ -403,4 +403,30 @@ a.statement:active {
   color: DarkGoldenRod ;
 }
 
+.constitution-agreement-text {
+  color: red;
+  font-size: 20px;
+}
+
+a.constitution-agreement-link {
+  font-size: 20px;
+  color: red;
+}
+
+a.constitution-agreement-link:link {
+  color: red;
+}
+
+a.constitution-agreement-link:visited {
+  color: red;
+}
+
+a.constitution-agreement-link:hover {
+  color: red;
+}
+
+a.constitution-agreement-link:active {
+  color: red;
+}
+
 
