@@ -25,7 +25,7 @@ block content
     else
         h2.centre Block Producer Candidates
 
-    div.block-producer-list
+    div.block-producer-li7st
       div.block-producer-row
         div.block-producer-cell.block-producer-cell-1.block-producer-column-header &nbsp;
         div.block-producer-cell.block-producer-cell-2.block-producer-column-header Block Producer
@@ -88,7 +88,7 @@ block content
                 if blockproducer.fake_bp
                   span(class='fake-bp-title') #{blockproducer.name} 
                   span(class='fake-bp-warning') #{' !CAUTION! '}
-              a(class='fake-bp-whats-this', href='/whats-this-bp-name-mismatch', target='_blank') Whats this
+                  a(class='fake-bp-whats-this', href='/whats-this-bp-name-mismatch', target='_blank') Whats this
               div.block-producer-cell.block-producer-cell-3.right #[span(class='small-vote-total') #{blockproducer.votes_absolute}M] #{blockproducer.votes_percent}
               div.block-producer-cell.block-producer-cell-4 #{blockproducer.country_code}  !{"&nbsp;"}
               div.block-producer-cell.block-producer-cell-5
