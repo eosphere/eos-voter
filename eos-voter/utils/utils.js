@@ -34,6 +34,23 @@ function ValidURL(str) {
 
 exports.ValidURL = ValidURL;
 
+// Kudos to CryptoLions
+// Copied from EOS portal - ML 15062018
+function calculateVoteWeight() {
+
+    //time epoch:
+    //https://github.com/EOSIO/eos/blob/master/contracts/eosiolib/time.hpp#L160
+
+    //stake to vote
+    //https://github.com/EOSIO/eos/blob/master/contracts/eosio.system/voting.cpp#L105-L109
+
+    let timestamp_epoch = 946684800000;
+    let dates_ = (Date.now() / 1000) - (timestamp_epoch / 1000);
+    let weight_ = Math.floor(dates_ / (86400 * 7)) / 52;  //86400 = seconds per day 24*3600
+    return Math.pow(2, weight_);
+}
+
+
 exports.format_block_producer = (x, total_votes) => {
     // Format the block producers information for the frontend
     let bp_info = chaininspector.get_bp_info();
@@ -79,7 +96,7 @@ exports.format_block_producer = (x, total_votes) => {
         console.log('format_block_producer err=', err);
         // Lots of BPs don't conform to the standard just continue as best as possible
     }
-    return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / config.timefactor / 1000000.0).toFixed(2),
+    return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / calculateVoteWeight() / 10000.0 / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
