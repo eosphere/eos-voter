@@ -30,7 +30,7 @@ var activated_percent = document.getElementById('allblockproducers').getAttribut
 var has_activated_message = document.getElementById('allblockproducers').getAttribute('data-has-activated-message');
 
 var votes = [];
-var proxy_name = ''; 
+var proxy_name = '';
 var balance = 'Unknown';
 var delegated_cpu_weight = 'Unknown';
 var delegated_net_weight = 'Unknown';
@@ -84,11 +84,11 @@ function cast_vote() {
 
 function current_vote() {
     return m('div', {'style': {'text-align':'center'}},
-             m("span.vote_info", (proxy_name == '' ? 
-                ['You have voted for ', m('strong.bolded-vote-info', votes.length), ' producer candidates.'] : 
-                m('strong.bolded-vote-info', 'You have proxied your vote to ' + proxy_name)) 
+             m("span.vote_info", (proxy_name == '' ?
+                ['You have voted for ', m('strong.bolded-vote-info', votes.length), ' producer candidates.'] :
+                m('strong.bolded-vote-info', 'You have proxied your vote to ' + proxy_name))
              )
-           ) 
+           )
 }
 
 function eos_to_float(s) {
@@ -139,19 +139,19 @@ function redrawAll() {
 
     globals.scatter.suggestNetwork(globals.network).then((result) => {
             globals.scatter.getIdentity(requiredFields).then(identity => {
-                // Set up any extra options you want to use eosjs with. 
+                // Set up any extra options you want to use eosjs with.
                 if (identity.accounts[0].authority != 'active'){
-                    modal_stack.push_modal([ErrorModal, {error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority + 
+                    modal_stack.push_modal([ErrorModal, {error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
                           ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}, null]);
                     m.redraw();
                     return;
                 }
 
-                 
+
                 // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
                 eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
-                eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => { 
+                eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
                         //console.log('getAccount result=', result);
                         modal_stack.pop_entire_stack();
 
@@ -190,12 +190,12 @@ function redrawAll() {
                             delegated_net_weight = result ? result.total_resources.net_weight.split(" ")[0] : 0;
                         }
                         /*
-                        Comment out due to last minute problems with this dialog popping up unexpectly 
+                        Comment out due to last minute problems with this dialog popping up unexpectly
                         if (parseFloat(delegated_cpu_weight) == 0 && parseFloat(delegated_net_weight) == 0) {
                             modal_stack.push_modal([StakeModal, {delegated_cpu_weight: delegated_cpu_weight, delegated_net_weight: delegated_net_weight, balance: balance}, null]);
                         }
                         */
-        
+
                         m.redraw();
                     })
                     .catch(   (e) => {
@@ -203,7 +203,7 @@ function redrawAll() {
                                     errorDisplay('Scatter returned an error from getAccount', e);
                                     }
                     );
-    
+
             }).catch(error => {
                 console.error('scatter.getIdentity() gave error=', error);
                 if (error.type == 'identity_rejected') {
@@ -248,7 +248,7 @@ function block_producers_grid(block_producer_list, description) {
                m('div', {'class': 'block-producer-cell block-producer-cell-1 block-producer-column-header'}, [
                  m('label', {'class': 'checkbox-container'}, [
                    m.trust('&nbsp;'),
-                   m('input', Object.assign({}, {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes}, 
+                   m('input', Object.assign({}, {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': recalcVotes},
                         ((votes.includes(block_producer.id)) ? {'checked': 'checked'} : {}))),
                    m('span', {'class': 'checkmark'}),
                  ]),
@@ -257,8 +257,8 @@ function block_producers_grid(block_producer_list, description) {
                ((window.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : [
                   m('img.bp-small-logo', {'src':(block_producer.name in window.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {window.block_producer_invalid_images.push(block_producer.name); m.redraw(); /*x.target.src = '';*/ }}),
                 ]),
-                m('span', block_producer.name), 
-                
+                m('span', block_producer.name),
+
                ]:[
                  m('span.fake-bp-title', block_producer.name),
                  m('span.fake-bp-warning', ' !CAUTION! '),
@@ -269,10 +269,10 @@ function block_producers_grid(block_producer_list, description) {
                  ' ', block_producer.votes_percent,
                ]),
                m('div', {'class': 'block-producer-cell block-producer-cell-4'}, [block_producer.country_code, m.trust('&nbsp;')]),
-               m('div', {'class': 'block-producer-cell block-producer-cell-5'}, block_producer.valid_url ? 
-                 [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] : 
+               m('div', {'class': 'block-producer-cell block-producer-cell-5'}, block_producer.valid_url ?
+                 [m('a', {'href': block_producer.statement, 'class': 'statement', 'target': '_blank'}, block_producer.statement)] :
                    [block_producer.statement, m.trust('&nbsp;')]),
-             ]);              
+             ]);
             }))
 
            ),
@@ -329,10 +329,21 @@ var View = {
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; max-width: 458.2px;'}, [
-                         'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight + 
+                         'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight +
                          ' EOS. Delegated Net = ' + delegated_net_weight + ' EOS.',
                        ]),
-                       m('button', {'class': 'vote-helper-button', 'onclick': (e) => { modal_stack.push_modal([StakeModal, {delegated_cpu_weight: delegated_cpu_weight, delegated_net_weight: delegated_net_weight, balance: balance}, null]); }}, 'Stake now'),
+                       m('button', {'class': 'vote-helper-button',
+                                    'onclick': (e) => { modal_stack.push_modal([StakeModal,
+                                      {delegated_cpu_weight: delegated_cpu_weight,
+                                       delegated_net_weight: delegated_net_weight,
+                                       balance: balance}, null]); }}, 'Stake now'),
+                     ]),
+                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
+                       m('div', {'style': 'display: inline-block; width: 458.2px;'}, [
+                         'Sign out of scatter and load another identity',
+                       ]),
+                       m('button', {'class': 'vote-helper-button',
+                                    'onclick': (e) => { globals.scatter.forgetIdentity().then(redrawAll) }}, 'Change identity'),
                      ]),
                      current_vote(),
                    ]),
@@ -342,13 +353,12 @@ var View = {
                m('p', [
                  'A service provided by ',
                  m('a', {'href':'https://eosphere.io', 'target':'_blank'}, 'EOSphere'),
-                 ' Source code licenced under Affero GNU GPL ', 
+                 ' Source code licenced under Affero GNU GPL ',
                  m('a', {'href': 'https://github.com/eosphere/eos-voter', 'target':'_blank'},
                  'Download source'),
                ]),
              ]),
         )
     }
-}   
+}
 m.mount(root, View)
-
