@@ -40,4 +40,5 @@ config.min_activated_stake = 1500000000000; // 150'000'000'0000
 config.timefactor = 7218513226.892367735;
 
 
-config.query_bp_json = true;
+//config.query_bp_json = true;
+

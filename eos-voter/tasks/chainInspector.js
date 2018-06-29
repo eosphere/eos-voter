@@ -57,8 +57,8 @@ var first_run = true;
 
 function updateBpInfo() {
     console.log('updateBpInfo called');
-    if (config.query_bp_json == false)
-      return;
+    //if (config.query_bp_json == false)
+    //  return;
     //Iterate over all of the block producers and update their bp info
     active_block_producers.map((bp) => {
         if (utils.ValidURL(bp.url)) {
