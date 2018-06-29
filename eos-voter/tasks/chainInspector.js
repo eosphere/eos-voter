@@ -13,7 +13,7 @@ var total_activated_stake = 0;
 var bp_info = {};
 
 var options = {
-  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_secure_port, 
+  httpEndpoint: config.protocol + '://' + config.chain_addr + ':' + config.chain_secure_port,
   //httpEndpoint: 'https://node1.eosphere.io:443',
   debug: false,
   fetchConfiguration: {},
@@ -57,6 +57,8 @@ var first_run = true;
 
 function updateBpInfo() {
     console.log('updateBpInfo called');
+    if (config.query_bp_json == false)
+      return;
     //Iterate over all of the block producers and update their bp info
     active_block_producers.map((bp) => {
         if (utils.ValidURL(bp.url)) {
@@ -96,7 +98,7 @@ function updateBpInfo() {
                     //console.error('Error for url ', bp.url, ' = ', err);
                     //console.error('Error for stage2 url ', bp.url);
                     // API call failed...
-                });  
+                });
             };
             rp(request_options)
             .then(function (result) {
@@ -111,8 +113,8 @@ function updateBpInfo() {
                 //console.error('Error for url ', bp.url);
                 request_bp_info_stage2(bp, {});
                 // API call failed...
-            });  
-        }      
+            });
+        }
     });
     setTimeout(updateBpInfo, config.bp_info_refresh_secs * 1000);
 }
@@ -156,10 +158,8 @@ function inspectChain()
                      setTimeout(inspectChain, config.refresh_secs * 1000);
                     });
 
-    
+
 }
 
 inspectChain();
 setTimeout(updateBpInfo, config.refresh_secs * 1000);
-
-

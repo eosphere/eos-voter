@@ -1,5 +1,5 @@
 var config = module.exports = {};
- 
+
 config.refresh_secs = 5;
 
 // Warning landing page content should include HTML tag it will be injected into a div tag
@@ -12,7 +12,7 @@ config.voting_page_content = '<p class=\'centre\'>You may vote for up to 30 bloc
 // Warning voting page content should include HTML tag it will be injected into a div tag
 config.has_activated_message = '<p class=\'centre-activated\'>This particular EOS block chain has now reached the 15% activation threshold</p>'
 
-// Content of the what's this (fake bp) page 
+// Content of the what's this (fake bp) page
 // Warning voting page content should include HTML tag it will be injected into a div tag
 config.whats_this_bp_name_mismatch = `
 <p>Caution - the registered name of this producer does not match the name listed publicly on the corresponding website.</p>
@@ -39,4 +39,5 @@ config.min_activated_stake = 1500000000000; // 150'000'000'0000
 //Magic number calculated by reverse engineering Jungle not sure why this disagrees with the above possible issue with upgrade from dawn4.0 -> dawn4.1 where this changed
 config.timefactor = 7218513226.892367735;
 
-config.bp_info_refresh_secs = 60;
+
+config.query_bp_json = true;
