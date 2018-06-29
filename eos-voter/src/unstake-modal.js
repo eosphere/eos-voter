@@ -9,7 +9,7 @@ var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 
-class StakeModal extends EosVoterModal {
+class UnstakeModal extends EosVoterModal {
     constructor(vnode) {
         super(vnode);
         this.delegated_cpu_weight = vnode.attrs.delegated_cpu_weight;
@@ -22,7 +22,7 @@ class StakeModal extends EosVoterModal {
 
     can_close() { return !this.is_staking; };
 
-    stake_now() {
+    unstake_now() {
         if (this.is_staking)
             return;
         this.is_staking = true;
@@ -36,10 +36,10 @@ class StakeModal extends EosVoterModal {
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
             eos.contract('eosio', requiredFields).then(c => {
-                c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS', 0)
+                c.undelegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS')
                     .then((result) => {
                     console.log('delegatebw result=', result);
-                    modal_stack.push_modal([OKModal, {info_message: 'Staking was succesful. Transaction id = \'' + result.transaction_id + '\''}, null]);
+                    modal_stack.push_modal([OKModal, {info_message: 'Unstaking was succesful. Transaction id = \'' + result.transaction_id + '\'. Unstaked coins take 3 days to become available.'}, null]);
                     m.redraw();
                     })
                     .catch(e => {
@@ -65,18 +65,19 @@ class StakeModal extends EosVoterModal {
 
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Stake your EOS'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Unstake your EOS'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
-                   m('h2', {'style': {'text-align': 'center'}}, 'You must stake EOS to CPU and Net to vote'),
+                   m('h2', {'style': {'text-align': 'center'}}, 'You must unstake EOS from CPU and Net to trade'),
                    ((this.delegated_cpu_weight == 0 && this.delegated_net_weight == 0) ? [
                      m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked EOS'),
                    ]:[]),
                    m("p", 'Your available EOS balance is ' + this.balance + ' EOS.'),
                    m("p", 'You currently have ' + this.delegated_cpu_weight + ' EOS staked to CPU.'),
                    m("p", 'You currently have ' + this.delegated_net_weight + ' EOS staked to Net.'),
+                   m("p", 'Enter the number of EOS tokens you wish to remove from the stake and return to your account.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
-                     m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
-                       m('label', {'for': 'id-CPU-stake'}, 'CPU stake'),
+                     m('div', {'style': {'width': '160px', 'display': 'inline-block'}}, [
+                       m('label', {'for': 'id-CPU-stake'}, 'CPU amount to unstake'),
                      ]),
                      m('input', {'type': 'text', 'id': 'id-CPU-stake',
                                  'value': this.new_delegated_cpu_weight,
@@ -85,8 +86,8 @@ class StakeModal extends EosVoterModal {
                      m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                    ]),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
-                     m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
-                       m('label', {'for': 'id-Net-stake', 'style': {'width': '70px'}}, 'Net stake'),
+                     m('div', {'style': {'width': '160px', 'display': 'inline-block'}}, [
+                       m('label', {'for': 'id-Net-stake'}, 'Net amount to unstake'),
                      ]),
                      m('input', {'type': 'text', 'id': 'id-Net-stake',
                                  'value': this.new_delegated_net_weight == 'Unknown' ? '0' : this.new_delegated_net_weight,
@@ -98,9 +99,9 @@ class StakeModal extends EosVoterModal {
                  ]),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
-                     m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.stake_now()},
-                       (this.is_staking == false ? "Stake EOS" : [
-                       m('span', {'style': {'display': 'inline-block'}}, "Staking"),
+                     m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.unstake_now()},
+                       (this.is_staking == false ? "Unstake EOS" : [
+                       m('span', {'style': {'display': 'inline-block'}}, "Unstaking"),
                        m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
                      ])),
                    ]),
@@ -113,4 +114,4 @@ class StakeModal extends EosVoterModal {
     }
 }
 
-exports.StakeModal = StakeModal;
+exports.UnstakeModal = UnstakeModal;
