@@ -333,7 +333,18 @@ var View = {
                          'Your EOS balance is ' + balance + ' EOS. Delegated CPU = ' + delegated_cpu_weight +
                          ' EOS. Delegated Net = ' + delegated_net_weight + ' EOS.',
                        ]),
-                       m('button', {'class': 'vote-helper-button', 'onclick': (e) => { modal_stack.push_modal([StakeModal, {delegated_cpu_weight: delegated_cpu_weight, delegated_net_weight: delegated_net_weight, balance: balance}, null]); }}, 'Stake now'),
+                       m('button', {'class': 'vote-helper-button',
+                                    'onclick': (e) => { modal_stack.push_modal([StakeModal,
+                                      {delegated_cpu_weight: delegated_cpu_weight,
+                                       delegated_net_weight: delegated_net_weight,
+                                       balance: balance}, null]); }}, 'Stake now'),
+                     ]),
+                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
+                       m('div', {'style': 'display: inline-block; width: 458.2px;'}, [
+                         'Sign out of scatter and load another identity',
+                       ]),
+                       m('button', {'class': 'vote-helper-button',
+                                    'onclick': (e) => { globals.scatter.forgetIdentity().then(redrawAll) }}, 'Change identity'),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 458.2px;'}, [
