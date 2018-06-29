@@ -22,7 +22,7 @@ config.chain_secure_port = '443'
 
 
 // User readable name for the chain
-config.chain_name = 'Jungle Testnet';
+config.chain_name = 'EOS Mainnet';
 
 config.bp_info_refresh_secs = 60;
 
