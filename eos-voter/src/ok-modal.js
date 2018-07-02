@@ -2,7 +2,7 @@
 let exports = module.exports = {};
 
 var m = require("mithril");
-var {EosVoterModal, modal_stack} = require('./eosvoter-modal.js');
+var {EosVoterModal} = require('./eosvoter-modal.js');
 
 class OKModal extends EosVoterModal {
     constructor(vnode) {
@@ -11,7 +11,7 @@ class OKModal extends EosVoterModal {
     }
     canclose() { return false; };
     ok_now() {
-        modal_stack.pop_entire_stack();
+        this.owner.pop_entire_stack();
         m.redraw();
     }
     get_internal_content() {
@@ -26,4 +26,3 @@ class OKModal extends EosVoterModal {
 }
 
 exports.OKModal = OKModal;
-

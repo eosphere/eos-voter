@@ -5,7 +5,7 @@ var m = require("mithril");
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var globals = require('./globals.js');
 var eosjs = require('eosjs');
-var {modal_stack} = require('./eosvoter-modal.js');
+//var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 
@@ -39,26 +39,26 @@ class UnstakeModal extends EosVoterModal {
                 c.undelegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS')
                     .then((result) => {
                     console.log('delegatebw result=', result);
-                    modal_stack.push_modal([OKModal, {info_message: 'Unstaking was succesful. Transaction id = \'' + result.transaction_id + '\'. Unstaked coins take 3 days to become available.'}, null]);
+                    this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Unstaking was succesful. Transaction id = \'' + result.transaction_id + '\'. Unstaked coins take 3 days to become available.'}, null]);
                     m.redraw();
                     })
                     .catch(e => {
-                        errorDisplay('eosio.delegatebw returned an error', e);
+                        errorDisplay(this.owner, 'eosio.delegatebw returned an error', e);
                         console.log('delegatebw error e=', e)
                     });
                 })
                 .catch(e => {
-                    errorDisplay('get contract returned an error', e);
+                    errorDisplay(this.owner, 'get contract returned an error', e);
                     console.log('contract error e=', e)
                 });
             })
             .catch(e => {
-                errorDisplay('getidentity returned an error', e);
+                errorDisplay(this.owner, 'getidentity returned an error', e);
                 console.log('getidentity error e=', e)
             });
         })
         .catch(e => {
-            errorDisplay('suggestNetwork returned an error', e);
+            errorDisplay(this.owner, 'suggestNetwork returned an error', e);
             console.log('suggestNetwork error e=', e)
         });
     }

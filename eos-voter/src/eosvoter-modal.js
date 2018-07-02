@@ -6,8 +6,8 @@ var globals = require('./globals.js');
 //import m from "mithril";
 var m = require("mithril");
 
-class ModalStack {
-    // Implements a stack of EosVoterModal objects
+class ModalStackMixin {
+    // Inherit from this to get the modal stack in your view
     constructor() {
         this.pop_listener_fn = null;
         this.modal_stack = [];
@@ -43,11 +43,26 @@ class ModalStack {
             this.pop_modal();
         }
     }
+
+    get_current_modal() {
+        if (this.is_empty()) return [];
+        // Returns the modal on the top of the stack
+        let top = this.get_top();
+        let inst = m(top[0] /*the class*/, top[1] /* the params*/);
+        if (top[2] === null) {
+            top[2] = inst;
+        }
+        return inst;
+    }
 }
 
-var modal_stack = exports.modal_stack = new ModalStack();
+exports.ModalStackMixin = ModalStackMixin;
 
 class EosVoterModal {
+    constructor(vnode) {
+      this.owner = vnode.attrs.owner;
+    }
+
     view() {
        return m('.dialog', {'onclick': e => this.close()},
          m('.dialogContent', {'onclick': e => e.stopPropagation()}, [
@@ -64,10 +79,8 @@ class EosVoterModal {
     }
 
     force_close() {
-        modal_stack.pop_modal();
+        this.owner.pop_modal();
     }
 }
 
 exports.EosVoterModal = EosVoterModal;
-
-

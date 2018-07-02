@@ -2,7 +2,7 @@
 let exports = module.exports = {};
 
 var m = require("mithril");
-var {EosVoterModal, modal_stack} = require('./eosvoter-modal.js');
+var {EosVoterModal} = require('./eosvoter-modal.js');
 
 class ErrorModal extends EosVoterModal {
     constructor(vnode) {
@@ -34,7 +34,7 @@ class ErrorOKModal extends EosVoterModal {
     }
     canclose() { return true; };
     ok_now() {
-        modal_stack.pop_modal();
+        this.owner.pop_modal();
     }
     get_internal_content() {
         return [
@@ -47,7 +47,7 @@ class ErrorOKModal extends EosVoterModal {
     }
 }
 
-function errorDisplay(description, e) {
+function errorDisplay(owner, description, e) {
     console.log('errorDisplay e=', e);
     let message = 'Null message';
     let details = 'Null details';
@@ -67,11 +67,10 @@ function errorDisplay(description, e) {
         // Silently ignore if error details does not exists Ie because the error message isn't JSON
         message = e;
     }
-    modal_stack.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}, null]);
+    owner.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}, null]);
     m.redraw();
 }
 
 exports.ErrorModal = ErrorModal;
 exports.errorDisplay = errorDisplay;
 exports.ErrorOKModal = ErrorOKModal;
-

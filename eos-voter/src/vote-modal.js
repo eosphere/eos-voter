@@ -5,7 +5,7 @@ var m = require("mithril");
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var globals = require('./globals.js');
 var eosjs = require('eosjs');
-var {modal_stack} = require('./eosvoter-modal.js');
+//var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 
@@ -32,32 +32,32 @@ class VoteModal extends EosVoterModal {
             globals.scatter.getIdentity(requiredFields).then(identity => {
 
                 var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
-                 
+
                 eos.contract('eosio', requiredFields).then(c => {
                         eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )
                             .then((result) => {
                                 console.log('voteproducer result=', result);
-                                modal_stack.push_modal([OKModal, {info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\''}, null]);
+                                this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\''}, null]);
                                 m.redraw();
                             })
                             .catch((error) => {
                                 console.error('voteproducer error=', error);
-                                errorDisplay('eosio.voteproducer returned an error', error);
+                                errorDisplay(this.owner, 'eosio.voteproducer returned an error', error);
                             })
                     })
                     .catch(e => {
                         errorDisplay('get contract returned an error', e);
-                        console.log('contract error e=', e)
+                        console.log(this.owner, 'contract error e=', e)
                     });
                 })
                 .catch(e => {
                     errorDisplay('getidentity returned an error', e);
-                    console.log('getidentity error e=', e)
+                    console.log(this.owner, 'getidentity error e=', e)
                 });
             })
             .catch(e => {
                 errorDisplay('suggestNetwork returned an error', e);
-                console.log('suggestNetwork error e=', e)
+                console.log(this.owner, 'suggestNetwork error e=', e)
             });
     }
 
@@ -66,7 +66,7 @@ class VoteModal extends EosVoterModal {
         get_constitution_agreement
 
                  m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
-                   'By voting you are agreeing to the ', 
+                   'By voting you are agreeing to the ',
                    m('a', {'class': 'constitution-agreement-link',
                            'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
                            'target': '_blank'},
@@ -78,14 +78,14 @@ class VoteModal extends EosVoterModal {
                  m('h2', {'style': {'text-align': 'center'}}, 'Confirm your vote'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
-                     'By voting you are agreeing to the ', 
+                     'By voting you are agreeing to the ',
                      m('a', {'class': 'constitution-agreement-link',
                              'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
                              'target': '_blank'},
                              'EOS Constitution detailed here'),
                    ]),
                  ].concat(
-                   (this.proxy_name != '' ? 
+                   (this.proxy_name != '' ?
                        [ m('h2', {'style': {'text-align':'center'}}, 'You are voting for proxy - ' + this.proxy_name) ]
                    :
                    (this.votes.length > 0 ?
@@ -104,7 +104,7 @@ class VoteModal extends EosVoterModal {
                    )))),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
-                     m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.vote_now()}, 
+                     m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.vote_now()},
                        (this.is_voting == false ? "Cast Vote" : [
                        m('span', {'style': {'display': 'inline-block'}}, "Voting"),
                        m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
@@ -121,4 +121,3 @@ class VoteModal extends EosVoterModal {
 }
 
 exports.VoteModal = VoteModal;
-

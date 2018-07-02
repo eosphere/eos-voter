@@ -2,7 +2,7 @@
 let exports = module.exports = {};
 
 var m = require("mithril");
-var {EosVoterModal, modal_stack} = require('./eosvoter-modal.js');
+var {EosVoterModal} = require('./eosvoter-modal.js');
 
 class NotDetectedModal extends EosVoterModal {
     canclose() { return false; };
@@ -17,4 +17,3 @@ class NotDetectedModal extends EosVoterModal {
 }
 
 exports.NotDetectedModal = NotDetectedModal;
-
