@@ -21,37 +21,33 @@ var chain_addr = document.getElementById('allblockproducers').getAttribute('data
 var chain_port = document.getElementById('allblockproducers').getAttribute('data-chain-port');
 var chain_secure_port = document.getElementById('allblockproducers').getAttribute('data-chain-secure-port');
 globals.chain_protocol = document.getElementById('allblockproducers').getAttribute('data-chain-protocol');
-var chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
-var chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
-var voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
-var total_activated_stake = document.getElementById('allblockproducers').getAttribute('data-total-activated-stake');
-var min_activated_stake = document.getElementById('allblockproducers').getAttribute('data-min-activated-stake');
-var activated_percent = document.getElementById('allblockproducers').getAttribute('data-activated-percent');
-var has_activated_message = document.getElementById('allblockproducers').getAttribute('data-has-activated-message');
+globals.chain_name = document.getElementById('allblockproducers').getAttribute('data-chain-name');
+globals.chain_id = document.getElementById('allblockproducers').getAttribute('data-chain-id');
+globals.voting_page_content = document.getElementById('allblockproducers').getAttribute('data-voting-page-content');
+globals.total_activated_stake = document.getElementById('allblockproducers').getAttribute('data-total-activated-stake');
+globals.min_activated_stake = document.getElementById('allblockproducers').getAttribute('data-min-activated-stake');
+globals.activated_percent = document.getElementById('allblockproducers').getAttribute('data-activated-percent');
+globals.has_activated_message = document.getElementById('allblockproducers').getAttribute('data-has-activated-message');
 globals.active_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-active-block-producers'));
 globals.backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
 
-window.block_producer_invalid_images = [];
+globals.block_producer_invalid_images = [];
 
 globals.network = {
     blockchain:'eos',
     host: chain_addr,
     port: chain_port,
-    chainId: chain_id,
+    chainId: globals.chain_id,
 }
 
 globals.network_secure = {
     blockchain:'eos',
     host: chain_addr,
     port: chain_secure_port,
-    chainId: chain_id,
+    chainId: globals.chain_id,
 }
 
-const requiredFields = {
-    accounts:[ globals.network ],
-};
-
-globals.eosOptions = {chainId: chain_id,};
+globals.eosOptions = {chainId: globals.chain_id,};
 
 
 
@@ -73,7 +69,7 @@ class VoteView extends ModalStackMixin {
       this.balance = 'Unknown';
       this.delegated_cpu_weight = 'Unknown';
       this.delegated_net_weight = 'Unknown';
-      this.has_activated = parseFloat(activated_percent) > 15.0;
+      this.has_activated = parseFloat(globals.activated_percent) > 15.0;
 
       document.addEventListener('scatterLoaded', scatterExtension => {
           console.log('scatterLoaded called');
@@ -154,6 +150,10 @@ class VoteView extends ModalStackMixin {
             return;
 
         var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+
+        const requiredFields = {
+            accounts:[ globals.network ],
+        };
 
         globals.scatter.suggestNetwork(globals.network).then((result) => {
                 globals.scatter.getIdentity(requiredFields).then(identity => {
@@ -266,8 +266,8 @@ class VoteView extends ModalStackMixin {
                      ]),
                    ]),
                    m('div', {'class': 'block-producer-cell block-producer-cell-2'}, (!block_producer.fake_bp ? [
-                   ((window.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : [
-                      m('img.bp-small-logo', {'src':(block_producer.name in window.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {window.block_producer_invalid_images.push(block_producer.name); m.redraw(); /*x.target.src = '';*/ }}),
+                   ((globals.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : [
+                      m('img.bp-small-logo', {'src':(block_producer.name in globals.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {globals.block_producer_invalid_images.push(block_producer.name); m.redraw(); /*x.target.src = '';*/ }}),
                     ]),
                     m('span', block_producer.name),
 
@@ -306,13 +306,13 @@ class VoteView extends ModalStackMixin {
                  ]),
                  m('div', {'class': 'pageheader-spacer'}),
                  m("div", {'class': 'content-container'}, [
-                   m("div", m.trust(voting_page_content)),
+                   m("div", m.trust(globals.voting_page_content)),
                    this.current_vote(),
-                   m("p", {'class': 'centre'}, 'Currently connected to the ' + chain_name + ' network'),
-                   m("p", {'class': 'centre'}, 'Chain id = ' + chain_id + '.'),
-                   m("p.centre", 'Percentage of EOS voting ' + activated_percent + '%'),
-                   m("p.centre", Humanize.formatNumber(total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(min_activated_stake) + ' needed to activate the chain'),
-                   (this.has_activated) ? [m("div", m.trust(has_activated_message))] : [],
+                   m("p", {'class': 'centre'}, 'Currently connected to the ' + globals.chain_name + ' network'),
+                   m("p", {'class': 'centre'}, 'Chain id = ' + globals.chain_id + '.'),
+                   m("p.centre", 'Percentage of EOS voting ' + globals.activated_percent + '%'),
+                   m("p.centre", Humanize.formatNumber(globals.total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(globals.min_activated_stake) + ' needed to activate the chain'),
+                   (this.has_activated) ? [m("div", m.trust(globals.has_activated_message))] : [],
                  ].concat(this.block_producers_grid(globals.active_block_producers, this.has_activated ? "Active Block Producers" : "Block Producer Candidates")).
                  concat(this.block_producers_grid(globals.backup_block_producers, "Backup Block Producers")).
                  concat([
