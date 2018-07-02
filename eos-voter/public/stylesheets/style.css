@@ -48,6 +48,7 @@ a {
 }
 
 .signupbuttoncontainer {
+  text-align: center;
   float: right;
 }
 
@@ -64,6 +65,12 @@ a {
   position: absolute;
   top: 50%; left: calc(100% - 50px - 80px);
   transform: translate(-50%,-50%);
+  text-decoration: none;
+  text-align: center;
+}
+
+a.signupbutton {
+  line-height : 50px;
 }
 
 .signupbutton:hover {
@@ -71,6 +78,9 @@ a {
   border: 3px solid black;
   color: black;
 }
+
+
+
 
 .centre {
     text-align: center;
@@ -285,7 +295,7 @@ div.block-producer-row {
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }  
+  100% { transform: rotate(360deg); }
 }
 
 .dialog {
@@ -310,7 +320,7 @@ div.block-producer-row {
   padding: 40px;
   width: calc(100% - 80px);
   height: calc(100% - 80px);
-  
+
   h2 {
     margin-top: 0;
   }
@@ -403,5 +413,3 @@ a.constitution-agreement-link:hover {
 a.constitution-agreement-link:active {
   color: red;
 }
-
-
