@@ -73,6 +73,16 @@ a.signupbutton {
   line-height : 50px;
 }
 
+.popup-cancel-button {
+  float: right;
+  text-align:center;
+  text-decoration: none;
+}
+
+a.popup-cancel-button {
+  line-height : 40px;
+}
+
 .signupbutton:hover {
   background-color: #FFF;
   border: 3px solid black;

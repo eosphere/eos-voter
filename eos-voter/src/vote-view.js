@@ -28,6 +28,9 @@ class VoteView extends ModalStackMixin {
       document.addEventListener('scatterLoaded', scatterExtension => {
           console.log('scatterLoaded called');
 
+          if (globals.scatter != null)
+            return;
+
           if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0) {
               return;
           }
@@ -94,8 +97,10 @@ class VoteView extends ModalStackMixin {
         if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0) {
             setTimeout(() => document.location.reload(true), 2000);
         } else {
-            this.push_modal([DetectScatterModal, {owner: this}, null]);
-            this.set_pop_listener_fn(() => { this.redrawAll() });
+            if (global.scatter != null) {
+              this.push_modal([DetectScatterModal, {owner: this}, null]);
+              this.set_pop_listener_fn(() => { this.redrawAll() });
+            }
         }
     }
 

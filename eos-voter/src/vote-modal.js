@@ -112,8 +112,8 @@ class VoteModal extends EosVoterModal {
                    ]),
                  ].concat(this.is_voting ? [] : [
                    m('div', [
-                     m("Button", {'class': 'vote-helper-button', 'onclick': e => this.close(),
-                                  'style': {'float': 'right'}}, "Cancel"),
+                     m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!'
+                             }, "Cancel"),
                    ]),
                  ])),
                ];

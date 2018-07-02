@@ -29,6 +29,7 @@ globals.delegated_cpu_weight = 'Unknown';
 globals.delegated_net_weight = 'Unknown';
 globals.has_activated = parseFloat(globals.activated_percent) > 15.0;
 globals.has_loaded =  false; // Has the account information loaded from the server
+globals.scatter = null;
 
 globals.network = {
     blockchain:'eos',
