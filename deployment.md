@@ -164,6 +164,14 @@ cd /srv/eos-voter/eos-voter/
 sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production
 ```
 
+#Set up the logrotation options
+
+```
+sudo pm2 logrotate -u ubuntu
+```
+
+As per the the pm2 instructions <http://pm2.keymetrics.io/docs/usage/log-management/#setting-up-a-native-logrotate>
+
 ### Server is set up
 
 You are now up and running with your own eos-voter install
