@@ -1,18 +1,8 @@
 // This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
 
 import m from "mithril";
-import eosjs from 'eosjs';
-import Humanize from 'humanize-plus';
-import {DetectScatterModal} from './detect-scatter-modal.js';
-import {ConnectingToScatter} from './connecting-to-scatter-modal.js';
-import {VoteModal} from './vote-modal.js';
-//import {modal_stack} from './eosvoter-modal.js';
-import {ModalStackMixin} from './eosvoter-modal.js';
-import {StakeModal} from './stake-modal.js';
-import {UnstakeModal} from './unstake-modal.js';
-import {ErrorModal, errorDisplay, ErrorOKModal} from './error-modal.js';
-import {NotDetectedModal} from './not-detected-modal.js';
 import {VoteView} from './vote-view.js';
+import {CastVoteView} from './cast-vote-view.js';
 
 var globals = require('./globals.js');
 
@@ -31,8 +21,14 @@ globals.activated_percent = document.getElementById('allblockproducers').getAttr
 globals.has_activated_message = document.getElementById('allblockproducers').getAttribute('data-has-activated-message');
 globals.active_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-active-block-producers'));
 globals.backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
-
 globals.block_producer_invalid_images = [];
+globals.votes = [];
+globals.proxy_name = '';
+globals.balance = 'Unknown';
+globals.delegated_cpu_weight = 'Unknown';
+globals.delegated_net_weight = 'Unknown';
+globals.has_activated = parseFloat(globals.activated_percent) > 15.0;
+globals.has_loaded =  false; // Has the account information loaded from the server
 
 globals.network = {
     blockchain:'eos',
@@ -53,5 +49,6 @@ globals.eosOptions = {chainId: globals.chain_id,};
 
 
 m.route(root, "/", {
-  "/": VoteView,
+  "": VoteView,
+  "cast": CastVoteView,
 } )

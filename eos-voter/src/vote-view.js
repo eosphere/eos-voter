@@ -7,7 +7,6 @@ let Humanize = require('humanize-plus');
 let {DetectScatterModal} = require('./detect-scatter-modal.js');
 let {ConnectingToScatter} = require('./connecting-to-scatter-modal.js');
 let {VoteModal} = require('./vote-modal.js');
-//import {modal_stack} from './eosvoter-modal.js';
 let {ModalStackMixin} = require('./eosvoter-modal.js');
 let {StakeModal} = require('./stake-modal.js');
 let {UnstakeModal} = require('./unstake-modal.js');
@@ -25,12 +24,6 @@ function eos_to_float(s) {
 class VoteView extends ModalStackMixin {
     constructor(vnode) {
       super();
-      this.votes = [];
-      this.proxy_name = '';
-      this.balance = 'Unknown';
-      this.delegated_cpu_weight = 'Unknown';
-      this.delegated_net_weight = 'Unknown';
-      this.has_activated = parseFloat(globals.activated_percent) > 15.0;
 
       document.addEventListener('scatterLoaded', scatterExtension => {
           console.log('scatterLoaded called');
@@ -55,17 +48,17 @@ class VoteView extends ModalStackMixin {
     }
 
     recalcVotes() {
-        this.proxy_name = document.getElementById('id-proxy-name').value;
-        var checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
-        this.votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'));
-        this.votes.sort();
+        globals.proxy_name = document.getElementById('id-proxy-name').value;
+        let checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
+        globals.votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'));
+        globals.votes.sort();
     }
 
     cast_vote() {
-        if (this.proxy_name === '' && this.votes.length > 30)
+        if (globals.proxy_name === '' && globals.votes.length > 30)
             this.push_modal([ErrorOKModal, {owner: this, error_messages: ['Too many votes. You can only vote for 30 producers']}, null]);
         else
-            this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
+            this.push_modal([VoteModal, {owner: this, proxy_name: globals.proxy_name, votes: globals.votes}, null]);
     }
 
     display_connection_modal() {
@@ -78,9 +71,9 @@ class VoteView extends ModalStackMixin {
 
     current_vote() {
         return m('div', {'style': {'text-align':'center'}},
-                 m("span.vote_info", (this.proxy_name == '' ?
-                    ['You have voted for ', m('strong.bolded-vote-info', this.votes.length), ' producer candidates.'] :
-                    m('strong.bolded-vote-info', 'You have proxied your vote to ' + this.proxy_name))
+                 m("span.vote_info", (globals.proxy_name == '' ?
+                    ['You have voted for ', m('strong.bolded-vote-info', globals.votes.length), ' producer candidates.'] :
+                    m('strong.bolded-vote-info', 'You have proxied your vote to ' + globals.proxy_name))
                  )
                )
     }
@@ -109,6 +102,9 @@ class VoteView extends ModalStackMixin {
     redrawAll() {
         if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0)
             return;
+
+       if (globals.has_loaded)
+         return;
 
         var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
@@ -144,7 +140,7 @@ class VoteView extends ModalStackMixin {
                             }).then(
                                 (result) => {
                                     const row = result.rows.find(row => row.balance.split(" ")[1].toLowerCase() === 'eos');
-                                    this.balance = row ? row.balance.split(" ")[0] : 0;
+                                    globals.balance = row ? row.balance.split(" ")[0] : 0;
                                     m.redraw();
                             }).catch(
                                 (error) => {
@@ -153,21 +149,22 @@ class VoteView extends ModalStackMixin {
                             })
 
                             if (result.voter_info) {
-                                this.votes = result.voter_info.producers;
-                                this.proxy_name = result.voter_info.proxy;
+                                globals.votes = result.voter_info.producers;
+                                globals.proxy_name = result.voter_info.proxy;
                             } else {
-                                this.votes = [];
-                                this.proxy_name = '';
+                                globals.votes = [];
+                                globals.proxy_name = '';
                             }
                             if (/*result.delegated_bandwidth == null || */(eos_to_float(result.total_resources.cpu_weight) == 0
                                 && eos_to_float(result.total_resources.net_weight) == 0))
                             {
-                                this.delegated_cpu_weight = '0';
-                                this.delegated_net_weight = '0';
+                                globals.delegated_cpu_weight = '0';
+                                globals.delegated_net_weight = '0';
                             } else {
-                                this.delegated_cpu_weight = result ? result.total_resources.cpu_weight.split(" ")[0] : 0;
-                                this.delegated_net_weight = result ? result.total_resources.net_weight.split(" ")[0] : 0;
+                                globals.delegated_cpu_weight = result ? result.total_resources.cpu_weight.split(" ")[0] : 0;
+                                globals.delegated_net_weight = result ? result.total_resources.net_weight.split(" ")[0] : 0;
                             }
+                            globals.has_loaded = true;
 
                             m.redraw();
                         })
@@ -222,7 +219,7 @@ class VoteView extends ModalStackMixin {
                      m('label', {'class': 'checkbox-container'}, [
                        m.trust('&nbsp;'),
                        m('input', Object.assign({}, {'class': 'vote-checkbox', 'id': block_producer.id,'type': 'checkbox', 'onchange': (e) => { this.recalcVotes() }},
-                            ((this.votes.includes(block_producer.id)) ? {'checked': 'checked'} : {}))),
+                            ((globals.votes.includes(block_producer.id)) ? {'checked': 'checked'} : {}))),
                        m('span', {'class': 'checkmark'}),
                      ]),
                    ]),
@@ -262,7 +259,8 @@ class VoteView extends ModalStackMixin {
                      m("h1", {'class': 'centre-h1'}, "EOS Voter")
                    ]),
                    m("div", {'class': 'pageheaderitem signupbuttoncontainer'}, [
-                     m("button", {'class': 'signupbutton', 'onclick': (e) => {this.cast_vote()}}, 'Cast Vote'),
+                     //m("button", {'class': 'signupbutton', 'onclick': (e) => {this.cast_vote()}}, 'Cast Vote'),
+                     m("a", {'class': 'signupbutton', 'href': '#!cast'}, 'Cast Vote'),
                    ]),
                  ]),
                  m('div', {'class': 'pageheader-spacer'}),
@@ -274,7 +272,7 @@ class VoteView extends ModalStackMixin {
                    m("p.centre", 'Percentage of EOS voting ' + globals.activated_percent + '%'),
                    m("p.centre", Humanize.formatNumber(globals.total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(globals.min_activated_stake) + ' needed to activate the chain'),
                    (this.has_activated) ? [m("div", m.trust(globals.has_activated_message))] : [],
-                 ].concat(this.block_producers_grid(globals.active_block_producers, this.has_activated ? "Active Block Producers" : "Block Producer Candidates")).
+                 ].concat(this.block_producers_grid(globals.active_block_producers, globals.has_activated ? "Active Block Producers" : "Block Producer Candidates")).
                  concat(this.block_producers_grid(globals.backup_block_producers, "Backup Block Producers")).
                  concat([
                    m("div", [
@@ -283,20 +281,20 @@ class VoteView extends ModalStackMixin {
                          m("span", "Proxy my vote to another user"),
                        ]),
                        m("span", "@"),
-                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': this.proxy_name}),
+                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': globals.proxy_name}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': (e) => { this.recalcVotes(); }}, "Set Proxy"),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; max-width: 458.2px;'}, [
-                         'Your EOS balance is ' + this.balance + ' EOS. Delegated CPU = ' + this.delegated_cpu_weight +
-                         ' EOS. Delegated Net = ' + this.delegated_net_weight + ' EOS.',
+                         'Your EOS balance is ' + globals.balance + ' EOS. Delegated CPU = ' + globals.delegated_cpu_weight +
+                         ' EOS. Delegated Net = ' + globals.delegated_net_weight + ' EOS.',
                        ]),
                        m('button', {'class': 'vote-helper-button',
                                     'onclick': (e) => { this.push_modal([StakeModal,
                                       {owner: this,
-                                       delegated_cpu_weight: this.delegated_cpu_weight,
-                                       delegated_net_weight: this.delegated_net_weight,
-                                       balance: this.balance}, null]); }}, 'Stake now'),
+                                       delegated_cpu_weight: globals.delegated_cpu_weight,
+                                       delegated_net_weight: globals.delegated_net_weight,
+                                       balance: globals.balance}, null]); }}, 'Stake now'),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 458.2px;'}, [
@@ -306,9 +304,9 @@ class VoteView extends ModalStackMixin {
                          this.push_modal([UnstakeModal,
                            {
                              owner: this,
-                             delegated_cpu_weight: this.delegated_cpu_weight,
-                             delegated_net_weight: this.delegated_net_weight,
-                             balance: this.balance
+                             delegated_cpu_weight: globals.delegated_cpu_weight,
+                             delegated_net_weight: globals.delegated_net_weight,
+                             balance: globals.balance
                            }, null]); }}, 'Unstake now'),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [

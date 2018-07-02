@@ -52,7 +52,7 @@ class ModalStackMixin {
         if (top[2] === null) {
             top[2] = inst;
         }
-        return inst;
+        return [inst];
     }
 }
 
