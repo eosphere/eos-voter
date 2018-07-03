@@ -83,6 +83,37 @@ a.popup-cancel-button {
   line-height : 40px;
 }
 
+.inline-helper-button-container {
+  display: inline-block;
+  margin-left: 10px;
+
+  top: 50%; left: 0px;
+  transform: translate(0%,-50%);
+}
+
+.inline-helper-button {
+    background-color: #EEE;
+    border: 3px solid black;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    /*margin-left: 100px;*/
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 34.5px;
+    padding-right: 34.5px;
+
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+}
+
+.inline-helper-button:hover {
+  background-color: #111;
+  border: 3px solid white;
+  color: white;
+}
+
 .signupbutton:hover {
   background-color: #FFF;
   border: 3px solid black;

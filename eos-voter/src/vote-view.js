@@ -294,12 +294,16 @@ class VoteView extends ModalStackMixin {
                          'Your EOS balance is ' + globals.balance + ' EOS. Delegated CPU = ' + globals.delegated_cpu_weight +
                          ' EOS. Delegated Net = ' + globals.delegated_net_weight + ' EOS.',
                        ]),
-                       m('button', {'class': 'vote-helper-button',
+                       /*m('button', {'class': 'vote-helper-button',
                                     'onclick': (e) => { this.push_modal([StakeModal,
                                       {owner: this,
                                        delegated_cpu_weight: globals.delegated_cpu_weight,
                                        delegated_net_weight: globals.delegated_net_weight,
-                                       balance: globals.balance}, null]); }}, 'Stake now'),
+                                       balance: globals.balance}, null]); }}, 'Stake now'),*/
+                       m('div', {'class': 'inline-helper-button-container'}, [
+                         m('a', {'class': 'inline-helper-button',
+                                      'href': '#!stake'}, 'Stake now'),
+                       ]),
                      ]),
                      m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
                        m('div', {'style': 'display: inline-block; width: 458.2px;'}, [

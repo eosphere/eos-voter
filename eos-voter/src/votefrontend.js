@@ -3,6 +3,7 @@
 import m from "mithril";
 import {VoteView} from './vote-view.js';
 import {CastVoteView} from './cast-vote-view.js';
+import {StakeView} from './stake-view.js';
 
 var globals = require('./globals.js');
 
@@ -52,4 +53,5 @@ globals.eosOptions = {chainId: globals.chain_id,};
 m.route(root, "/", {
   "": VoteView,
   "cast": CastVoteView,
+  "stake": StakeView,
 } )
