@@ -270,6 +270,10 @@ class VoteView extends ModalStackMixin {
                    ]),
                  ]),
                  m("div", {'class': 'pageheader-part2'}, [
+                   m("span", {'style': {'color':'white', 'margin-left':'5px'}},
+                     m('strong', 'Available:'),
+                     ' ' + globals.balance + '. Delegated CPU: ' + globals.delegated_cpu_weight +
+                   '. Net: ' + globals.delegated_net_weight + '.'),
                    m("div", {'class':"more-options-dropdown"}, [
                      m("span", [
                        "More Options ",
@@ -314,43 +318,6 @@ class VoteView extends ModalStackMixin {
                        m("span", "@"),
                        m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': globals.proxy_name}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': (e) => { this.recalcVotes(); }}, "Set Proxy"),
-                     ]),
-                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px; height: 40px;'}, [
-                       m('div', {'style': 'display: inline-block; max-width: 458.2px;'}, [
-                         'Your EOS balance is ' + globals.balance + ' EOS. Delegated CPU = ' + globals.delegated_cpu_weight +
-                         ' EOS. Delegated Net = ' + globals.delegated_net_weight + ' EOS.',
-                       ]),
-                       m('div', {'class': 'inline-helper-button-container'}, [
-                         m('a', {'class': 'inline-helper-button',
-                                      'href': '#!stake', 'style': {
-                                        'padding-left': '34.5px',
-                                        'padding-right': '34.5px',
-                                      }
-                                 }, 'Stake now'),
-                       ]),
-                     ]),
-                     m("div", {'style': 'margin-top: 23px; margin-bottom: 15px;  '}, [
-                       m('div', {'style': 'display: inline-block; width: 458.2px;'}, [
-                         m.trust('&nbsp;'),
-                       ]),
-                       /*
-                       m('button', {'class': 'vote-helper-button', 'onclick': (e) => {
-                         this.push_modal([UnstakeModal,
-                           {
-                             owner: this,
-                             delegated_cpu_weight: globals.delegated_cpu_weight,
-                             delegated_net_weight: globals.delegated_net_weight,
-                             balance: globals.balance
-                           }, null]); }}, 'Unstake now'),
-                       */
-                       m('div', {'class': 'inline-helper-button-container'}, [
-                         m('a', {'class': 'inline-helper-button',
-                                      'href': '#!unstake', 'style': {
-                                        'padding-left': '25.5px',
-                                        'padding-right': '25.5px',
-                                      }
-                                 }, 'Unstake now'),
-                       ]),
                      ]),
                      this.current_vote(),
                    ]),
