@@ -266,11 +266,29 @@ class VoteView extends ModalStackMixin {
                      m("h1", {'class': 'centre-h1'}, "EOS Voter")
                    ]),
                    m("div", {'class': 'pageheaderitem signupbuttoncontainer'}, [
-                     //m("button", {'class': 'signupbutton', 'onclick': (e) => {this.cast_vote()}}, 'Cast Vote'),
                      m("a", {'class': 'signupbutton', 'href': '#!cast'}, 'Cast Vote'),
                    ]),
                  ]),
-                 m('div', {'class': 'pageheader-spacer'}),
+                 m("div", {'class': 'pageheader-part2'}, [
+                   m("div", {'class':"more-options-dropdown"}, [
+                     m("span", [
+                       "More Options ",
+                       m("i", {"class":"fa fa-chevron-down"}),
+                     ]),
+                     m("div", {'class':"more-options-dropdown-content"}, [
+                       m("div", {'class': 'more-options-item'}, [
+                         m('a', {'class': 'more-options-item-link', href: '#!stake'}, 'Stake'),
+                       ]),
+                       m("div", {'class': 'more-options-item'}, [
+                         m('a', {'class': 'more-options-item-link', href: '#!unstake'}, 'Unstake'),
+                       ]),
+                       m("div", {'class': 'more-options-item'}, [
+                         m('a', {'class': 'more-options-item-link',href: '#!signout'}, 'Sign out'),
+                       ]),
+                     ]),
+                   ]),
+                 ]),
+                 m('div', {'class': 'pageheader-spacer2'}),
                  m("div", {'class': 'content-container'}, [
                    m("div", m.trust(globals.voting_page_content)),
                    this.current_vote(),

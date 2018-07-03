@@ -52,6 +52,13 @@ a {
   float: right;
 }
 
+.right-buttons-container {
+  position: absolute;
+  top: 50%; left: calc(100% - 50px - 80px);
+  transform: translate(-50%,-50%);
+
+}
+
 .signupbutton {
   height: 50px;
   width: 230px;
@@ -457,4 +464,90 @@ a.constitution-agreement-link:hover {
 
 a.constitution-agreement-link:active {
   color: red;
+}
+
+.more-options-dropdown {
+    position: relative;
+    float:right;
+    display: inline-block;
+    /*color:white;*/
+
+    /*height: 50px;*/
+    width: 222px;
+    margin-right: 12px;
+    margin-bottom: 8px;
+    margin-top: -8px;
+    padding: 4px;
+
+    /*background-color: #e6f3ff;*/
+    background-color: #eee;
+    border: 3px solid black;
+    color: black;
+    font-size: 14px;
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+.more-options-dropdown:hover {
+  background-color: #000;
+  /*border: 3px solid white;*/
+  color: white;
+}
+
+
+.more-options-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 224px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    /*padding: 12px 16px;*/
+    z-index: 1;
+    color:black;
+    left: 0px;
+    top: 22px;
+
+    text-align: left;
+}
+
+.more-options-dropdown:hover .more-options-dropdown-content {
+    display: block;
+}
+
+.more-options-item {
+  border: 1px black solid;
+  /*padding-top: 7px;
+  padding-bottom: 7px;*/
+}
+
+.more-options-item-link {
+  display: block;
+  /*border: 1px blue solid;*/
+  padding-left: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+
+.more-options-item-link:hover {
+  background-color: #000;
+  /*border: 3px solid white;*/
+  color: white;
+}
+
+.pageheader-part2 {
+  background-color: #333;
+  overflow: visible;
+  position: relative;
+  width: 100%;
+  top: 94px;
+  position: fixed;
+  z-index: 1;
+}
+
+.pageheader-spacer2 {
+  height: 123px;
 }
