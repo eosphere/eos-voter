@@ -283,7 +283,13 @@ class VoteView extends ModalStackMixin {
                          m('a', {'class': 'more-options-item-link', href: '#!unstake'}, 'Unstake'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
-                         m('a', {'class': 'more-options-item-link',href: '#!signout'}, 'Sign out'),
+                         m('a', {'class': 'more-options-item-link',
+                                  href: '#!',
+                                  'onclick': (e) => {
+                                      globals.scatter.forgetIdentity().then(
+                                        () => { globals.has_loaded = false;
+                                                this.redrawAll() })
+                                }}, 'Sign out'),
                        ]),
                      ]),
                    ]),
@@ -345,13 +351,6 @@ class VoteView extends ModalStackMixin {
                                       }
                                  }, 'Unstake now'),
                        ]),
-                     ]),
-                     m("div", {'style': 'margin-top: 15px; margin-bottom: 15px;'}, [
-                       m('div', {'style': 'display: inline-block; width: 458.2px;'}, [
-                         'Sign out of scatter and load another identity',
-                       ]),
-                       m('button', {'class': 'vote-helper-button',
-                                    'onclick': (e) => { globals.scatter.forgetIdentity().then(() => { this.redrawAll() }) }}, 'Change identity'),
                      ]),
                      this.current_vote(),
                    ]),
