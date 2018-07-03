@@ -17,12 +17,18 @@ class ErrorModal extends EosVoterModal {
     get_internal_content() {
         return [
                  m('h2', {'style': {'text-align': 'center'}}, 'Error'),
-                 this.error_messages.map((message) => m('p', {'class': 'error-paragraph'}, message)),
-                (this.show_retry ? [
-                   m('div', {'style': {'text-align': 'center'}}, [
-                     m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.retry_now()}, "Retry"),
-                   ]),
-                ] : []),
+                 m('div', {'style': {'width': '100%', 'height': 'calc(100% - 46px - 49px)'}}, [
+                   this.error_messages.map((message) => m('p', {'class': 'error-paragraph'}, message)),
+                  (this.show_retry ? [
+                     m('div', {'style': {'text-align': 'center'}}, [
+                       m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.retry_now()}, "Retry"),
+                     ]),
+                  ] : []),
+                ]),
+                m('div', [
+                  m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!'
+                }, "Close"),
+                ]),
                ];
     }
 }
