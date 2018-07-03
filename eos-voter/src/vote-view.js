@@ -73,12 +73,9 @@ class VoteView extends ModalStackMixin {
     }
 
     current_vote() {
-        return m('div', {'style': {'text-align':'center'}},
-                 m("span.vote_info", (globals.proxy_name == '' ?
-                    ['You have voted for ', m('strong.bolded-vote-info', globals.votes.length), ' producer candidates.'] :
-                    m('strong.bolded-vote-info', 'You have proxied your vote to ' + globals.proxy_name))
+        return (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers. '] :
+                  [  m('strong', 'Proxing vote to ' + globals.proxy_name + '. ') ]
                  )
-               )
     }
 
     oncreate() {
@@ -257,6 +254,20 @@ class VoteView extends ModalStackMixin {
         ];
     }
 
+  vote_for_eosphere() {
+    //let bp_name = 'lioninjungle';
+    let bp_name = 'eosphereiobp';
+    if (globals.votes.includes(bp_name))
+      return m('p.header-info-text', 'Thanks for voting for EOSphere.');
+    else
+      return m('p.header-info-text', [
+        'Service provided by EOSphere ',
+        m('a', {'style': {'color':'white'}, href:'#',
+                'onclick': (e) => {globals.votes.push(bp_name);}},
+                'Vote for EOSphere'),
+      ])
+  }
+
   view() {
         return m("main", [
                  m("div", {'class': 'pageheader'}, [
@@ -271,17 +282,20 @@ class VoteView extends ModalStackMixin {
                    ]),
                  ]),
                  m("div", {'class': 'pageheader-part2'}, [
-                   m("span", {'style': {'color':'white', 'margin-left':'5px'}},
-                     m('strong', 'Available:'),
-                     ' ' + globals.balance + '. Delegated CPU: ' + globals.delegated_cpu_weight +
-                   '. Net: ' + globals.delegated_net_weight + '.'),
-                   (globals.account_name != '' ? [
-                     m("span", {'style': {'color':'white', 'margin-left':'5px'}}, [
-                       m('strong', 'Name:'),
-                       globals.account_name,
+                   m("div", [
+                     m("p.header-info-text", [
+                       m('strong', 'Available:'),
+                       ' ' + globals.balance + '. Delegated CPU: ' + globals.delegated_cpu_weight +
+                       '. Net: ' + globals.delegated_net_weight + '. ',
+                       (globals.account_name != '' ? [
+                         m('strong', 'Name:'),
+                         globals.account_name, '. ',
+                       ]
+                       : []),
+                       this.current_vote(),
                      ]),
-                   ]
-                   : []),
+                     this.vote_for_eosphere(),
+                   ]),
                    m("div", {'class':"more-options-dropdown"}, [
                      m("span", [
                        "More Options ",
@@ -310,7 +324,6 @@ class VoteView extends ModalStackMixin {
                  m('div', {'class': 'pageheader-spacer2'}),
                  m("div", {'class': 'content-container'}, [
                    m("div", m.trust(globals.voting_page_content)),
-                   this.current_vote(),
                    m("p", {'class': 'centre'}, 'Currently connected to the ' + globals.chain_name + ' network'),
                    m("p", {'class': 'centre'}, 'Chain id = ' + globals.chain_id + '.'),
                    m("p.centre", 'Percentage of EOS voting ' + globals.activated_percent + '%'),
@@ -328,7 +341,6 @@ class VoteView extends ModalStackMixin {
                        m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': globals.proxy_name}),
                        m("Button", {'class': 'vote-helper-button', 'onclick': (e) => { this.recalcVotes(); }}, "Set Proxy"),
                      ]),
-                     this.current_vote(),
                    ]),
                  ])),
                ].concat(this.get_current_modal()

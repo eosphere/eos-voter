@@ -467,7 +467,7 @@ a.constitution-agreement-link:active {
 }
 
 .more-options-dropdown {
-    position: relative;
+    position: absolute;
     float:right;
     display: inline-block;
     /*color:white;*/
@@ -487,6 +487,9 @@ a.constitution-agreement-link:active {
     border-radius: 8px;
 
     text-align: center;
+
+    right: 0px;
+    top: 0px;
 }
 
 .more-options-dropdown:hover {
@@ -550,4 +553,9 @@ a.constitution-agreement-link:active {
 
 .pageheader-spacer2 {
   height: 123px;
+}
+
+.header-info-text {
+  color: white;
+  margin-left: 15px;
 }
