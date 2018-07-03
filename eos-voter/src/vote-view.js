@@ -133,6 +133,7 @@ class VoteView extends ModalStackMixin {
 
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
                             //console.log('getAccount result=', result);
+                            globals.account_name = identity.accounts[0].name;
                             this.pop_entire_stack();
 
                             // Get our EOS balance
@@ -274,6 +275,13 @@ class VoteView extends ModalStackMixin {
                      m('strong', 'Available:'),
                      ' ' + globals.balance + '. Delegated CPU: ' + globals.delegated_cpu_weight +
                    '. Net: ' + globals.delegated_net_weight + '.'),
+                   (globals.account_name != '' ? [
+                     m("span", {'style': {'color':'white', 'margin-left':'5px'}}, [
+                       m('strong', 'Name:'),
+                       globals.account_name,
+                     ]),
+                   ]
+                   : []),
                    m("div", {'class':"more-options-dropdown"}, [
                      m("span", [
                        "More Options ",
@@ -292,6 +300,7 @@ class VoteView extends ModalStackMixin {
                                   'onclick': (e) => {
                                       globals.scatter.forgetIdentity().then(
                                         () => { globals.has_loaded = false;
+                                                globals.account_name = '';
                                                 this.redrawAll() })
                                 }}, 'Sign out'),
                        ]),
