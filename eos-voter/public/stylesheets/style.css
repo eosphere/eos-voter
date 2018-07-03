@@ -144,11 +144,11 @@ a.popup-cancel-button {
     transform: translate(-50%,-50%);
 }
 
-div.block-producer-row:nth-child(even) {
+div.block-producer-row:nth-child(even) > * {
   background-color: #CCC;
 }
 
-div.block-producer-row:nth-child(odd) {
+div.block-producer-row:nth-child(odd) > * {
   background-color: #EEE;
 }
 
@@ -157,6 +157,10 @@ div.block-producer-row {
     overflow-x: hidden;
     /*padding-bottom: -2px;*/
     margin-bottom: -3px;
+}
+
+div.block-producer-list {
+  margin-right: -1.8%;
 }
 
 .block-producer-cell {
