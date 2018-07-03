@@ -2,7 +2,7 @@
 
 var chaininspector = require('../tasks/chainInspector');
 var config = require('../config');
-var countrycodes = require('./country-codes.js');
+var {countries, regions} = require('./country-codes.js');
 
 var exports = module.exports = {};
 
@@ -87,8 +87,13 @@ exports.format_block_producer = (x, total_votes) => {
     }
 
     var country_name = country_code;
-    if (country_code in countrycodes) {
-        country_name = countrycodes[country_code];
+    let region_name = '';
+    if (country_code in countries) {
+        country_name = countries[country_code];
+        if (country_code in regions) {
+          region_name = regions[country_code];
+          //console.log('country=', country_name, ' region=', region_name);
+        }
     } else {
         country_name = country_code;
     }
@@ -98,7 +103,7 @@ exports.format_block_producer = (x, total_votes) => {
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
               'country_code' : country_name, 'bp_logo_256': bp_logo_256,
-              'fake_bp': fake_bp, 'position': x.position };
+              'fake_bp': fake_bp, 'position': x.position, 'region': region_name };
 }
 
 exports.get_total_votes = function() {
