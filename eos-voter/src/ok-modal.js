@@ -11,8 +11,7 @@ class OKModal extends EosVoterModal {
     }
     canclose() { return false; };
     ok_now() {
-        this.owner.pop_entire_stack();
-        m.redraw();
+        document.location = "#!"
     }
     get_internal_content() {
         return [

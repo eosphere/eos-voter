@@ -37,7 +37,10 @@ class VoteModal extends EosVoterModal {
                         eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )
                             .then((result) => {
                                 console.log('voteproducer result=', result);
-                                this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\''}, null]);
+                                this.owner.push_modal([OKModal, {
+                                  owner: this.owner,
+                                  info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
+                                }, null]);
                                 m.redraw();
                             })
                             .catch((error) => {
