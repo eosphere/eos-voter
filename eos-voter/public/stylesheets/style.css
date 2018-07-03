@@ -56,10 +56,12 @@ a {
   height: 50px;
   width: 230px;
 
-  background-color: #444;
-  border: 3px solid white;
-  color: white;
-  font-size: 20px;
+  /*background-color: #e6f3ff;*/
+  background-color: #eee;
+  border: 3px solid black;
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
   border-radius: 8px;
 
   position: absolute;
@@ -71,6 +73,12 @@ a {
 
 a.signupbutton {
   line-height : 50px;
+}
+
+.signupbutton:hover {
+  background-color: #000;
+  border: 3px solid white;
+  color: white;
 }
 
 .popup-cancel-button {
@@ -111,11 +119,6 @@ a.popup-cancel-button {
   color: white;
 }
 
-.signupbutton:hover {
-  background-color: #FFF;
-  border: 3px solid black;
-  color: black;
-}
 
 
 
