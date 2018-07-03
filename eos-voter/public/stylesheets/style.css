@@ -97,11 +97,8 @@ a.popup-cancel-button {
     color: black;
     font-size: 16px;
     border-radius: 8px;
-    /*margin-left: 100px;*/
     padding-top: 9px;
     padding-bottom: 9px;
-    padding-left: 34.5px;
-    padding-right: 34.5px;
 
     position: relative;
     text-decoration: none;

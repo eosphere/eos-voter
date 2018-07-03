@@ -106,8 +106,8 @@ class UnstakeModal extends EosVoterModal {
                      ])),
                    ]),
                    m('div', [
-                     m("Button", {'class': 'vote-helper-button', 'onclick': e => this.close(),
-                                'style': {'float': 'right'}}, "Cancel"),
+                     m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!'
+                              }, "Cancel"),
                    ]),
                  ]),
                ]

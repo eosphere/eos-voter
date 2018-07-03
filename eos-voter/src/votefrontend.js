@@ -4,6 +4,7 @@ import m from "mithril";
 import {VoteView} from './vote-view.js';
 import {CastVoteView} from './cast-vote-view.js';
 import {StakeView} from './stake-view.js';
+import {UnstakeView} from './unstake-view.js';
 
 var globals = require('./globals.js');
 
@@ -54,4 +55,5 @@ m.route(root, "/", {
   "": VoteView,
   "cast": CastVoteView,
   "stake": StakeView,
+  "unstake": UnstakeView,
 } )
