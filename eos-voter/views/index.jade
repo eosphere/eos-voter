@@ -25,7 +25,7 @@ block content
     else
         h2.centre Block Producer Candidates
 
-    div.block-producer-li7st
+    div.block-producer-list
       div.block-producer-row
         div.block-producer-cell.block-producer-cell-1.block-producer-column-header &nbsp;
         div.block-producer-cell.block-producer-cell-2.block-producer-column-header Block Producer
@@ -33,10 +33,9 @@ block content
         div.block-producer-cell.block-producer-cell-4.block-producer-column-header Country
         div.block-producer-cell.block-producer-cell-5.block-producer-column-header Information
 
-      - var n = 1
       each blockproducer in activeblockproducers
         div.block-producer-row
-          div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)}
+          div.block-producer-cell.block-producer-cell-1.right= blockproducer.position
           div.block-producer-cell.block-producer-cell-2
             if !blockproducer.fake_bp
               img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")
@@ -66,7 +65,7 @@ block content
 
           each blockproducer in backupblockproducers
             div.block-producer-row
-              div.block-producer-cell.block-producer-cell-1.right #{sprintf(format, n++)}
+              div.block-producer-cell.block-producer-cell-1.right= blockproducer.position
               div.block-producer-cell.block-producer-cell-2
                 if !blockproducer.fake_bp
                   img.bp-small-logo(src=blockproducer.bp_logo_256, onError="this.onerror=null;this.src='';")

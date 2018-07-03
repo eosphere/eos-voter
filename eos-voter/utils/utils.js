@@ -97,7 +97,8 @@ exports.format_block_producer = (x, total_votes) => {
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),
               'last_produced_block_time': x.last_produced_block_time,
-              'country_code' : country_name, 'bp_logo_256': bp_logo_256, 'fake_bp': fake_bp };
+              'country_code' : country_name, 'bp_logo_256': bp_logo_256,
+              'fake_bp': fake_bp, 'position': x.position };
 }
 
 exports.get_total_votes = function() {

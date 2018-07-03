@@ -7,6 +7,8 @@ var Eos = require('eosjs'); // Eos = require('./src')
 var config = require('../config/index.js');
 var rp = require('request-promise');
 var utils = require('../utils/utils.js');
+var {sprintf} = require('sprintf')
+//app.locals.format = "%02d";
 
 var chainid = null;
 var total_activated_stake = 0;
@@ -119,6 +121,15 @@ function updateBpInfo() {
     setTimeout(updateBpInfo, config.bp_info_refresh_secs * 1000);
 }
 
+function calc_block_producer_position(block_producers) {
+  // Calculate the ordinal position of all block producers in the list
+  let ret = [];
+  for (let i = 0; i < block_producers.length ; i++) {
+    ret.push(Object.assign({}, block_producers[i], {'position':sprintf('%02d', i + 1)}));
+  }
+  return ret;
+}
+
 function inspectChain()
 {
     console.log('Calling getInfo');
@@ -126,11 +137,12 @@ function inspectChain()
         (result) => {
         console.log('getInfo returned');
         chainid = result.chain_id;
-        eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 500}).then(
+        eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'producers', 'limit': 1500}).then(
             (result) => {
                 console.log('getTableRows producers returned result') ;
                 var new_block_producers = result.rows;
                 new_block_producers.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
+                new_block_producers = calc_block_producer_position(new_block_producers);
                 eos.getTableRows({'json': true, 'code': 'eosio', 'scope': 'eosio', 'table': 'global', 'limit': 500}).then(
                     (result) => {
                         //console.log('getTableRows global returned result= ', result) ;

@@ -45,7 +45,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.locals.sprintf = require('sprintf').sprintf;
-app.locals.format = "%02d";
-
 module.exports = app;

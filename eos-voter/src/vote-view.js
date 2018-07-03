@@ -229,12 +229,14 @@ class VoteView extends ModalStackMixin {
                      ]),
                    ]),
                    m('div', {'class': 'block-producer-cell block-producer-cell-2'}, (!block_producer.fake_bp ? [
+                     m('span', block_producer.position + ' '),
                    ((globals.block_producer_invalid_images.includes(block_producer.name) || block_producer.bp_logo_256 == '') ? [] : [
                       m('img.bp-small-logo', {'src':(block_producer.name in globals.block_producer_invalid_images) ? '' : block_producer.bp_logo_256, 'onerror': (x) => {globals.block_producer_invalid_images.push(block_producer.name); m.redraw(); /*x.target.src = '';*/ }}),
                     ]),
                     m('span', block_producer.name),
 
                    ]:[
+                     m('span.fake-bp-title', block_producer.position + ' '),
                      m('span.fake-bp-title', block_producer.name),
                      m('span.fake-bp-warning', ' !CAUTION! '),
                      m('a', {'class': 'fake-bp-whats-this', 'href':'/whats-this-bp-name-mismatch', 'target':'_blank'}, 'Whats this'),
