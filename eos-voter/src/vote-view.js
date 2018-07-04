@@ -357,6 +357,9 @@ class VoteView extends ModalStackMixin {
                          m('a', {'class': 'more-options-item-link', href: '#!unstake'}, 'Unstake'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
+                         m('a', {'class': 'more-options-item-link', href: '#!transfer'}, 'Transfer'),
+                       ]),
+                       m("div", {'class': 'more-options-item'}, [
                          m('a', {'class': 'more-options-item-link',
                                   href: '#!',
                                   'onclick': (e) => {
