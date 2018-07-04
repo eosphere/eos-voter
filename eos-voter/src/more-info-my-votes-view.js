@@ -68,7 +68,7 @@ class MoreInfoMyVotesModal extends EosVoterModal {
                  ].concat([
                    m('div', [
                      m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!'
-                             }, "Cancel"),
+                   }, "Close"),
                    ]),
                  ])),
                ];

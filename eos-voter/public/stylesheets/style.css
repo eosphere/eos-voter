@@ -481,8 +481,32 @@ a.constitution-agreement-link:active {
   color: red;
 }
 
+.header-info-block-container {
+  position: relative;
+  display: inline-block;
+  /*border: 1px yellow solid;*/
+  width: calc(33% - 15px);
+  margin-left: 8px;
+  margin-right: 8px;
+  top: -12px;
+}
+
+.header-info-block {
+  /*display: inline-block;*/
+  position: absolute;
+  border: 1px #eee solid;
+  border-radius: 4px;
+  color: #eee;
+  margin: 0px 5px;
+  width: 100%;
+  height: 55px;
+  top: 0px;
+  padding: 4px;
+  /*width: calc((100% - 222px) / 3);*/
+}
+
 .more-options-dropdown {
-    position: absolute;
+    /*position: absolute;*/
     float:right;
     display: inline-block;
     /*color:white;*/
@@ -491,7 +515,7 @@ a.constitution-agreement-link:active {
     width: 222px;
     margin-right: 12px;
     margin-bottom: 8px;
-    margin-top: -8px;
+    margin-top: -2px;
     padding: 4px;
 
     /*background-color: #e6f3ff;*/
@@ -523,7 +547,7 @@ a.constitution-agreement-link:active {
     /*padding: 12px 16px;*/
     z-index: 1;
     color:black;
-    left: 0px;
+    right: 22px;
     top: 22px;
 
     text-align: left;
@@ -564,13 +588,16 @@ a.constitution-agreement-link:active {
   top: 93px;
   position: fixed;
   z-index: 1;
+  padding-bottom: 14px;
 }
 
 .pageheader-spacer2 {
-  height: 123px;
+  height: 161px;
 }
 
 .header-info-text {
-  color: white;
-  margin-left: 15px;
+  margin-left: 0px;
+  margin-bottom: 2px;
+  margin-top: 0px;
+  margin-right: 0px;
 }

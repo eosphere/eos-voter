@@ -77,11 +77,12 @@ class VoteView extends ModalStackMixin {
             .filter((x) => globals.votes.includes(x.name)).map((x) => x.region)
             .filter((x) => x != '');
         let region_count = new Set(regions).size
-        return (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers in '
+        return m('p.header-info-text', (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers in '
                  , m('strong', region_count), ' regions. ',
                  m('a', {'style': {'color':'white'}, 'href': '#!more-info-my-votes'}, 'More info')] :
                   [  m('strong', 'Proxing vote to ' + globals.proxy_name + '. ') ]
                  )
+               )
     }
 
     oncreate() {
@@ -265,6 +266,7 @@ class VoteView extends ModalStackMixin {
     let bp_name = 'eosphereiobp';
     if (globals.votes.includes(bp_name))
       return m('p.header-info-text', 'Thanks for voting for EOSphere.');
+      //return m('span', 'Thanks for voting for EOSphere.');
     else
       return m('p.header-info-text', [
         'Service provided by EOSphere ',
@@ -288,6 +290,7 @@ class VoteView extends ModalStackMixin {
                    ]),
                  ]),
                  m("div", {'class': 'pageheader-part2'}, [
+                   /*
                    m("div", [
                      m("p.header-info-text", [
                        m('strong', 'Available:'),
@@ -301,6 +304,45 @@ class VoteView extends ModalStackMixin {
                        this.current_vote(),
                      ]),
                      this.vote_for_eosphere(),
+                   ]),
+                   */
+                   m("div", {'style': {'width': 'calc(100% - 272px)',
+                                       'height': '60px',
+                                       'display': 'inline-block',
+                                       'max-height':'60px'}}, [
+                     m("div", {'class': 'header-info-block-container'}, [
+                       m("div", {'class': 'header-info-block'}, [
+                         m("p.header-info-text", [
+                           m('strong', 'Name:'),
+                           globals.account_name, '. ',
+                         ])
+                       ]),
+                     ]),
+                     m("div", {'class': 'header-info-block-container'}, [
+                       m("div", {'class': 'header-info-block'}, [
+                         m("span", [
+                           m('p.header-info-text', [
+                             m('strong', 'Available:'),
+                             ' ' + globals.balance + '.'
+                           ]),
+                           m('p.header-info-text', [
+                             ' Delegated CPU: ' + globals.delegated_cpu_weight + '.',
+                           ]),
+                           m('p.header-info-text', [
+                             'Net: ' + globals.delegated_net_weight + '. ',
+                           ]),
+                         ])
+                       ]),
+                     ]),
+                     m("div", {'class': 'header-info-block-container'}, [
+                       m("div", {'class': 'header-info-block'}, [
+                         m("span", [
+                           this.current_vote(),
+                           this.vote_for_eosphere(),
+
+                         ])
+                       ]),
+                     ]),
                    ]),
                    m("div", {'class':"more-options-dropdown"}, [
                      m("span", [
