@@ -67,6 +67,13 @@ class UnstakeModal extends EosVoterModal {
         return [
                  m('h2', {'style': {'text-align': 'center'}}, 'Unstake your EOS'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
+                   m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
+                     'By unstaking you are agreeing to the ',
+                     m('a', {'class': 'constitution-agreement-link',
+                             'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
+                             'target': '_blank'},
+                             'EOS Constitution detailed here'),
+                   ]),
                    m('h2', {'style': {'text-align': 'center'}}, 'You must unstake EOS from CPU and Net to trade'),
                    ((this.delegated_cpu_weight == 0 && this.delegated_net_weight == 0) ? [
                      m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked EOS'),
