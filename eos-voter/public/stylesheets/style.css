@@ -1,9 +1,24 @@
+@font-face {
+    font-family: 'hindregular';
+    src: url('hind-regular-webfont.eot');
+    src: url('hind-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         /*url('hind-regular-webfont.woff2') format('woff2'),*/
+         url('hind-regular-webfont.woff') format('woff'),
+         url('hind-regular-webfont.ttf') format('truetype'),
+         url('hind-regular-webfont.svg#hindregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
 body {
   padding: 10px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  /*background-color: #EEE;*/
+  font: 15px "hindregular", Helvetica, Arial, sans-serif;
+  background-color: #EEE;
   margin: 0px;
   padding: 0px;
+  color: #1A1A1A;
 }
 
 a {
@@ -152,11 +167,11 @@ a.popup-cancel-button {
 }
 
 div.block-producer-row:nth-child(even) > * {
-  background-color: #CCC;
+  background-color: #B8B8B8;
 }
 
 div.block-producer-row:nth-child(odd) > * {
-  background-color: #EEE;
+  background-color: #D8D8D8;
 }
 
 div.block-producer-row {
@@ -385,23 +400,23 @@ div.block-producer-list {
 }
 
 a.statement {
-  color: black;
+  color: #1A1A1A;
 }
 
 a.statement:link {
-  color: black;
+  color: #1A1A1A;
 }
 
 a.statement:visited {
-  color: black;
+  color: #1A1A1A;
 }
 
 a.statement:hover {
-  color: black;
+  color: #1A1A1A;
 }
 
 a.statement:active {
-  color: black;
+  color: #1A1A1A;
 }
 
 .bolded-vote-info {
