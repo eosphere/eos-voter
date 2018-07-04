@@ -73,7 +73,12 @@ class VoteView extends ModalStackMixin {
     }
 
     current_vote() {
-        return (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers. '] :
+        let regions = (globals.active_block_producers.concat(globals.backup_block_producers))
+            .filter((x) => globals.votes.includes(x.name)).map((x) => x.region)
+            .filter((x) => x != '');
+        let region_count = new Set(regions).size
+        return (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers in '
+                 , m('strong', region_count), ' regions.'] :
                   [  m('strong', 'Proxing vote to ' + globals.proxy_name + '. ') ]
                  )
     }
