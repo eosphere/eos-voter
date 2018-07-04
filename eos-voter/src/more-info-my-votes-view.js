@@ -62,6 +62,9 @@ class MoreInfoMyVotesModal extends EosVoterModal {
                        [ m('h2', {'style': {'text-align':'center'}}, 'You are voting for no block producer') ]
                    ))),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
+                   m('div', {'style': {'height': '80px'}}, [
+                     m.trust('&nbsp;'),
+                   ]),
                  ].concat([
                    m('div', [
                      m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!'
