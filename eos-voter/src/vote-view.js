@@ -334,7 +334,7 @@ class VoteView extends ModalStackMixin {
                    ]),
                    m("div", {'class':"more-options-dropdown"}, [
                      m("span", [
-                       "More Options ",
+                       "Account Tools ",
                        m("i", {"class":"fa fa-chevron-down"}),
                      ]),
                      m("div", {'class':"more-options-dropdown-content"}, [
