@@ -350,7 +350,7 @@ class VoteView extends ModalStackMixin {
                                         () => { globals.has_loaded = false;
                                                 globals.account_name = '';
                                                 this.redrawAll() })
-                                }}, 'Sign out'),
+                                }}, 'Change Identity'),
                        ]),
                      ]),
                    ]),
