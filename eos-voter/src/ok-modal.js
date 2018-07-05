@@ -12,6 +12,7 @@ class OKModal extends EosVoterModal {
     canclose() { return false; };
     ok_now() {
         document.location = "#!"
+        m.route.set('#!');
     }
     get_internal_content() {
         return [

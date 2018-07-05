@@ -79,7 +79,7 @@ class VoteView extends ModalStackMixin {
         let region_count = new Set(regions).size
         return m('p.header-info-text', (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers in '
                  , m('strong', region_count), ' regions. ',
-                 m('a', {'style': {'color':'white'}, 'href': '#!more-info-my-votes'}, 'More info')] :
+                 m('a', {'style': {'color':'white'}, 'href': '#!more-info-my-votes', 'onclick': (e) => {m.route.set('#!more-info-my-votes');}}, 'More info')] :
                   [  m('strong', 'Proxing vote to ' + globals.proxy_name + '. ') ]
                  )
                )
@@ -271,7 +271,7 @@ class VoteView extends ModalStackMixin {
       return m('p.header-info-text', [
         'Service provided by EOSphere ',
         m('a', {'style': {'color':'white'}, href:'#',
-                'onclick': (e) => {globals.votes.push(bp_name);}},
+                'onclick': (e) => {globals.votes.push(bp_name); globals.votes.sort();}},
                 'Vote for EOSphere'),
       ])
   }
@@ -286,7 +286,7 @@ class VoteView extends ModalStackMixin {
                      m("h1", {'class': 'centre-h1'}, "EOS Voter")
                    ]),
                    m("div", {'class': 'pageheaderitem signupbuttoncontainer'}, [
-                     m("a", {'class': 'signupbutton', 'href': '#!cast'}, 'Cast Vote'),
+                     m("a", {'class': 'signupbutton', 'href': '#!cast', 'onclick': (e) => {m.route.set('#!cast');}}, 'Cast Vote'),
                    ]),
                  ]),
                  m("div", {'class': 'pageheader-part2'}, [
@@ -351,13 +351,13 @@ class VoteView extends ModalStackMixin {
                      ]),
                      m("div", {'class':"more-options-dropdown-content"}, [
                        m("div", {'class': 'more-options-item'}, [
-                         m('a', {'class': 'more-options-item-link', href: '#!stake'}, 'Stake'),
+                         m('a', {'class': 'more-options-item-link', href: '#!stake', 'onclick': (e) => {m.route.set('#!stake');}}, 'Stake'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
-                         m('a', {'class': 'more-options-item-link', href: '#!unstake'}, 'Unstake'),
+                         m('a', {'class': 'more-options-item-link', href: '#!unstake', 'onclick': (e) => {m.route.set('#!unstake');}}, 'Unstake'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
-                         m('a', {'class': 'more-options-item-link', href: '#!transfer'}, 'Transfer'),
+                         m('a', {'class': 'more-options-item-link', href: '#!transfer', 'onclick': (e) => {m.route.set('#!transfer');}}, 'Transfer'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
                          m('a', {'class': 'more-options-item-link',

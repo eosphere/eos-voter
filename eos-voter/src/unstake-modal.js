@@ -113,7 +113,7 @@ class UnstakeModal extends EosVoterModal {
                      ])),
                    ]),
                    m('div', [
-                     m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!'
+                     m("a", {'class': 'vote-helper-button popup-cancel-button', 'href': '#!', 'onclick': (e) => {m.route.set('#!');}
                               }, "Cancel"),
                    ]),
                  ]),
