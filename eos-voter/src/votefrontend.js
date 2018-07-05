@@ -6,7 +6,8 @@ import {CastVoteView} from './cast-vote-view.js';
 import {StakeView} from './stake-view.js';
 import {UnstakeView} from './unstake-view.js';
 import {MoreInfoMyVotesView} from './more-info-my-votes-view.js';
-import {TransferView} from './transfer-view.js'
+import {TransferView} from './transfer-view.js';
+import {ProxyView} from './proxy-my-vote-view.js';
 
 var globals = require('./globals.js');
 
@@ -61,4 +62,5 @@ m.route(root, "/", {
   "unstake": UnstakeView,
   "more-info-my-votes": MoreInfoMyVotesView,
   "transfer": TransferView,
+  "proxy-my-vote": ProxyView,
 } )

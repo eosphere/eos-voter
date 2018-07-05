@@ -80,7 +80,10 @@ class VoteView extends ModalStackMixin {
         return m('p.header-info-text', (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers in '
                  , m('strong', region_count), ' regions ',
                  m('a', {'style': {'color':'white'}, 'href': '#!more-info-my-votes', 'onclick': (e) => {m.route.set('#!more-info-my-votes');}}, 'More info')] :
-                  [  m('strong', 'Proxing vote to ' + globals.proxy_name + ' ') ]
+                  [
+                    m('strong', 'Proxing vote to ' + globals.proxy_name + ' '),
+                    m('a', {'style': {'color':'white'}, 'href': '#!', 'onclick': (e) => {globals.proxy_name = ''}}, 'Clear proxy')
+                  ]
                  )
                )
     }
@@ -262,6 +265,8 @@ class VoteView extends ModalStackMixin {
     }
 
   vote_for_eosphere() {
+    if (globals.proxy_name != '')
+      return m('p.header-info-text', 'Service provided by EOSphere');
     //let bp_name = 'lioninjungle';
     let bp_name = 'eosphereiobp';
     if (globals.votes.includes(bp_name))
@@ -343,6 +348,9 @@ class VoteView extends ModalStackMixin {
                          m('a', {'class': 'more-options-item-link', href: '#!transfer', 'onclick': (e) => {m.route.set('#!transfer');}}, 'Transfer'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
+                         m('a', {'class': 'more-options-item-link', href: '#!proxy-my-vote', 'onclick': (e) => {m.route.set('#!proxy-my-vote');}}, 'Proxy my Vote'),
+                       ]),
+                       m("div", {'class': 'more-options-item'}, [
                          m('a', {'class': 'more-options-item-link',
                                   href: '#!',
                                   'onclick': (e) => {
@@ -364,19 +372,7 @@ class VoteView extends ModalStackMixin {
                    m("p.centre", Humanize.formatNumber(globals.total_activated_stake) + ' EOS have voted'),
                    (this.has_activated) ? [m("div", m.trust(globals.has_activated_message))] : [],
                  ].concat(this.block_producers_grid(globals.active_block_producers, globals.has_activated ? "Active Block Producers" : "Block Producer Candidates")).
-                 concat(this.block_producers_grid(globals.backup_block_producers, "Backup Block Producers")).
-                 concat([
-                   m("div", [
-                     m("div", {'style': 'margin-top: 15px;'}, [
-                       m('div', {'style': 'display: inline-block; width: 240px;'}, [
-                         m("span", "Proxy my vote to another user"),
-                       ]),
-                       m("span", "@"),
-                       m("input", {'id': 'id-proxy-name', 'type': 'text', 'style': 'height:25px;width:200px;', 'value': globals.proxy_name}),
-                       m("Button", {'class': 'vote-helper-button', 'onclick': (e) => { this.recalcVotes(); }}, "Set Proxy"),
-                     ]),
-                   ]),
-                 ])),
+                 concat(this.block_producers_grid(globals.backup_block_producers, "Backup Block Producers"))),
                ].concat(this.get_current_modal()
              ).concat([
                m('p', [
