@@ -78,9 +78,9 @@ class VoteView extends ModalStackMixin {
             .filter((x) => x != '');
         let region_count = new Set(regions).size
         return m('p.header-info-text', (globals.proxy_name == '' ? ['Voting for ', m('strong', globals.votes.length), ' producers in '
-                 , m('strong', region_count), ' regions. ',
+                 , m('strong', region_count), ' regions ',
                  m('a', {'style': {'color':'white'}, 'href': '#!more-info-my-votes', 'onclick': (e) => {m.route.set('#!more-info-my-votes');}}, 'More info')] :
-                  [  m('strong', 'Proxing vote to ' + globals.proxy_name + '. ') ]
+                  [  m('strong', 'Proxing vote to ' + globals.proxy_name + ' ') ]
                  )
                )
     }
@@ -265,8 +265,7 @@ class VoteView extends ModalStackMixin {
     //let bp_name = 'lioninjungle';
     let bp_name = 'eosphereiobp';
     if (globals.votes.includes(bp_name))
-      return m('p.header-info-text', 'Thanks for voting for EOSphere.');
-      //return m('span', 'Thanks for voting for EOSphere.');
+      return m('p.header-info-text', 'Thanks for voting for EOSphere');
     else
       return m('p.header-info-text', [
         'Service provided by EOSphere ',
@@ -290,22 +289,6 @@ class VoteView extends ModalStackMixin {
                    ]),
                  ]),
                  m("div", {'class': 'pageheader-part2'}, [
-                   /*
-                   m("div", [
-                     m("p.header-info-text", [
-                       m('strong', 'Available:'),
-                       ' ' + globals.balance + '. Delegated CPU: ' + globals.delegated_cpu_weight +
-                       '. Net: ' + globals.delegated_net_weight + '. ',
-                       (globals.account_name != '' ? [
-                         m('strong', 'Name:'),
-                         globals.account_name, '. ',
-                       ]
-                       : []),
-                       this.current_vote(),
-                     ]),
-                     this.vote_for_eosphere(),
-                   ]),
-                   */
                    m("div", {'style': {'width': 'calc(100% - 272px)',
                                        'height': '60px',
                                        'display': 'inline-block',
@@ -314,7 +297,7 @@ class VoteView extends ModalStackMixin {
                        m("div", {'class': 'header-info-block'}, [
                          m("p.header-info-text", [
                            m('strong', 'Name:'),
-                           globals.account_name, '. ',
+                           globals.account_name,
                          ])
                        ]),
                      ]),
@@ -323,13 +306,13 @@ class VoteView extends ModalStackMixin {
                          m("span", [
                            m('p.header-info-text', [
                              m('strong', 'Available:'),
-                             ' ' + globals.balance + '.'
+                             ' ' + globals.balance
                            ]),
                            m('p.header-info-text', [
-                             ' Delegated CPU: ' + globals.delegated_cpu_weight + '.',
+                             ' Delegated CPU: ' + globals.delegated_cpu_weight,
                            ]),
                            m('p.header-info-text', [
-                             'Net: ' + globals.delegated_net_weight + '. ',
+                             'Net: ' + globals.delegated_net_weight,
                            ]),
                          ])
                        ]),
