@@ -378,7 +378,7 @@ class VoteView extends ModalStackMixin {
                    m("p", {'class': 'centre'}, 'Currently connected to the ' + globals.chain_name + ' network'),
                    m("p", {'class': 'centre'}, 'Chain id = ' + globals.chain_id + '.'),
                    m("p.centre", 'Percentage of EOS voting ' + globals.activated_percent + '%'),
-                   m("p.centre", Humanize.formatNumber(globals.total_activated_stake) + ' EOS have voted ' + Humanize.formatNumber(globals.min_activated_stake) + ' needed to activate the chain'),
+                   m("p.centre", Humanize.formatNumber(globals.total_activated_stake) + ' EOS have voted'),
                    (this.has_activated) ? [m("div", m.trust(globals.has_activated_message))] : [],
                  ].concat(this.block_producers_grid(globals.active_block_producers, globals.has_activated ? "Active Block Producers" : "Block Producer Candidates")).
                  concat(this.block_producers_grid(globals.backup_block_producers, "Backup Block Producers")).
