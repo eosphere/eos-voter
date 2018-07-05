@@ -51,7 +51,7 @@ class VoteView extends ModalStackMixin {
     }
 
     recalcVotes() {
-        globals.proxy_name = document.getElementById('id-proxy-name').value;
+        //globals.proxy_name = document.getElementById('id-proxy-name').value;
         let checkboxes = Array.prototype.slice.call(document.getElementsByClassName("vote-checkbox"));
         globals.votes = checkboxes.filter(cb => cb.checked).map(cb => cb.getAttribute('id'));
         globals.votes.sort();
