@@ -8,6 +8,7 @@ import {UnstakeView} from './unstake-view.js';
 import {MoreInfoMyVotesView} from './more-info-my-votes-view.js';
 import {TransferView} from './transfer-view.js';
 import {ProxyView} from './proxy-my-vote-view.js';
+import {BecomeProxyView} from './become-proxy-view.js';
 
 var globals = require('./globals.js');
 
@@ -36,6 +37,7 @@ globals.has_activated = parseFloat(globals.activated_percent) > 15.0;
 globals.has_loaded =  false; // Has the account information loaded from the server
 globals.scatter = null;
 globals.account_name = '';
+globals.is_proxy = 0;
 
 globals.network = {
     blockchain:'eos',
@@ -63,4 +65,5 @@ m.route(root, "/", {
   "more-info-my-votes": MoreInfoMyVotesView,
   "transfer": TransferView,
   "proxy-my-vote": ProxyView,
+  "become-proxy": BecomeProxyView,
 } )

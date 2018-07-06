@@ -13,6 +13,7 @@ let {UnstakeModal} = require('./unstake-modal.js');
 let {ErrorModal, errorDisplay, ErrorOKModal} = require('./error-modal.js');
 let {NotDetectedModal} = require('./not-detected-modal.js');
 
+
 var globals = require('./globals.js');
 
 function eos_to_float(s) {
@@ -164,9 +165,12 @@ class VoteView extends ModalStackMixin {
                             if (result.voter_info) {
                                 globals.votes = result.voter_info.producers;
                                 globals.proxy_name = result.voter_info.proxy;
+                                globals.is_proxy = result.voter_info.is_proxy;
+                                //console.log('globals.isproxy=', globals.is_proxy);
                             } else {
                                 globals.votes = [];
                                 globals.proxy_name = '';
+                                globals.isproxy = 0;
                             }
                             if (/*result.delegated_bandwidth == null || */(eos_to_float(result.total_resources.cpu_weight) == 0
                                 && eos_to_float(result.total_resources.net_weight) == 0))
@@ -303,7 +307,8 @@ class VoteView extends ModalStackMixin {
                          m("p.header-info-text", [
                            m('strong', 'Name:'),
                            globals.account_name,
-                         ])
+                         ]),
+                         ( globals.is_proxy ? [m("p.header-info-text", m('strong', 'Is Proxy'))]: []),
                        ]),
                      ]),
                      m("div", {'class': 'header-info-block-container'}, [
@@ -349,6 +354,9 @@ class VoteView extends ModalStackMixin {
                        ]),
                        m("div", {'class': 'more-options-item'}, [
                          m('a', {'class': 'more-options-item-link', href: '#!proxy-my-vote', 'onclick': (e) => {m.route.set('#!proxy-my-vote');}}, 'Proxy my Vote'),
+                       ]),
+                       m("div", {'class': 'more-options-item'}, [
+                         m('a', {'class': 'more-options-item-link', href: '#!become-proxy', 'onclick': (e) => {m.route.set('#!become-proxy');}}, 'Become Proxy'),
                        ]),
                        m("div", {'class': 'more-options-item'}, [
                          m('a', {'class': 'more-options-item-link',

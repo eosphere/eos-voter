@@ -9,14 +9,14 @@ var {errorDisplay} = require('./error-modal.js');
 var eosjs = require('eosjs');
 var {OKModal} = require('./ok-modal.js');
 
-class ProxyMyVote extends EosVoterModal {
+class BecomeProxyModal extends EosVoterModal {
     constructor(vnode) {
         super(vnode);
         this.delegated_cpu_weight = vnode.attrs.delegated_cpu_weight;
         this.delegated_net_weight = vnode.attrs.delegated_net_weight;
         this.balance = vnode.attrs.balance;
         this.is_processing = false;
-        this.proxy_name = globals.proxy_name;
+        this.is_proxy = globals.is_proxy;
     }
 
     can_close() { return !this.is_processing; };
@@ -25,15 +25,6 @@ class ProxyMyVote extends EosVoterModal {
         if (this.is_processing)
             return;
         this.is_processing = true;
-
-        if (this.proxy_name == '') {
-          this.owner.push_modal([OKModal, {
-            owner: this.owner,
-            info_message: 'Your proxy was cleared you can now cast a standard vote.',
-          }, null]);
-          globals.proxy_name = '';
-          return;
-        }
 
     const requiredFields = {
         accounts:[ globals.network ],
@@ -44,14 +35,14 @@ class ProxyMyVote extends EosVoterModal {
             var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
             eos.contract('eosio', requiredFields).then(c => {
-                    eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )
+                    eos.regproxy({'proxy': identity.accounts[0].name, 'isproxy': this.is_proxy} )
                         .then((result) => {
-                            console.log('voteproducer result=', result);
+                            console.log('regproxy result=', result);
                             this.owner.push_modal([OKModal, {
                               owner: this.owner,
-                              info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
+                              info_message: 'Proxy registration was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
                             }, null]);
-                            globals.proxy_name = this.proxy_name;
+                            globals.is_proxy = this.is_proxy;
                             m.redraw();
                         })
                         .catch((error) => {
@@ -77,7 +68,7 @@ class ProxyMyVote extends EosVoterModal {
 
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Proxy your Vote'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Register as a Proxy'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
                      'By Proxying and voting you are agreeing to the ',
@@ -86,24 +77,28 @@ class ProxyMyVote extends EosVoterModal {
                              'target': '_blank'},
                              'EOS Constitution detailed here'),
                    ]),
-                   m('p', 'Proxy you vote to another account.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '140px', 'display': 'inline-block'}}, [
-                       m('label', {'for': 'id-CPU-stake'}, 'Destination account'),
+                       m('label', {'for': 'id-is-proxy'}, 'Register as proxy'),
                      ]),
-                     m('input', {'type': 'text', 'id': 'id-destination-account',
-                                 'value': this.proxy_name,
-                                 'onchange': (e) => { this.proxy_name = e.target.value; },
-                                 }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                     m('div', {'style': {'display': 'inline-block'}}, [
+                       m('label', {'class': 'checkbox-container', 'style': {'top': '-18px'}}, [
+                         m('input', Object.assign({}, {'class': 'vote-checkbox', 'type': 'checkbox', 'id': 'id-is-proxy', 
+                                       'onchange': (e) => { this.is_proxy = 1 - this.is_proxy; 
+                                       document.getElementById('id-is-proxy').checked=(this.is_proxy == 1);},
+                                       },
+                                       ( (this.is_proxy == 1) ? {'checked': 'checked'} : {} ))),
+                         m('span', {'class': 'checkmark checkmark-register-proxy'}),
+                       ]),
+                     ]),
                    ]),
 
                  ]),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.proxy_now()},
-                       (this.is_processing == false ? "Proxy Now" : [
-                       m('span', {'style': {'display': 'inline-block'}}, "Proxying"),
+                       (this.is_processing == false ? "Register Now" : [
+                       m('span', {'style': {'display': 'inline-block'}}, "Registering"),
                        m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
                      ])),
                    ]),
@@ -116,7 +111,7 @@ class ProxyMyVote extends EosVoterModal {
     }
 }
 
-class ProxyView extends VoteView {
+class BecomeProxyView extends VoteView {
   oncreate() {
     super.oncreate();
     //this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
@@ -124,7 +119,7 @@ class ProxyView extends VoteView {
   get_current_modal() {
     let ret =  super.get_current_modal();
     if (ret.length === 0) {
-      let inst = m(ProxyMyVote, {owner: this,
+      let inst = m(BecomeProxyModal, {owner: this,
         delegated_cpu_weight: globals.delegated_cpu_weight,
         delegated_net_weight: globals.delegated_net_weight,
         balance: globals.balance});
@@ -134,4 +129,4 @@ class ProxyView extends VoteView {
     }
   }
 }
-exports.ProxyView = ProxyView
+exports.BecomeProxyView = BecomeProxyView
