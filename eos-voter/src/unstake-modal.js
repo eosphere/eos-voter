@@ -8,6 +8,7 @@ var eosjs = require('eosjs');
 //var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
+var {float_to_eos} = require('./utils.js');
 
 class UnstakeModal extends EosVoterModal {
     constructor(vnode) {
@@ -36,7 +37,7 @@ class UnstakeModal extends EosVoterModal {
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
             eos.contract('eosio', requiredFields).then(c => {
-                c.undelegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS')
+                c.undelegatebw(identity.accounts[0].name, identity.accounts[0].name, float_to_eos(this.new_delegated_net_weight), float_to_eos(this.new_delegated_cpu_weight))
                     .then((result) => {
                     console.log('delegatebw result=', result);
                     this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Unstaking was succesful. Transaction id = \'' + result.transaction_id + '\'. Unstaked coins take 3 days to become available.'}, null]);

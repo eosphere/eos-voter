@@ -140,7 +140,6 @@ class VoteView extends ModalStackMixin {
                     eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
-                      console.log('4 getaccount returned');
                             //console.log('getAccount result=', result);
                             globals.account_name = identity.accounts[0].name;
                             this.pop_entire_stack();

@@ -8,6 +8,7 @@ var eosjs = require('eosjs');
 //var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
+var {float_to_eos} = require('./utils.js');
 
 class StakeModal extends EosVoterModal {
     constructor(vnode) {
@@ -36,7 +37,8 @@ class StakeModal extends EosVoterModal {
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
             eos.contract('eosio', requiredFields).then(c => {
-                c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, this.new_delegated_net_weight + ' EOS', this.new_delegated_cpu_weight + ' EOS', 0)
+                console.log('deletegatebw this.new_delegated_net_weight=', this.new_delegated_net_weight)
+                c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, float_to_eos(this.new_delegated_net_weight), float_to_eos(this.new_delegated_cpu_weight), 0)
                     .then((result) => {
                     console.log('delegatebw result=', result);
                     this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Staking was succesful. Transaction id = \'' + result.transaction_id + '\''}, null]);

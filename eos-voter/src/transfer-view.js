@@ -9,6 +9,7 @@ var {EosVoterModal} = require('./eosvoter-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 var eosjs = require('eosjs');
 var {OKModal} = require('./ok-modal.js');
+var {float_to_eos} = require('./utils.js');
 
 class TransferModal extends EosVoterModal {
     constructor(vnode) {
@@ -37,7 +38,7 @@ class TransferModal extends EosVoterModal {
             // Set up any extra options you want to use eosjs with.
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
-              eos.transfer(identity.accounts[0].name, this.destination_account, this.transfer_amount + ' EOS', this.memo_field)
+              eos.transfer(identity.accounts[0].name, this.destination_account, float_to_eos(this.transfer_amount), this.memo_field)
                   .then((result) => {
                   console.log('transfer result=', result);
                   this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Transfer was succesful. Transaction id = \'' + result.transaction_id + '\''}, null]);
