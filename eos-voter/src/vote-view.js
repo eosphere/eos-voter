@@ -113,19 +113,19 @@ class VoteView extends ModalStackMixin {
     }
 
     redrawAll() {
-        if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0)
-            return;
+       if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0)
+         return;
 
        if (globals.has_loaded)
          return;
 
-        var eos = globals.scatter.eos( globals.network, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+        var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
         const requiredFields = {
             accounts:[ globals.network ],
         };
 
-        globals.scatter.suggestNetwork(globals.network).then((result) => {
+        //globals.scatter.suggestNetwork(globals.network_secure).then((result) => {
                 globals.scatter.getIdentity(requiredFields).then(identity => {
                     // Set up any extra options you want to use eosjs with.
                     if (identity.accounts[0].authority != 'active'){
@@ -140,6 +140,7 @@ class VoteView extends ModalStackMixin {
                     eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
 
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
+                      console.log('4 getaccount returned');
                             //console.log('getAccount result=', result);
                             globals.account_name = identity.accounts[0].name;
                             this.pop_entire_stack();
@@ -205,14 +206,14 @@ class VoteView extends ModalStackMixin {
 
 
 
-            }).catch((error) => {
+              /*}).catch((error) => {
                 console.error('Suggested network was rejected result=', error);
                 if (error.type == "locked") {
                     this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}, null]);
                     m.redraw();
                 } else
                     errorDisplay(this.owner, 'Scatter returned an error from suggestNetwork', error);
-            });
+            })*/;
     }
 
     block_producers_grid(block_producer_list, description) {

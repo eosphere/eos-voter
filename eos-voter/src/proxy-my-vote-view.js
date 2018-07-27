@@ -38,7 +38,7 @@ class ProxyMyVote extends EosVoterModal {
     const requiredFields = {
         accounts:[ globals.network ],
     };
-    globals.scatter.suggestNetwork(globals.network).then((result) => {
+    //globals.scatter.suggestNetwork(globals.network).then((result) => {
         globals.scatter.getIdentity(requiredFields).then(identity => {
 
             var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
@@ -68,11 +68,11 @@ class ProxyMyVote extends EosVoterModal {
                 errorDisplay('getidentity returned an error', e);
                 console.log(this.owner, 'getidentity error e=', e)
             });
-        })
+        /*})
         .catch(e => {
             errorDisplay('suggestNetwork returned an error', e);
             console.log(this.owner, 'suggestNetwork error e=', e)
-        });
+        });*/
     }
 
     get_internal_content() {

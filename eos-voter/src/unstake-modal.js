@@ -30,7 +30,7 @@ class UnstakeModal extends EosVoterModal {
     const requiredFields = {
         accounts:[ globals.network ],
     };
-    globals.scatter.suggestNetwork(globals.network).then((result) => {
+    //globals.scatter.suggestNetwork(globals.network).then((result) => {
         globals.scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with.
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
@@ -56,11 +56,11 @@ class UnstakeModal extends EosVoterModal {
                 errorDisplay(this.owner, 'getidentity returned an error', e);
                 console.log('getidentity error e=', e)
             });
-        })
+        /*})
         .catch(e => {
             errorDisplay(this.owner, 'suggestNetwork returned an error', e);
             console.log('suggestNetwork error e=', e)
-        });
+        });*/
     }
 
     get_internal_content() {
