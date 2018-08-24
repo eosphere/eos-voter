@@ -15,8 +15,22 @@ ENV last_update 20180823
 
 # Install required packages
 
-RUN apt-get update --quiet --yes && apt-get install --quiet --yes --force-yes curl \
-    sudo  nodejs build-essential
+RUN apt-get update --quiet --yes && apt-get install --quiet --yes --force-yes \
+    curl \
+    sudo \
+    python3-pip \
+    mongodb \
+    git
+
+# Install required packages
+ADD chaininspector/requirements.txt /root/requirements.txt
+RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade setuptools urllib3[secure]
+RUN pip3 install -r /root/requirements.txt
+
+# Configure environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONWARNINGS d
 
 ADD config/installation/install_node_ubuntu /root/install_node_ubuntu
 
