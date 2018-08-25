@@ -3,6 +3,8 @@ import time
 from pymongo import MongoClient
 from eosapi import Client
 import json
+import bp_json_inspector
+import threading
 
 c = Client(nodes=['https://node2.eosphere.io'])
 
@@ -12,11 +14,12 @@ producers = db.producers
 owners = {}
 last_owner = ''
 more = None
+bp_json_thread_running = False
 
 #print("collection names=", db.collection_names(include_system_collections=False))
 
 def download_producers(start_producer):
-    print('download_producers start_producer=', start_producer)
+    #print('download_producers start_producer=', start_producer)
     global owners
     global more
     d = c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
@@ -36,10 +39,14 @@ def download_producers(start_producer):
 while True:
     download_producers('')
 
-    j = json.dumps(owners)
+    bp_json_inspector.set_producers(owners)
     producers.update_one({'_id': 1}, {"$set": {'_id': 1, "producers": owners}})
 
-    print('len(owners)=', len(owners))
-    print('more=', more)
-    print('producers.count=', producers.count())
-    time.sleep(1)
+    if bp_json_thread_running is False:
+        threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
+        bp_json_thread_running = True
+
+    #print('len(owners)=', len(owners))
+    #print('more=', more)
+    #print('producers.count=', producers.count())
+    time.sleep(5)
