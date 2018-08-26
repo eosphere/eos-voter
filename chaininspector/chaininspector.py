@@ -5,6 +5,7 @@ from eosapi import Client
 import json
 import bp_json_inspector
 import threading
+import sys
 
 c = Client(nodes=['https://node2.eosphere.io'])
 
@@ -35,18 +36,20 @@ def download_producers(start_producer):
         if more:
             download_producers(last_owner)
 
-
 while True:
-    download_producers('')
+    try:
+        download_producers('')
 
-    bp_json_inspector.set_producers(owners)
-    producers.update_one({'_id': 1}, {"$set": {'_id': 1, "producers": owners}})
+        bp_json_inspector.set_producers(owners)
+        producers.update_one({'_id': 1}, {"$set": {'_id': 1, "producers": owners}})
 
-    if bp_json_thread_running is False:
-        threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
-        bp_json_thread_running = True
+        if bp_json_thread_running is False:
+            threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
+            bp_json_thread_running = True
 
-    #print('len(owners)=', len(owners))
-    #print('more=', more)
-    #print('producers.count=', producers.count())
-    time.sleep(5)
+        #print('len(owners)=', len(owners))
+        #print('more=', more)
+        #print('producers.count=', producers.count())
+        time.sleep(5)
+    except Exception as ex:
+        sys.exit(-1)
