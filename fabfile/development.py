@@ -100,6 +100,11 @@ def setup_mongodb():
 def chaininspector():
     print(yellow('Running docker process...'))
     with lcd('.'):
+        with warn_only():
+            result = local('docker start {project_name}-mongo'.format(
+                project_name=project_name))
+        if result.failed:
+            abort(red('Could not start mongodb. Have you run \'setup_mongodb\'?'))
         local('docker run --tty --interactive '
               '--label {project_name}-chaininspector '
               '--volume "{local_pwd}":/opt/project '
