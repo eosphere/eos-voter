@@ -98,6 +98,11 @@ exports.format_block_producer = (x, total_votes) => {
         country_name = country_code;
     }
 
+    /*console.log("x.total_votes=", x.total_votes)
+    console.log("typeof x.total_votes=", typeof x.total_votes)
+    console.log("total_votes=", total_votes)
+    console.log("typeof total_votes=", typeof total_votes)*/
+
     return { 'id': x.owner, 'name': x.owner, 'votes_absolute': (x.total_votes / calculateVoteWeight() / 10000.0 / 1000000.0).toFixed(2),
               'votes_percent': ((parseFloat(x.total_votes) / total_votes * 100.0).toFixed(2) + '%'),
               'statement': x.url, 'valid_url': ValidURL(x.url),

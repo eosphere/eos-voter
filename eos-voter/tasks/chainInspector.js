@@ -173,5 +173,5 @@ function inspectChain()
 
 }
 
-inspectChain();
-setTimeout(updateBpInfo, config.refresh_secs * 1000);
+//inspectChain();
+//setTimeout(updateBpInfo, config.refresh_secs * 1000);
