@@ -6,9 +6,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
+var {indexRouter, voteRouter} = require('./routes/index');
 //var usersRouter = require('./routes/users');
-var voteRouter = require('./routes/vote');
+//var voteRouter = require('./routes/vote');
 var chainInpectorTask = require('./tasks/chainInspector.js')
 var whatsthisbpnamemismatchRouter = require('./routes/whatsthisbpnamemismatch');
 
