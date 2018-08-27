@@ -306,7 +306,7 @@ class VoteView extends ModalStackMixin {
                        m("div", {'class': 'header-info-block'}, [
                          m("p.header-info-text", [
                            m('strong', 'Name:'),
-                           globals.account_name,
+                           ' ', globals.account_name,
                          ]),
                          ( globals.is_proxy ? [m("p.header-info-text", m('strong', 'Is Proxy'))]: []),
                        ]),
