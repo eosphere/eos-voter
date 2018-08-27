@@ -48,4 +48,4 @@ def inpsect_bp_json():
 
             time.sleep(10)
     except Exception as ex:
-        sys.exit(-1)
+        sys.exit(1)

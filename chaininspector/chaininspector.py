@@ -52,4 +52,4 @@ while True:
         #print('producers.count=', producers.count())
         time.sleep(5)
     except Exception as ex:
-        sys.exit(-1)
+        sys.exit(1)
