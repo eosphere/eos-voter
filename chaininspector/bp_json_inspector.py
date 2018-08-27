@@ -2,6 +2,7 @@ import time
 import re
 import requests
 import sys
+from pymongo import MongoClient
 
 producers = None
 
@@ -27,13 +28,16 @@ def trailing_slash(s):
         return s
 
 def inpsect_bp_json():
+    mongo_client = MongoClient('mongodb://mongo:27017/')
+    db = mongo_client.eos_producers
+    bp_info = db.bp_info
     try:
         global producers
         while True:
             prods = producers
             print("inpsect_bp_json id(prods)", id(prods))
             print("type(prods)=", type(prods))
-            for k, bp in prods.items():
+            for bp_name, bp in prods.items():
                 #print("dir(bp)=", bp)
                 print('Connecting to {} is valid = {}'.format(bp['url'], valid_url(bp['url'])))
                 if valid_url(bp['url'].lower()):
@@ -43,6 +47,9 @@ def inpsect_bp_json():
                         print('Result status code={}'.format(r.status_code))
                         if r.status_code == 200:
                             print('Json returned=', r.json())
+                            bp_info.update_one({'_id': bp_name}, {"$set": r.json()})
+                            print('Stored in mongodb')
+
                     except Exception as ex:
                         print("an EXCEPTION OCCURERD    ex=", ex)
 
