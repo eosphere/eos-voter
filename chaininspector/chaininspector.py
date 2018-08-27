@@ -55,9 +55,9 @@ while True:
                                                    "total_votes" : total_votes,
                                                    "producers": owners}}, upsert=True)
 
-        #if bp_json_thread_running is False:
-        #    threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
-        #    bp_json_thread_running = True
+        if bp_json_thread_running is False:
+            threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
+            bp_json_thread_running = True
 
         #print('len(owners)=', len(owners))
         #print('more=', more)

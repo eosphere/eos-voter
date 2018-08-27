@@ -47,7 +47,7 @@ def inpsect_bp_json():
                         print('Result status code={}'.format(r.status_code))
                         if r.status_code == 200:
                             print('Json returned=', r.json())
-                            bp_info.update_one({'_id': bp_name}, {"$set": r.json()})
+                            bp_info.update_one({'_id': bp_name}, {"$set": r.json()}, upsert=True)
                             print('Stored in mongodb')
 
                     except Exception as ex:

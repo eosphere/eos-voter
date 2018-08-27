@@ -47,9 +47,9 @@ function calculateVoteWeight() {
 }
 
 
-exports.format_block_producer = (x, total_votes) => {
+exports.format_block_producer = (x, total_votes, bp_info) => {
     // Format the block producers information for the frontend
-    let bp_info = chaininspector.get_bp_info();
+    //let bp_info = chaininspector.get_bp_info();
     var country_code = '';
     if (x.owner in bp_info) {
         country_code = bp_info[x.owner].org.location.country;

@@ -35,29 +35,37 @@ router.get('/', function(req, res, next) {
         producer_list.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
         //console.log("Producers2=", producer_list);
 
-        let active_block_producers = producer_list.map((x) => utils.format_block_producer(x, total_votes));
-        for (let i = 0; i < active_block_producers.length; i++) {
-          active_block_producers[i].position = sprintf('%02d', i + 1);
-        }
-        let backup_block_producers = active_block_producers.slice(21);
-        console.log("backup_block_producers=", backup_block_producers);
-        active_block_producers = active_block_producers.slice(0, 21);
+        dbo.collection("bp_info").find().toArray(function(err, result2) {
+          console.log('result2=', result2)
+          var bp_info = {};
+          for (let i = 0; i < result2.length ; i++) {
+            bp_info[result2[i]._id] = result2[i];
+          }
+          let active_block_producers = producer_list.map((x) => utils.format_block_producer(x, total_votes, bp_info));
+          for (let i = 0; i < active_block_producers.length; i++) {
+            active_block_producers[i].position = sprintf('%02d', i + 1);
+          }
+          let backup_block_producers = active_block_producers.slice(21);
+          //console.log("backup_block_producers=", backup_block_producers);
+          active_block_producers = active_block_producers.slice(0, 21);
 
-        has_activated = total_activated_stake > config.min_activated_stake;
+          has_activated = total_activated_stake > config.min_activated_stake;
 
-        res.render('index', { title: 'EOS Voter',
-                              chainname: config.chain_name,
-                             'activeblockproducers': active_block_producers,
-                             'backupblockproducers': backup_block_producers,
-                             'block_producer_list_empty': (active_block_producers.length + backup_block_producers.length) == 0,
-                             'landing_page_content': config.landing_page_content,
-                             'chainid': chain_id,
-                             'total_activated_stake': Humanize.formatNumber(total_activated_stake / 10.0 / 1000),
-                             'min_activated_stake': Humanize.formatNumber(config.min_activated_stake / 10.0 / 1000),
-                             'activated_percent': (total_activated_stake / config.min_activated_stake * (15.0 / 100.0) * 100.0).toFixed(2),
-                             'has_activated': has_activated,
-                             'has_activated_message': config.has_activated_message,
-                             });
+          res.render('index', { title: 'EOS Voter',
+                                chainname: config.chain_name,
+                               'activeblockproducers': active_block_producers,
+                               'backupblockproducers': backup_block_producers,
+                               'block_producer_list_empty': (active_block_producers.length + backup_block_producers.length) == 0,
+                               'landing_page_content': config.landing_page_content,
+                               'chainid': chain_id,
+                               'total_activated_stake': Humanize.formatNumber(total_activated_stake / 10.0 / 1000),
+                               'min_activated_stake': Humanize.formatNumber(config.min_activated_stake / 10.0 / 1000),
+                               'activated_percent': (total_activated_stake / config.min_activated_stake * (15.0 / 100.0) * 100.0).toFixed(2),
+                               'has_activated': has_activated,
+                               'has_activated_message': config.has_activated_message,
+                               });
+        });
+
       });
     });
 
