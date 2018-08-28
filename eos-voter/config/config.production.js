@@ -13,4 +13,4 @@ config.chain_name = 'EOS Mainnet';
 
 config.mongodb_server = 'localhost';
 
-mmodule.exports = config;
+module.exports = config;
