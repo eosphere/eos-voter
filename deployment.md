@@ -44,84 +44,6 @@ Check out the repo
 cd /srv
 sudo git clone https://github.com/eosphere/eos-voter.git
 
-### Set up let's encrypt
-
-Add the Let's Encrypt PPA (taken from DigitalOceans instructions https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04)
-
-```
-sudo add-apt-repository ppa:certbot/certbot
-```
-
-Update the repo
-
-```
-sudo apt-get update
-```
-
-Install the certbot
-
-```
-sudo apt-get install python-certbot-nginx
-```
-
-Copy in nginx configuration file to the /etc/nginx/sites-available directory
-
-```
-sudo cp /srv/eos-voter/config/nginx/eos-voter.conf /etc/nginx/sites-available/eos-voter.conf
-```
-
-Edit the /etc/nginx/sites-available/eos-voter.conf file and change the server name to your server's fully qualified domain name. It is in the file as eos-voter.example.com
-
-Remove the default site from the active sites and add in the eos-voter site.
-
-```
-sudo rm /etc/nginx/sites-enabled/default
-sudo ln -s /etc/nginx/sites-available/eos-voter.conf /etc/nginx/sites-enabled/eos-voter.conf
-```
-
-Restart nginx to get it to pick up the changes
-```
-sudo service nginx restart
-```
-
-Install the certbot
-
-```
-sudo mkdir /srv/certbot
-sudo cp /srv/eos-voter/config/lets-encrypt/certbot.sh /srv/certbot/certbot.sh
-sudo chmod 700 /srv/certbot/certbot.sh
-```
-
-Create the well know directory for the certbot's output files
-```
-sudo mkdir /srv/eos-voter/public
-sudo mkdir /srv/eos-voter/public/.well-known
-```
-
-Edit the certbot file so it refers to the correct domain
-```
-sudo nano /srv/certbot/certbot.sh
-```
-
-Run the certbot for the first time
-
-```
-sudo /srv/certbot/certbot.sh
-```
-
-Accept all the prompts this should give us an SSL cert
-
-Run the let's encrypt update every month
-```
-sudo crontab -e
-```
-
-Add the following entry to the crontab
-```
-0 0    1    *   *    /srv/certbot/certbot.sh
-```
-This will run the certbot on the first of every month you should check on the first of the next month that it ran.
-
 ### Set up nodejs
 
 First download the nodejs executable from their ppa
@@ -143,6 +65,13 @@ sudo npm install
 cd /srv/eos-voter/chaininspector
 sudo virtualenv venv -p python3
 sudo ./venv/bin/pip install -r requirements.txt
+
+### Configure nginx
+
+sudo  /srv/eos-voter/config/nginx/eos-voter.conf /etc/nginx/sites-available
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/eos-voter.conf /etc/nginx/sites-enabled/eos-voter.conf
+sudo service nginx restart
 
 ### Start the chaininspector program
 
@@ -203,21 +132,21 @@ ssh into the server. Then change to the software directory and pull the updates
 
 ```
 cd /srv/eos-voter
-git pull
+sudo git pull
 ```
 
 Install any updated npm requirements
 
 ```
 cd /srv/eos-voter/eos-voter
-npm install
+sudo npm install
 ```
 
 Run webpack to regenerate the client side javascript
 
 ```
 cd /srv/eos-voter/eos-voter
-nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production -d
+sudo nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production -d
 ```
 
 Restart the app
