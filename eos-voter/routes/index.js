@@ -3,7 +3,6 @@
 var express = require('express');
 var router_index = express.Router();
 var router_vote = express.Router();
-var chaininspector = require('../tasks/chainInspector')
 var utils = require('../utils/utils.js');
 var config = require('../config');
 var Humanize = require('humanize-plus');

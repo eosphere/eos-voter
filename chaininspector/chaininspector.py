@@ -18,10 +18,7 @@ more = None
 bp_json_thread_running = False
 chain_id = ''
 
-#print("collection names=", db.collection_names(include_system_collections=False))
-
 def download_producers(start_producer):
-    #print('download_producers start_producer=', start_producer)
     global owners
     global more
     d = c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
@@ -48,21 +45,19 @@ while True:
 
         bp_json_inspector.set_producers(owners)
         total_votes = sum([float(producer['total_votes']) for producer in owners.values()])
-        print("total_votes=", total_votes)
         producers.update_one({'_id': 1}, {"$set": {'_id': 1,
                                                    "chain_id": chain_id,
                                                    "total_activated_stake": total_activated_stake,
                                                    "total_votes" : total_votes,
                                                    "producers": owners}}, upsert=True)
 
+        print("Producer list downloaded")
+
         if bp_json_thread_running is False:
             threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
             bp_json_thread_running = True
 
-        #print('len(owners)=', len(owners))
-        #print('more=', more)
-        #print('producers.count=', producers.count())
         time.sleep(5)
     except Exception as ex:
         print("Exception ex=", ex)
-        sys.exit(1)
+        os._exit(1)

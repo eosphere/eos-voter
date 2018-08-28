@@ -3,6 +3,7 @@ import re
 import requests
 import sys
 from pymongo import MongoClient
+import os
 
 producers = None
 
@@ -35,24 +36,17 @@ def inpsect_bp_json():
         global producers
         while True:
             prods = producers
-            print("inpsect_bp_json id(prods)", id(prods))
-            print("type(prods)=", type(prods))
             for bp_name, bp in prods.items():
-                #print("dir(bp)=", bp)
-                print('Connecting to {} is valid = {}'.format(bp['url'], valid_url(bp['url'])))
+                print('Connecting to bp.json url for {}'.format(bp['owner']))
                 if valid_url(bp['url'].lower()):
-                    print('Getting bp.json')
                     try:
                         r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json')
-                        print('Result status code={}'.format(r.status_code))
                         if r.status_code == 200:
-                            print('Json returned=', r.json())
                             bp_info.update_one({'_id': bp_name}, {"$set": r.json()}, upsert=True)
-                            print('Stored in mongodb')
 
                     except Exception as ex:
                         print("an EXCEPTION OCCURERD    ex=", ex)
 
             time.sleep(10)
     except Exception as ex:
-        sys.exit(1)
+        os._exit(1)

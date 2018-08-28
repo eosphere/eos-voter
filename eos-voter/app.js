@@ -7,9 +7,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var {indexRouter, voteRouter} = require('./routes/index');
-//var usersRouter = require('./routes/users');
-//var voteRouter = require('./routes/vote');
-var chainInpectorTask = require('./tasks/chainInspector.js')
 var whatsthisbpnamemismatchRouter = require('./routes/whatsthisbpnamemismatch');
 
 var app = express();
@@ -25,7 +22,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
 app.use('/vote', voteRouter);
 app.use('/whats-this-bp-name-mismatch', whatsthisbpnamemismatchRouter);
 
