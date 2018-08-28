@@ -26,4 +26,6 @@ config.chain_name = 'EOS Mainnet';
 
 config.bp_info_refresh_secs = 60;
 
+config.mongodb_server = 'mongo';
+
 module.exports = config;

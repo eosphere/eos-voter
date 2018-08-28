@@ -7,7 +7,7 @@ var utils = require('../utils/utils.js');
 var config = require('../config');
 var Humanize = require('humanize-plus');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://mongo:27017/";
+var url = "mongodb://" + config.mongodb_server + ":27017/";
 var {sprintf} = require('sprintf')
 
 function ProcessBPListRequest(res, template) {

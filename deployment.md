@@ -146,6 +146,9 @@ sudo ./venv/bin/pip install -r requirements.txt
 
 ### Start the chaininspector program
 
+sudo cp /srv/eos-voter/config/supervisord/chaininspector.conf /etc/supervisor/conf.d/
+sudo supervisorctl update
+
 ### Start the nodejs frontend
 Install PM2 which will keep our program running
 ```
@@ -180,6 +183,13 @@ sudo pm2 logrotate -u ubuntu
 ```
 
 As per the the pm2 instructions <http://pm2.keymetrics.io/docs/usage/log-management/#setting-up-a-native-logrotate>
+
+Use pico to edit the file it makes
+
+```
+sudo pico /etc/logrotate.d/pm2-ubuntu
+```
+Change the line that says `weekly` to `daily`
 
 ### Server is set up
 
