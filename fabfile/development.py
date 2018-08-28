@@ -50,19 +50,28 @@ def runserver():
         if len(ret) == 0:
             abort(red('Could not runserver. Have you run '
                       '\'fab development.webpack\'?'))
+        with warn_only():
+            result = local('docker start {project_name}-mongo'.format(
+                project_name=project_name))
+        if result.failed:
+            abort(red('Could not start mongodb. Have you run \'setup_mongodb\'?'))
         local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
               '--entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 '
               '--network={project_name}-network '
               '--network-alias=webserver '
-              '--user=$(id -u):$(id -g) "{project_name}"'.format(
+              #'--user=$(id -u):$(id -g) '
+              '"{project_name}"'.format(
                     local_pwd=local_pwd, project_name=project_name))
 
 @task
 def webpack():
     print(yellow('Running docker process...'))
     with lcd('.'):
-        local('docker run --tty --interactive --label {project_name}-webpack --volume "{local_pwd}":/opt/project '
-              '--entrypoint="/opt/project/run-webpack" --user=$(id -u):$(id -g) '
+        local('docker run --tty --interactive '
+              '--label {project_name}-webpack '
+              '--volume "{local_pwd}":/opt/project '
+              '--entrypoint="/opt/project/run-webpack" '
+              #'--user=$(id -u):$(id -g) '
               '"{project_name}"'.format(
                     local_pwd=local_pwd, project_name=project_name))
 
@@ -73,4 +82,34 @@ def setup_network():
         local('docker network create --driver bridge {project_name}-network'
               ''.format(project_name=project_name))
 
+@task
+def setup_mongodb():
+    print(yellow('Launching detached mongodb docker process...'))
+    with lcd('.'):
+        with warn_only():
+            result = local('docker run --detach --name={project_name}-mongo '
+                           '--network={project_name}-network '
+                           '--network-alias=mongo '
+                           '-d mongo '.format(
+                            project_name=project_name))
+            if result.failed:
+                abort(red('Could not setup mongodb. Have you run '
+                    '\'setup_network\'?'))
 
+@task
+def chaininspector():
+    print(yellow('Running docker process...'))
+    with lcd('.'):
+        with warn_only():
+            result = local('docker start {project_name}-mongo'.format(
+                project_name=project_name))
+        if result.failed:
+            abort(red('Could not start mongodb. Have you run \'setup_mongodb\'?'))
+        local('docker run --tty --interactive '
+              '--label {project_name}-chaininspector '
+              '--volume "{local_pwd}":/opt/project '
+              '--entrypoint="/opt/project/run-chain-inspector" '
+              '--network={project_name}-network '
+              #'--user=$(id -u):$(id -g) '
+              '"{project_name}" mongo'.format(
+                    local_pwd=local_pwd, project_name=project_name))

@@ -1,22 +1,9 @@
 // This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
 
-var chaininspector = require('../tasks/chainInspector');
 var config = require('../config');
 var {countries, regions} = require('./country-codes.js');
 
 var exports = module.exports = {};
-
-function to_engineering(f) {
-    // Return a f formatted as a string in engineering notation
-    // Defintion of engineering notation https://en.wikipedia.org/wiki/Engineering_notation
-    if (f == 0) {
-        return '0e+0';
-    }
-    let exponent = Math.floor(Math.log10(f));
-    exponent = exponent - exponent % 3;
-    mantissa = f / Math.pow(10, exponent);
-    return mantissa.toFixed(3) + 'e' + (exponent >= 0 ? '+' : '') + exponent.toFixed(0)
-}
 
 function ValidURL(str) {
   var pattern = new RegExp('^(https?:\\/\\/)'+ // protocol
@@ -47,9 +34,8 @@ function calculateVoteWeight() {
 }
 
 
-exports.format_block_producer = (x, total_votes) => {
+exports.format_block_producer = (x, total_votes, bp_info) => {
     // Format the block producers information for the frontend
-    let bp_info = chaininspector.get_bp_info();
     var country_code = '';
     if (x.owner in bp_info) {
         country_code = bp_info[x.owner].org.location.country;
@@ -106,14 +92,8 @@ exports.format_block_producer = (x, total_votes) => {
               'fake_bp': fake_bp, 'position': x.position, 'region': region_name };
 }
 
-exports.get_total_votes = function() {
-    var block_producers = chaininspector.get_all_block_producers();
-    if (block_producers.length == 0)
-        // Fake returning some votes for display purposes
-        return 1;
-    return block_producers.reduce((accumulator, x) => accumulator + parseFloat(x.total_votes), 0);
-}
-
+/*
 exports.has_activated = function() {
     return chaininspector.get_total_activated_stake() > config.min_activated_stake;
 }
+*/

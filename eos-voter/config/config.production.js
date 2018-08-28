@@ -11,6 +11,6 @@ config.chain_secure_port = '443'
 // User readable name for the chain
 config.chain_name = 'EOS Mainnet';
 
+config.mongodb_server = 'localhost';
+
 module.exports = config;
-
-
