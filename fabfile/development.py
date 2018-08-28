@@ -111,5 +111,5 @@ def chaininspector():
               '--entrypoint="/opt/project/run-chain-inspector" '
               '--network={project_name}-network '
               #'--user=$(id -u):$(id -g) '
-              '"{project_name}"'.format(
+              '"{project_name}" mongo'.format(
                     local_pwd=local_pwd, project_name=project_name))

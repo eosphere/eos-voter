@@ -4,12 +4,16 @@ import requests
 import sys
 from pymongo import MongoClient
 import os
+import datetime
 
 producers = None
+mongodb_server = None
 
-def set_producers(prods):
+def set_producers(prods, srv):
     global producers
     producers = prods
+    global mongodb_server
+    mongodb_server = srv
 
 def valid_url(url):
     if url == '' or url is None:
@@ -29,7 +33,7 @@ def trailing_slash(s):
         return s
 
 def inpsect_bp_json():
-    mongo_client = MongoClient('mongodb://mongo:27017/')
+    mongo_client = MongoClient('mongodb://{}:27017/'.format(mongodb_server))
     db = mongo_client.eos_producers
     bp_info = db.bp_info
     try:
@@ -37,7 +41,7 @@ def inpsect_bp_json():
         while True:
             prods = producers
             for bp_name, bp in prods.items():
-                print('Connecting to bp.json url for {}'.format(bp['owner']))
+                print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Connecting to bp.json url for {}".format(bp['owner']))
                 if valid_url(bp['url'].lower()):
                     try:
                         r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json')
@@ -45,7 +49,7 @@ def inpsect_bp_json():
                             bp_info.update_one({'_id': bp_name}, {"$set": r.json()}, upsert=True)
 
                     except Exception as ex:
-                        print("an EXCEPTION OCCURERD    ex=", ex)
+                        print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " an EXCEPTION OCCURERD    ex=", ex)
 
             time.sleep(10)
     except Exception as ex:

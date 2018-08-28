@@ -11,7 +11,7 @@ We use aws and will run on a EC2 instance
 ### Set up the server
 
 Create an EC2 instance. I used a nano. The server doesn't do a lot of work so can be pretty small.
-Use Ubunto 16.04 as the operating system.
+Use Ubuntu 18.04 as the operating system.
 
 Log into the instance
 
@@ -36,7 +36,7 @@ Then reconnect
 Install the required Ubuntu packages
 
 ```
-sudo apt-get install git nginx
+sudo apt-get install git nginx mongodb python3-pip supervisor virtualenv
 ```
 
 Check out the repo
@@ -76,7 +76,7 @@ Remove the default site from the active sites and add in the eos-voter site.
 
 ```
 sudo rm /etc/nginx/sites-enabled/default
-sudo ln -s /etc/nginx/sites-available/eos-voter.conf /etc/nginx/sites-enabled/eos-voter.conf 
+sudo ln -s /etc/nginx/sites-available/eos-voter.conf /etc/nginx/sites-enabled/eos-voter.conf
 ```
 
 Restart nginx to get it to pick up the changes
@@ -135,9 +135,18 @@ Install the npm requirements
 
 ```
 cd /srv/eos-voter/eos-voter
-npm install
+sudo npm install
 ```
 
+### Set up the python block chain inspector
+
+cd /srv/eos-voter/chaininspector
+sudo virtualenv venv -p python3
+sudo ./venv/bin/pip install -r requirements.txt
+
+### Start the chaininspector program
+
+### Start the nodejs frontend
 Install PM2 which will keep our program running
 ```
 sudo npm install -g pm2
@@ -205,4 +214,3 @@ Restart the app
 ```
 pm2 restart all
 ```
-
