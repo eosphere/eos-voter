@@ -54,7 +54,7 @@ cd /srv
 sudo mkdir eos-voter
 ```
 
-Change the ownership of the bitcoinhex directory. The deployment user owns it
+Change the ownership of the eos-voter directory. The deployment user owns it
 but the www-data user will be able to read it.
 ```
 sudo chown deployment:www-data eos-voter
@@ -117,8 +117,8 @@ sudo npm install -g pm2
 Create the pm2 log directory and make it writable by the www-data user
 ```
 mkdir ~/.pm2
-chmod 775 ~/pm2
-chown deployment:www-data ~/.pm2
+chmod 775 ~/.pm2
+sudo chown deployment:www-data ~/.pm2
 ```
 
 Start the application with pm2
@@ -140,7 +140,7 @@ Run webpack to generate the static files
 ```
 cd /srv/eos-voter/eos-voter/
 sudo -u deployment nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js -d --mode production
-sudo -u deployment chown deployment:www-data /srv/eos-voter -R
+sudo chown deployment:www-data /srv/eos-voter -R
 ```
 
 #Set up the logrotation options
