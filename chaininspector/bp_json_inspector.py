@@ -8,12 +8,15 @@ import datetime
 
 producers = None
 mongodb_server = None
+chain_id = None
 
-def set_producers(prods, srv):
+def set_producers(prods, srv, c):
     global producers
     producers = prods
     global mongodb_server
     mongodb_server = srv
+    global chain_id
+    chain_id = c
 
 def valid_url(url):
     if url == '' or url is None:
@@ -44,9 +47,14 @@ def inpsect_bp_json():
                 print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Connecting to bp.json url for {} url = {}".format(bp['owner'], bp['url']))
                 if valid_url(bp['url'].lower()):
                     try:
+                        result = {}
+                        r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.' + chain_id + '.json', timeout=30)
+                        if r.status_code == 200:
+                            result = r.json()
                         r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json', timeout=30)
                         if r.status_code == 200:
-                            bp_info.update_one({'_id': bp_name}, {"$set": r.json()}, upsert=True)
+                            result = {**r.json(), **result}
+                            bp_info.update_one({'_id': bp_name}, {"$set": result}, upsert=True)
 
                     except Exception as ex:
                         print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " an EXCEPTION OCCURERD    ex=", ex)

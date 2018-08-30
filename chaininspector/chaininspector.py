@@ -51,7 +51,7 @@ try:
         total_activated_stake = d['rows'][0]['total_activated_stake']
         download_producers('')
 
-        bp_json_inspector.set_producers(owners, mongodb_server)
+        bp_json_inspector.set_producers(owners, mongodb_server, chain_id)
         total_votes = sum([float(producer['total_votes']) for producer in owners.values()])
         producers.update_one({'_id': 1}, {"$set": {'_id': 1,
                                                    "chain_id": chain_id,
