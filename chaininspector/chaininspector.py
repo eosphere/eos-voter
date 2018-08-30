@@ -6,7 +6,8 @@ import json
 import bp_json_inspector
 import threading
 import sys
-import datetime
+import os
+from chainlogger import log
 
 c = Client(nodes=['https://node2.eosphere.io'])
 
@@ -40,8 +41,9 @@ def download_producers(start_producer):
         if more:
             download_producers(last_owner)
 
-while True:
-    try:
+log("Chain inspector starting")
+try:
+    while True:
         chain_id = c.get_info()['chain_id']
         d = c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
                          table= 'global', limit=100, table_key=1,
@@ -49,7 +51,7 @@ while True:
         total_activated_stake = d['rows'][0]['total_activated_stake']
         download_producers('')
 
-        bp_json_inspector.set_producers(owners, mongodb_server)
+        bp_json_inspector.set_producers(owners, mongodb_server, chain_id)
         total_votes = sum([float(producer['total_votes']) for producer in owners.values()])
         producers.update_one({'_id': 1}, {"$set": {'_id': 1,
                                                    "chain_id": chain_id,
@@ -57,13 +59,16 @@ while True:
                                                    "total_votes" : total_votes,
                                                    "producers": owners}}, upsert=True)
 
-        print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Producer list downloaded")
+        log("Producer list downloaded")
 
         if bp_json_thread_running is False:
             threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
             bp_json_thread_running = True
 
         time.sleep(5)
-    except Exception as ex:
-        print("Exception ex=", ex)
-        os._exit(1)
+except Exception as ex:
+    log("Chain inspector Exception ex=", ex)
+    os._exit(1)
+finally:
+    log("Finally called")
+    os._exit(1)
