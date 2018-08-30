@@ -98,15 +98,26 @@ sudo chown deployment:www-data /srv/eos-voter -R
 
 ### Configure nginx
 
+```
 sudo cp /srv/eos-voter/config/nginx/eos-voter.conf /etc/nginx/sites-available
 sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/eos-voter.conf /etc/nginx/sites-enabled/eos-voter.conf
 sudo service nginx restart
+```
 
 ### Start the chaininspector program
 
+First create the log directory for the chaininspector.
+```
+sudo mkdir /var/log/chaininspector
+chmod 777 /var/log/chaininspector
+```
+
+Tell supervisor to start the chaininspector and keep it alive
+```
 sudo cp /srv/eos-voter/config/supervisord/chaininspector.conf /etc/supervisor/conf.d/
 sudo supervisorctl update
+```
 
 ### Start the nodejs frontend
 Install PM2 which will keep our program running
