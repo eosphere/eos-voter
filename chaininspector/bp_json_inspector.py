@@ -4,7 +4,7 @@ import requests
 import sys
 from pymongo import MongoClient
 import os
-import datetime
+from chainlogger import log
 
 producers = None
 mongodb_server = None
@@ -44,7 +44,7 @@ def inpsect_bp_json():
         while True:
             prods = producers
             for bp_name, bp in prods.items():
-                print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Connecting to bp.json url for {} url = {}".format(bp['owner'], bp['url']))
+                log("Connecting to bp.json url for {} url = {}".format(bp['owner'], bp['url']))
                 if valid_url(bp['url'].lower()):
                     try:
                         result = {}
@@ -57,11 +57,11 @@ def inpsect_bp_json():
                             bp_info.update_one({'_id': bp_name}, {"$set": result}, upsert=True)
 
                     except Exception as ex:
-                        print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " an EXCEPTION OCCURERD    ex=", ex)
+                        log("an EXCEPTION OCCURERD    ex=", ex)
 
             time.sleep(10)
     except Exception as ex:
-        print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " bp.json Exception ex=", ex)
+        log("bp.json Exception ex=", ex)
         os._exit(1)
     finally:
-        print("Finally called")
+        log("Finally called")

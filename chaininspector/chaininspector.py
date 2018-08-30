@@ -6,8 +6,8 @@ import json
 import bp_json_inspector
 import threading
 import sys
-import datetime
 import os
+from chainlogger import log
 
 c = Client(nodes=['https://node2.eosphere.io'])
 
@@ -41,7 +41,7 @@ def download_producers(start_producer):
         if more:
             download_producers(last_owner)
 
-print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Chain inspector starting")
+log("Chain inspector starting")
 try:
     while True:
         chain_id = c.get_info()['chain_id']
@@ -59,7 +59,7 @@ try:
                                                    "total_votes" : total_votes,
                                                    "producers": owners}}, upsert=True)
 
-        print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Producer list downloaded")
+        log("Producer list downloaded")
 
         if bp_json_thread_running is False:
             threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
@@ -67,8 +67,8 @@ try:
 
         time.sleep(5)
 except Exception as ex:
-    print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Chain inspector Exception ex=", ex)
+    log("Chain inspector Exception ex=", ex)
     os._exit(1)
 finally:
-    print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Finally called")
+    log("Finally called")
     os._exit(1)
