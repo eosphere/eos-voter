@@ -98,6 +98,12 @@ sudo chown deployment:www-data /srv/eos-voter -R
 
 ### Configure nginx
 
+First create the Diffie-Helman parameters. This is necessary because the defaults
+are too weak to defeat the logjam vulnerability.
+```
+sudo openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
+```
+
 ```
 sudo cp /srv/eos-voter/config/nginx/eos-voter.conf /etc/nginx/sites-available
 sudo rm /etc/nginx/sites-enabled/default
@@ -105,18 +111,24 @@ sudo ln -s /etc/nginx/sites-available/eos-voter.conf /etc/nginx/sites-enabled/eo
 sudo service nginx restart
 ```
 
+
 ### Start the chaininspector program
 
 First create the log directory for the chaininspector.
 ```
 sudo mkdir /var/log/chaininspector
-sudo chmod 777 /var/log/chaininspector
+sudo chmod 775 /var/log/chaininspector
 ```
 
 Tell supervisor to start the chaininspector and keep it alive
 ```
 sudo cp /srv/eos-voter/config/supervisord/chaininspector.conf /etc/supervisor/conf.d/
 sudo supervisorctl update
+```
+
+### Set up the log rotation for our application
+```
+sudo cp /srv/eos-voter/config/logrotate/* /etc/logrotate.d/
 ```
 
 ### Start the nodejs frontend
