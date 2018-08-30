@@ -110,7 +110,7 @@ sudo service nginx restart
 First create the log directory for the chaininspector.
 ```
 sudo mkdir /var/log/chaininspector
-chmod 777 /var/log/chaininspector
+sudo chmod 777 /var/log/chaininspector
 ```
 
 Tell supervisor to start the chaininspector and keep it alive
@@ -185,14 +185,12 @@ sudo -u deployment git pull
 ```
 
 Install any updated npm requirements
-
 ```
 cd /srv/eos-voter/eos-voter
 sudo -u deployment npm install
 ```
 
 Run webpack to regenerate the client side javascript
-
 ```
 cd /srv/eos-voter/eos-voter
 sudo -u deployment nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production -d
@@ -200,7 +198,7 @@ sudo -u deployment nodejs node_modules/webpack/bin/webpack.js src/votefrontend.j
 
 Change the ownership of all files in the directory
 ```
-sudo chown deployment:www-data eos-voter -R
+sudo chown deployment:www-data /srv/eos-voter -R
 ```
 
 Restart the app
