@@ -41,10 +41,10 @@ def inpsect_bp_json():
         while True:
             prods = producers
             for bp_name, bp in prods.items():
-                print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Connecting to bp.json url for {}".format(bp['owner']))
+                print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " Connecting to bp.json url for {} url = {}".format(bp['owner'], bp['url']))
                 if valid_url(bp['url'].lower()):
                     try:
-                        r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json')
+                        r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json', timeout=30)
                         if r.status_code == 200:
                             bp_info.update_one({'_id': bp_name}, {"$set": r.json()}, upsert=True)
 
@@ -53,4 +53,7 @@ def inpsect_bp_json():
 
             time.sleep(10)
     except Exception as ex:
+        print(datetime.datetime.utcnow().replace(microsecond=0).replace(tzinfo=datetime.timezone.utc).isoformat() + " bp.json Exception ex=", ex)
         os._exit(1)
+    finally:
+        print("Finally called")
