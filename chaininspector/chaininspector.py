@@ -8,6 +8,7 @@ import threading
 import sys
 import os
 from chainlogger import log
+import datetime
 
 c = Client(nodes=['https://node2.eosphere.io'])
 
@@ -25,12 +26,25 @@ more = None
 bp_json_thread_running = False
 chain_id = ''
 
+def auto_retry(fn, retries=10, delay=10):
+    # If run fn and return the result. If exception retry up to retries times
+    # and waiting delay seconds between attempts
+    try:
+        return fn()
+    except Exception as e:
+        log('auto_retry exception e =',e,' retries=', retries)
+        time.sleep(delay)
+        if retries > 0:
+            return auto_retry(fn, retries=retries-1, delay=delay)
+        else:
+            raise
+
 def download_producers(start_producer):
     global owners
     global more
-    d = c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
+    d = auto_retry(lambda: c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
                      table= 'producers', limit=100, table_key=1,
-                     lower_bound=start_producer, upper_bound=-1)
+                     lower_bound=start_producer, upper_bound=-1))
 
     rows = d['rows']
     more = d['more']
@@ -41,25 +55,26 @@ def download_producers(start_producer):
         if more:
             download_producers(last_owner)
 
-log("Chain inspector starting")
+log('Chain inspector starting')
 try:
     while True:
-        chain_id = c.get_info()['chain_id']
-        d = c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
+        chain_id = auto_retry(lambda: c.get_info()['chain_id'])
+        d = auto_retry(lambda: c.get_table_rows(json= True, code= 'eosio', scope= 'eosio',
                          table= 'global', limit=100, table_key=1,
-                         lower_bound=0, upper_bound=-1)
+                         lower_bound=0, upper_bound=-1))
         total_activated_stake = d['rows'][0]['total_activated_stake']
         download_producers('')
 
         bp_json_inspector.set_producers(owners, mongodb_server, chain_id)
         total_votes = sum([float(producer['total_votes']) for producer in owners.values()])
-        producers.update_one({'_id': 1}, {"$set": {'_id': 1,
-                                                   "chain_id": chain_id,
-                                                   "total_activated_stake": total_activated_stake,
-                                                   "total_votes" : total_votes,
-                                                   "producers": owners}}, upsert=True)
+        producers.update_one({'_id': 1}, {'$set': {'_id': 1,
+                                                   'chain_id': chain_id,
+                                                   'total_activated_stake': total_activated_stake,
+                                                   'total_votes' : total_votes,
+                                                   'producers': owners,
+                                                   'updatetime': datetime.datetime.utcnow()}}, upsert=True)
 
-        log("Producer list downloaded")
+        log('Producer list downloaded')
 
         if bp_json_thread_running is False:
             threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()
