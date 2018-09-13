@@ -8,6 +8,7 @@ import threading
 import sys
 import os
 from chainlogger import log
+import datetime
 
 c = Client(nodes=['https://node2.eosphere.io'])
 
@@ -54,7 +55,7 @@ def download_producers(start_producer):
         if more:
             download_producers(last_owner)
 
-log("Chain inspector starting")
+log('Chain inspector starting')
 try:
     while True:
         chain_id = auto_retry(lambda: c.get_info()['chain_id'])
@@ -66,13 +67,14 @@ try:
 
         bp_json_inspector.set_producers(owners, mongodb_server, chain_id)
         total_votes = sum([float(producer['total_votes']) for producer in owners.values()])
-        producers.update_one({'_id': 1}, {"$set": {'_id': 1,
-                                                   "chain_id": chain_id,
-                                                   "total_activated_stake": total_activated_stake,
-                                                   "total_votes" : total_votes,
-                                                   "producers": owners}}, upsert=True)
+        producers.update_one({'_id': 1}, {'$set': {'_id': 1,
+                                                   'chain_id': chain_id,
+                                                   'total_activated_stake': total_activated_stake,
+                                                   'total_votes' : total_votes,
+                                                   'producers': owners,
+                                                   'updatetime': datetime.datetime.utcnow()}}, upsert=True)
 
-        log("Producer list downloaded")
+        log('Producer list downloaded')
 
         if bp_json_thread_running is False:
             threading.Thread( target=bp_json_inspector.inpsect_bp_json ).start()

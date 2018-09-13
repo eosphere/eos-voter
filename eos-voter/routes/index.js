@@ -21,6 +21,7 @@ function ProcessBPListRequest(res, template) {
       var total_votes = parseFloat(result[0]['total_votes']);
       var chain_id = result[0]['chain_id']
       var total_activated_stake = result[0]['total_activated_stake']
+      var updatetime = result[0]['updatetime']
 
       var producer_list = Object.keys(producers).map((key) => producers[key] );
       producer_list.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
@@ -58,6 +59,7 @@ function ProcessBPListRequest(res, template) {
                              'chain_protocol': config.protocol,
                              'voting_page_content': config.voting_page_content,
                              'raw_total_activated_stake': total_activated_stake /10.0 / 1000.0,
+                             'updatetime': updatetime,
                              });
       });
 

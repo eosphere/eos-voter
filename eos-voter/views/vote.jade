@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  |<!-- updatetime = #{updatetime} -->
   div(id='allblockproducers', 'data-chain-name'=chainname, 'data-active-block-producers'=activeblockproducers,
       'data-backup-block-producers'=backupblockproducers, 'data-chain-addr'=chainaddr, 'data-chain-port'=chainport,
       'data-chain-id'=chainid, 'data-chain-protocol'=chain_protocol, 'data-chain-secure-port'=chain_secure_port,
