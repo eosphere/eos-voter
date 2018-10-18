@@ -164,6 +164,7 @@ class VoteView extends ModalStackMixin {
 
                             if (result.voter_info) {
                                 globals.votes = result.voter_info.producers;
+                                globals.votes = globals.votes.filter((bp) => globals.registered_producers.has(bp));
                                 globals.proxy_name = result.voter_info.proxy;
                                 globals.is_proxy = result.voter_info.is_proxy;
                                 //console.log('globals.isproxy=', globals.is_proxy);

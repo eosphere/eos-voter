@@ -7,4 +7,4 @@ globals.scatter = null;
 globals.network = {};
 globals.eosOptions = {};
 globals.network_secure = {};
-
+globals.registered_producers = new Set();
