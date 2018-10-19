@@ -27,8 +27,8 @@ globals.activated_percent = document.getElementById('allblockproducers').getAttr
 globals.has_activated_message = document.getElementById('allblockproducers').getAttribute('data-has-activated-message');
 globals.active_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-active-block-producers'));
 globals.backup_block_producers = JSON.parse(document.getElementById('allblockproducers').getAttribute('data-backup-block-producers'));
-globals.registered_producers = new Set(globals.active_block_producers.map((bp) => { bp.id }
-                ).concat(globals.backup_block_producers.map((bp) => { bp.id })));
+globals.registered_producers = new Set(globals.active_block_producers.map((bp) => bp.id
+                ).concat(globals.backup_block_producers.map((bp) => bp.id)));
 globals.block_producer_invalid_images = [];
 globals.votes = [];
 globals.proxy_name = '';
