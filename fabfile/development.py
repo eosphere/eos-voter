@@ -30,7 +30,8 @@ def bash():
               '--entrypoint="bash" --publish=3000:3000 '
               '--network={project_name}-network '
               '--network-alias=webserver '
-              '--user=$(id -u):$(id -g) "{project_name}"'.format(
+              #'--user=$(id -u):$(id -g) '
+              '"{project_name}"'.format(
                     local_pwd=local_pwd, project_name=project_name))
 
 @task
@@ -39,7 +40,8 @@ def npm_install():
     with lcd('.'):
         local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
               '--entrypoint="/opt/project/run-npm-install" '
-              '--user=$(id -u):$(id -g) "{project_name}"'.format(
+              #'--user=$(id -u):$(id -g) '
+              '"{project_name}"'.format(
                     local_pwd=local_pwd, project_name=project_name))
 
 @task
