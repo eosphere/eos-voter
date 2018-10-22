@@ -15,7 +15,9 @@ let {NotDetectedModal} = require('./not-detected-modal.js');
 let ScatterJS = require('scatterjs-core');
 let ScatterEOS = require('scatterjs-plugin-eosjs');
 
-//const scatter = ScatterJS.scatter;
+ScatterJS = ScatterJS.default;
+ScatterEOS = ScatterEOS.default;
+
 ScatterJS.plugins(new ScatterEOS());
 
 var globals = require('./globals.js');
