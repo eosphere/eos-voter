@@ -14,13 +14,13 @@ let {ErrorModal, errorDisplay, ErrorOKModal} = require('./error-modal.js');
 let {NotDetectedModal} = require('./not-detected-modal.js');
 let ScatterJS = require('scatterjs-core');
 let ScatterEOS = require('scatterjs-plugin-eosjs');
+let Eos = require('eosjs');
+
+var globals = require('./globals.js');
 
 ScatterJS = ScatterJS.default;
 ScatterEOS = ScatterEOS.default;
-
-ScatterJS.plugins(new ScatterEOS());
-
-var globals = require('./globals.js');
+ScatterJS.plugins( new ScatterEOS() );
 
 function eos_to_float(s) {
     //console.log('eos_to_float s=', s);
@@ -32,17 +32,12 @@ class VoteView extends ModalStackMixin {
     constructor(vnode) {
       super();
 
-
-      //*document.addEventListener('scatterLoaded', scatterExtension => {
-      // ScatterJS (NEW)
-      /*
-      ScatterJS.scatter.connect('EOS_VOTER', connectionOptions).then(connected => {
+      ScatterJS.scatter.connect('EOS-VOTER', globals.connectionOptions).then(connected => {
           console.log('scatterLoaded called');
-          //added
           if(!connected) {
+              // User does not have Scatter installed/unlocked.
               return false;
           }
-
           if (globals.scatter != null)
             return;
 
@@ -52,43 +47,17 @@ class VoteView extends ModalStackMixin {
           // Scatter will now be available from the window scope.
           // At this stage the connection to Scatter from the application is
           // already encrypted.
-          //*globals.scatter = window.scatter;
-          if(connected) {
-          globals.scatter = ScatterJS.scatter;
+          globals.scatter = window.scatter;
 
           // It is good practice to take this off the window once you have
           // a reference to it.
           window.scatter = null;
-          }
+
           // If you want to require a specific version of Scatter
-          var ret = globals.scatter.requireVersion(5.0);
+          //var ret = globals.scatter.requireVersion(5.0);
 
           this.display_connection_modal();
-      })*/
-      console.log(ScatterJS);
-      ScatterJS.scatter.connect("EOS_VOTER", connectionOptions).then(connected => {
-            if(!connected) {
-                // User does not have Scatter installed/unlocked.
-                return false;
-            }
-            const scatter = ScatterJS.scatter;
-            window.ScatterJS = null;
-
-            // Use `scatter` normally now.
-            //ScatterJS.scatter.getIdentity(...);
-        });
-
-      //Scatter 2.5.1 (OLD)
-      /*
-      ScatterJS.scatter.connect('EOS_SPHERE').then(connected => {
-
-          if(connected){
-              globals.scatter = ScatterJS.scatter;
-              window.scatter = null;
-          }
       });
-      */
-
     }
 
     recalcVotes() {
@@ -159,15 +128,18 @@ class VoteView extends ModalStackMixin {
        if (globals.has_loaded)
          return;
 
-        // utils make get_eos function to switch between app and extension
-        var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol ); //chrome extension
+        //for chrome extension:
+        //var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+        var eos = ScatterJS.scatter.eos(globals.network, Eos, globals.eosjsOptions);
 
         const requiredFields = {
             accounts:[ globals.network ],
         };
 
         //globals.scatter.suggestNetwork(globals.network_secure).then((result) => {
-                globals.scatter.getIdentity(requiredFields).then(identity => {
+
+                /* ORIGINAL CODE
+                ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
                     // Set up any extra options you want to use eosjs with.
                     if (identity.accounts[0].authority != 'active'){
                         this.push_modal([ErrorModal, {owner: this, error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
@@ -175,10 +147,24 @@ class VoteView extends ModalStackMixin {
                         m.redraw();
                         return;
                     }
+                */
 
+                //new code
+                ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
+                    //const account = ScatterJS.scatter.identity.accounts.find(x => x.blockchain === 'eos');
+                    //const account = ScatterJS.scatter.identity.accounts.find(account => account.blockchain === 'eos')
+                    if (identity.accounts[0].authority != 'active'){
+                        this.push_modal([ErrorModal, {owner: this, error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
+                              ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}, null]);
+                        m.redraw();
+                        return;
+                    }
 
                     // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                    eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol ); //this function returns eos object
+                    //for chrome extension:
+                    //eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+                    eos = ScatterJS.scatter.eos(globals.network, Eos, globals.eosjsOptions);
+
 
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
                             //console.log('getAccount result=', result);
