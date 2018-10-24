@@ -150,7 +150,9 @@ class VoteView extends ModalStackMixin {
                 */
 
                 //new code
+                console.log('Calling get identity');
                 ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
+                  console.log('Calling get identity returned=', identity);
                     //const account = ScatterJS.scatter.identity.accounts.find(x => x.blockchain === 'eos');
                     //const account = ScatterJS.scatter.identity.accounts.find(account => account.blockchain === 'eos')
                     if (identity.accounts[0].authority != 'active'){
@@ -165,9 +167,9 @@ class VoteView extends ModalStackMixin {
                     //eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
                     eos = ScatterJS.scatter.eos(globals.network, Eos, globals.eosjsOptions);
 
-
+                    console.log('Calling getAccount')
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
-                            //console.log('getAccount result=', result);
+                            console.log('getAccount result=', result);
                             globals.account_name = identity.accounts[0].name;
                             this.pop_entire_stack();
 
