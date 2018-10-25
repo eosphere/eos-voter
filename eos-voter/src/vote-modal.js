@@ -1,6 +1,10 @@
 // This file is part of eos-voter and is licenced under the Affero GPL 3.0 licence. See LICENCE file for details
 let exports = module.exports = {};
 
+//let ScatterJS = require('scatterjs-core');
+//let ScatterEOS = require('scatterjs-plugin-eosjs');
+//let Eos = require('eosjs');
+
 var m = require("mithril");
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var globals = require('./globals.js');
@@ -8,6 +12,13 @@ var eosjs = require('eosjs');
 //var {modal_stack} = require('./eosvoter-modal.js');
 var {OKModal} = require('./ok-modal.js');
 var {errorDisplay} = require('./error-modal.js');
+
+let ScatterJS = require('scatterjs-core');
+let ScatterEOS = require('scatterjs-plugin-eosjs');
+let Eos = require('eosjs');
+ScatterJS = ScatterJS.default;
+ScatterEOS = ScatterEOS.default;
+ScatterJS.plugins( new ScatterEOS() );
 
 class VoteModal extends EosVoterModal {
     constructor(vnode) {
@@ -29,9 +40,10 @@ class VoteModal extends EosVoterModal {
         };
 
         //globals.scatter.suggestNetwork(globals.network).then((result) => {
-            globals.scatter.getIdentity(requiredFields).then(identity => {
-
-                var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+            //globals.scatter.getIdentity(requiredFields).then(identity => { //old
+            ScatterJS.scatter.getIdentity(requiredFields).then(identity => { //new
+                //var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol ); //old
+                eos = ScatterJS.scatter.eos(globals.network, Eos, globals.eosjsOptions); // new
 
                 eos.contract('eosio', requiredFields).then(c => {
                         eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )

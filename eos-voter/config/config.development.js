@@ -12,7 +12,7 @@ config.protocol = 'http'
 config.chain_secure_port = '38888'
 */
 
-
+/*
 //If connecting via the scatter web extension use these settings
 config.chain_addr = 'node1.eosphere.io'
 // Port to connect to the API
@@ -21,8 +21,9 @@ config.chain_port = '80'
 config.protocol = 'https'
 // If we are using https we need a different port here
 config.chain_secure_port = '443'
+*/
 
-/*
+
 //If connecting via the scatter desktop application use these settings
 config.chain_addr = 'node1.eosphere.io'
 // Port to connect to the API
@@ -31,7 +32,7 @@ config.chain_port = '443'
 config.protocol = 'https'
 // If we are using https we need a different port here
 config.chain_secure_port = '443'
-*/
+
 
 // User readable name for the chain
 config.chain_name = 'EOS Mainnet';
