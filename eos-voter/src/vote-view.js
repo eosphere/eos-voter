@@ -16,7 +16,8 @@ let ScatterJS = require('scatterjs-core');
 let ScatterEOS = require('scatterjs-plugin-eosjs');
 let Eos = require('eosjs');
 
-var globals = require('./globals.js');
+let globals = require('./globals.js');
+let utils = require('./utils.js');
 
 ScatterJS = ScatterJS.default;
 ScatterEOS = ScatterEOS.default;
@@ -33,7 +34,8 @@ class VoteView extends ModalStackMixin {
       super();
 
       ScatterJS.scatter.connect('EOS-VOTER', globals.connectionOptions).then(connected => {
-          console.log('scatterLoaded called');
+          //console.log('ScatterJS.scatter.connect called connected=', connected);
+          //console.log('ScatterJS.scatter.connect window.scatter=', window.scatter)
           if(!connected) {
               // User does not have Scatter installed/unlocked.
               return false;
@@ -58,7 +60,12 @@ class VoteView extends ModalStackMixin {
 
           this.display_connection_modal();
       });
+      document.addEventListener('scatterLoaded', scatterExtension => {
+        //console.log('scatterLoaded evet trigger');
+        globals.has_scatter_extension = true;
+      });
     }
+
 
     recalcVotes() {
         //globals.proxy_name = document.getElementById('id-proxy-name').value;
@@ -130,10 +137,10 @@ class VoteView extends ModalStackMixin {
 
         //for chrome extension:
         //var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
-        var eos = ScatterJS.scatter.eos(globals.network, Eos, globals.eosjsOptions);
+        var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
 
         const requiredFields = {
-            accounts:[ globals.network ],
+            accounts:[ utils.get_network() ],
         };
 
         //globals.scatter.suggestNetwork(globals.network_secure).then((result) => {
@@ -150,9 +157,9 @@ class VoteView extends ModalStackMixin {
                 */
 
                 //new code
-                console.log('Calling get identity');
+                //console.log('Calling get identity');
                 ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
-                  console.log('Calling get identity returned=', identity);
+                  //console.log('Calling get identity returned=', identity);
                     //const account = ScatterJS.scatter.identity.accounts.find(x => x.blockchain === 'eos');
                     //const account = ScatterJS.scatter.identity.accounts.find(account => account.blockchain === 'eos')
                     if (identity.accounts[0].authority != 'active'){
@@ -165,11 +172,13 @@ class VoteView extends ModalStackMixin {
                     // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
                     //for chrome extension:
                     //eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
-                    eos = ScatterJS.scatter.eos(globals.network, Eos, globals.eosjsOptions);
+                    console.log('getIdentity globals.has_scatter_extensionr=', globals.has_scatter_extension)
 
-                    console.log('Calling getAccount')
+                    eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosOptions);
+
+                    //console.log('Calling getAccount')
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
-                            console.log('getAccount result=', result);
+                            //console.log('getAccount result=', result);
                             globals.account_name = identity.accounts[0].name;
                             this.pop_entire_stack();
 

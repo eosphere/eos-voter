@@ -22,6 +22,7 @@ config.protocol = 'https'
 // If we are using https we need a different port here
 config.chain_secure_port = '443'
 
+
 /*
 //If connecting via the scatter desktop application use these settings
 config.chain_addr = 'node1.eosphere.io'
