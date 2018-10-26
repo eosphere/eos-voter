@@ -3,11 +3,20 @@ let exports = module.exports = {};
 
 let {VoteView} = require('./vote-view.js');
 let m = require("mithril");
-var globals = require('./globals.js');
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 var eosjs = require('eosjs');
 var {OKModal} = require('./ok-modal.js');
+
+let ScatterJS = require('scatterjs-core');
+let ScatterEOS = require('scatterjs-plugin-eosjs');
+let Eos = require('eosjs');
+ScatterJS = ScatterJS.default;
+ScatterEOS = ScatterEOS.default;
+ScatterJS.plugins( new ScatterEOS() );
+
+let globals = require('./globals.js');
+let utils = require('./utils.js');
 
 class BecomeProxyModal extends EosVoterModal {
     constructor(vnode) {
@@ -27,12 +36,12 @@ class BecomeProxyModal extends EosVoterModal {
         this.is_processing = true;
 
     const requiredFields = {
-        accounts:[ globals.network ],
+        accounts:[ utils.get_network() ],
     };
     //globals.scatter.suggestNetwork(globals.network).then((result) => {
-        globals.scatter.getIdentity(requiredFields).then(identity => {
+        ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
 
-            var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
 
             eos.contract('eosio', requiredFields).then(c => {
                     eos.regproxy({'proxy': identity.accounts[0].name, 'isproxy': this.is_proxy} )

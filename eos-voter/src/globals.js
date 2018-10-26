@@ -8,9 +8,5 @@ globals.network = {};
 globals.eosOptions = {};
 globals.network_secure = {};
 globals.registered_producers = new Set();
-
-//globals.scatter = ScatterJS.scatter; //new scatter
 globals.connectionOptions = {};
 globals.esosJsOptions = {};
-
-globals.has_scatter_extension = false;
