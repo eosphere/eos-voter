@@ -50,7 +50,7 @@ class BecomeProxyModal extends EosVoterModal {
                             this.owner.push_modal([OKModal, {
                               owner: this.owner,
                               info_message: 'Proxy registration was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
-                            }, null]);
+                            }]);
                             globals.is_proxy = this.is_proxy;
                             m.redraw();
                         })
@@ -123,7 +123,6 @@ class BecomeProxyModal extends EosVoterModal {
 class BecomeProxyView extends VoteView {
   oncreate() {
     super.oncreate();
-    //this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
   }
   get_current_modal() {
     let ret =  super.get_current_modal();

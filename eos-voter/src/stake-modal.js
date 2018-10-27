@@ -50,7 +50,7 @@ class StakeModal extends EosVoterModal {
                 c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, float_to_eos(this.new_delegated_net_weight), float_to_eos(this.new_delegated_cpu_weight), 0)
                     .then((result) => {
                     console.log('delegatebw result=', result);
-                    this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Staking was succesful. Transaction id = \'' + result.transaction_id + '\''}, null]);
+                    this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Staking was succesful. Transaction id = \'' + result.transaction_id + '\''}]);
                     m.redraw();
                     })
                     .catch(e => {

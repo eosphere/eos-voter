@@ -39,7 +39,7 @@ class ProxyMyVote extends EosVoterModal {
           this.owner.push_modal([OKModal, {
             owner: this.owner,
             info_message: 'Your proxy was cleared you can now cast a standard vote.',
-          }, null]);
+          }]);
           globals.proxy_name = '';
           return;
         }
@@ -59,7 +59,7 @@ class ProxyMyVote extends EosVoterModal {
                             this.owner.push_modal([OKModal, {
                               owner: this.owner,
                               info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
-                            }, null]);
+                            }]);
                             globals.proxy_name = this.proxy_name;
                             m.redraw();
                         })
@@ -128,7 +128,6 @@ class ProxyMyVote extends EosVoterModal {
 class ProxyView extends VoteView {
   oncreate() {
     super.oncreate();
-    //this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
   }
   get_current_modal() {
     let ret =  super.get_current_modal();

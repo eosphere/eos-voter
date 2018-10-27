@@ -50,7 +50,7 @@ class TransferModal extends EosVoterModal {
               eos.transfer(identity.accounts[0].name, this.destination_account, float_to_eos(this.transfer_amount), this.memo_field)
                   .then((result) => {
                   console.log('transfer result=', result);
-                  this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Transfer was succesful. Transaction id = \'' + result.transaction_id + '\''}, null]);
+                  this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Transfer was succesful. Transaction id = \'' + result.transaction_id + '\''}]);
                   m.redraw();
                   })
                   .catch(e => {
@@ -136,7 +136,6 @@ class TransferModal extends EosVoterModal {
 class TransferView extends VoteView {
   oncreate() {
     super.oncreate();
-    //this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
   }
   get_current_modal() {
     let ret =  super.get_current_modal();

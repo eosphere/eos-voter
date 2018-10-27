@@ -75,14 +75,14 @@ class VoteView extends ModalStackMixin {
 
     cast_vote() {
         if (globals.proxy_name === '' && globals.votes.length > 30)
-            this.push_modal([ErrorOKModal, {owner: this, error_messages: ['Too many votes. You can only vote for 30 producers']}, null]);
+            this.push_modal([ErrorOKModal, {owner: this, error_messages: ['Too many votes. You can only vote for 30 producers']}]);
         else
-            this.push_modal([VoteModal, {owner: this, proxy_name: globals.proxy_name, votes: globals.votes}, null]);
+            this.push_modal([VoteModal, {owner: this, proxy_name: globals.proxy_name, votes: globals.votes}]);
     }
 
     display_connection_modal() {
       //Display the connecting screen
-      this.push_modal([ConnectingToScatter, {owner: this, on_close: this.pop_modal}, null]);
+      this.push_modal([ConnectingToScatter, {owner: this, on_close: this.pop_modal}]);
       m.redraw();
 
       this.redrawAll();
@@ -108,7 +108,7 @@ class VoteView extends ModalStackMixin {
       // After two seconds complain that we couldn't detect scatter
       setTimeout(() => {
           if (globals.scatter === null) {
-              this.push_modal([NotDetectedModal, {owner: this}, null]);
+              this.push_modal([NotDetectedModal, {owner: this}]);
               m.redraw();
           }
           } ,2000);
@@ -121,7 +121,7 @@ class VoteView extends ModalStackMixin {
             setTimeout(() => document.location.reload(true), 2000);
         } else {
             if (global.scatter != null) {
-              this.push_modal([DetectScatterModal, {owner: this}, null]);
+              this.push_modal([DetectScatterModal, {owner: this}]);
               this.set_pop_listener_fn(() => { this.redrawAll() });
             }
         }
@@ -153,7 +153,7 @@ class VoteView extends ModalStackMixin {
 
                     if (identity.accounts[0].authority != 'active'){
                         this.push_modal([ErrorModal, {owner: this, error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
-                              ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}, null]);
+                              ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}]);
                         m.redraw();
                         return;
                     }
@@ -220,7 +220,7 @@ class VoteView extends ModalStackMixin {
                 }).catch(error => {
                     console.error('scatter.getIdentity() gave error=', error);
                     if (error.type == 'identity_rejected') {
-                        this.push_modal([ErrorModal, {owner: this, error_messages: ['No identity was chosen. Please config an identity in Scatter and link it to your private key'], show_retry: true}, null]);
+                        this.push_modal([ErrorModal, {owner: this, error_messages: ['No identity was chosen. Please config an identity in Scatter and link it to your private key'], show_retry: true}]);
                         m.redraw();
                     } else
                         errorDisplay(this.owner, 'Scatter returned an error from getIdentity', error);
@@ -234,7 +234,7 @@ class VoteView extends ModalStackMixin {
               /*}).catch((error) => {
                 console.error('Suggested network was rejected result=', error);
                 if (error.type == "locked") {
-                    this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}, null]);
+                    this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}]);
                     m.redraw();
                 } else
                     errorDisplay(this.owner, 'Scatter returned an error from suggestNetwork', error);

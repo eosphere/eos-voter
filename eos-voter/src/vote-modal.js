@@ -52,7 +52,7 @@ class VoteModal extends EosVoterModal {
                                 this.owner.push_modal([OKModal, {
                                   owner: this.owner,
                                   info_message: 'Your vote was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
-                                }, null]);
+                                }]);
                                 m.redraw();
                             })
                             .catch((error) => {

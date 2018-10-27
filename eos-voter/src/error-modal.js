@@ -73,7 +73,7 @@ function errorDisplay(owner, description, e) {
         // Silently ignore if error details does not exists Ie because the error message isn't JSON
         message = e;
     }
-    owner.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}, null]);
+    owner.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}]);
     m.redraw();
 }
 
