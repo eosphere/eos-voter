@@ -127,6 +127,11 @@ class VoteView extends ModalStackMixin {
         }
     }
 
+    forceRedrawAll() {
+      globals.has_loaded = false;
+      this.redrawAll();
+    }
+
     redrawAll() {
        if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0)
          return;
