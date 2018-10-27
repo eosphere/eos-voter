@@ -32,7 +32,7 @@ function eos_to_float(s) {
 class VoteView extends ModalStackMixin {
     constructor(vnode) {
       super();
-      console.log('VoteView constructor(): is called.')
+      //console.log('VoteView constructor(): is called.')
 
       ScatterJS.scatter.connect('EOS-VOTER', globals.connectionOptions).then(connected => {
           if(!connected) {
@@ -120,7 +120,7 @@ class VoteView extends ModalStackMixin {
         if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0) {
             setTimeout(() => document.location.reload(true), 2000);
         } else {
-            if (global.scatter != null) {
+            if (globals.scatter === null) {
               this.push_modal([DetectScatterModal, {owner: this}]);
               this.set_pop_listener_fn(() => { this.redrawAll() });
             }
@@ -145,7 +145,7 @@ class VoteView extends ModalStackMixin {
             accounts:[ utils.get_network() ],
         };
 
-        //globals.scatter.suggestNetwork(globals.network_secure).then((result) => {
+        ScatterJS.scatter.suggestNetwork(globals.network_secure).then((result) => {
 
                 //console.log('Calling get identity');
                 ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
@@ -159,7 +159,7 @@ class VoteView extends ModalStackMixin {
                     }
 
                     // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                    console.log('getIdentity globals.has_scatter_extensionr=', globals.has_scatter_extension)
+                    //console.log('getIdentity globals.has_scatter_extensionr=', globals.has_scatter_extension)
 
                     eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosOptions);
 
@@ -231,14 +231,14 @@ class VoteView extends ModalStackMixin {
 
 
 
-              /*}).catch((error) => {
+              }).catch((error) => {
                 console.error('Suggested network was rejected result=', error);
                 if (error.type == "locked") {
                     this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}]);
                     m.redraw();
                 } else
                     errorDisplay(this.owner, 'Scatter returned an error from suggestNetwork', error);
-            })*/;
+            });
     }
 
     block_producers_grid(block_producer_list, description) {
