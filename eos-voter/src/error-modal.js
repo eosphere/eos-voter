@@ -54,6 +54,7 @@ class ErrorOKModal extends EosVoterModal {
 }
 
 function errorDisplay(owner, description, e) {
+    console.log('owner=', owner);
     console.log('errorDisplay e=', e);
     let message = 'Null message';
     let details = 'Null details';
