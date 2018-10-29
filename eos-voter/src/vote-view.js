@@ -139,7 +139,7 @@ class VoteView extends ModalStackMixin {
        if (globals.has_loaded)
          return;
 
-        var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
+        var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions, globals.chain_protocol);
 
         const requiredFields = {
             accounts:[ utils.get_network() ],
@@ -161,7 +161,7 @@ class VoteView extends ModalStackMixin {
                     // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
                     //console.log('getIdentity globals.has_scatter_extensionr=', globals.has_scatter_extension)
 
-                    eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosOptions);
+                    eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosOptions, globals.chain_protocol);
 
                     //console.log('Calling getAccount')
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {

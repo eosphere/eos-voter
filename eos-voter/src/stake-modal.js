@@ -40,11 +40,11 @@ class StakeModal extends EosVoterModal {
     const requiredFields = {
         accounts:[ utils.get_network() ],
     };
-    globals.scatter.suggestNetwork(globals.network).then((result) => {
+    globals.scatter.suggestNetwork(globals.network_secure).then((result) => {
         ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with.
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
+            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions, globals.chain_protocol);
             eos.contract('eosio', requiredFields).then(c => {
                 console.log('deletegatebw this.new_delegated_net_weight=', this.new_delegated_net_weight)
                 c.delegatebw(identity.accounts[0].name, identity.accounts[0].name, float_to_eos(this.new_delegated_net_weight), float_to_eos(this.new_delegated_cpu_weight), 0)

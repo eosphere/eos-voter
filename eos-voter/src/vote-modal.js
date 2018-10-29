@@ -41,9 +41,9 @@ class VoteModal extends EosVoterModal {
             accounts:[ utils.get_network() ],
         };
 
-        ScatterJS.scatter.suggestNetwork(globals.network).then((result) => {
+        ScatterJS.scatter.suggestNetwork(globals.network_secure).then((result) => {
             ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
-                var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
+                var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions, globals.chain_protocol);
 
                 eos.contract('eosio', requiredFields).then(c => {
                         eos.voteproducer({'voter': identity.accounts[0].name, 'proxy': this.proxy_name, 'producers': this.proxy_name != '' ? [] : this.votes} )

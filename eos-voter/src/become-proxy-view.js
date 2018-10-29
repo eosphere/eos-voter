@@ -38,10 +38,10 @@ class BecomeProxyModal extends EosVoterModal {
     const requiredFields = {
         accounts:[ utils.get_network() ],
     };
-    ScatterJS.scatter.suggestNetwork(globals.network).then((result) => {
+    ScatterJS.scatter.suggestNetwork(globals.network_secure).then((result) => {
         ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
 
-            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
+            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions, globals.chain_protocol);
 
             eos.contract('eosio', requiredFields).then(c => {
                     eos.regproxy({'proxy': identity.accounts[0].name, 'isproxy': this.is_proxy} )
