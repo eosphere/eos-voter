@@ -213,17 +213,22 @@ class VoteView extends ModalStackMixin {
                         })
                         .catch(   (e) => {
                                         console.error('Error returned by getAccount = ', e);
-                                        errorDisplay(this.owner, 'Scatter returned an error from getAccount', e);
+                                        errorDisplay(this, 'Scatter returned an error from getAccount', e);
                                         }
                         );
 
                 }).catch(error => {
                     console.error('scatter.getIdentity() gave error=', error);
+                    console.error('scatter.getIdentity() gave this=', this);
+                    if (error.type == "locked") {
+                        this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}]);
+                        m.redraw();
+                    } else
                     if (error.type == 'identity_rejected') {
                         this.push_modal([ErrorModal, {owner: this, error_messages: ['No identity was chosen. Please config an identity in Scatter and link it to your private key'], show_retry: true}]);
                         m.redraw();
                     } else
-                        errorDisplay(this.owner, 'Scatter returned an error from getIdentity', error);
+                        errorDisplay(this, 'Scatter returned an error from getIdentity', error);
                 });
 
 
@@ -233,11 +238,12 @@ class VoteView extends ModalStackMixin {
 
               }).catch((error) => {
                 console.error('Suggested network was rejected result=', error);
+                console.error('Suggested network was rejected this=', this);
                 if (error.type == "locked") {
                     this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}]);
                     m.redraw();
                 } else
-                    errorDisplay(this.owner, 'Scatter returned an error from suggestNetwork', error);
+                    errorDisplay(this, 'Scatter returned an error from suggestNetwork', error);
             });
     }
 
