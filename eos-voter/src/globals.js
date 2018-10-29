@@ -3,8 +3,10 @@
 
 let globals = module.exports = {};
 
-globals.scatter = null;
+globals.scatter = null; //old scatter
 globals.network = {};
 globals.eosOptions = {};
 globals.network_secure = {};
 globals.registered_producers = new Set();
+globals.connectionOptions = {};
+globals.esosJsOptions = {};

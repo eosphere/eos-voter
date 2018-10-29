@@ -3,11 +3,20 @@ let exports = module.exports = {};
 
 let {VoteView} = require('./vote-view.js');
 let m = require("mithril");
-var globals = require('./globals.js');
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 var eosjs = require('eosjs');
 var {OKModal} = require('./ok-modal.js');
+
+let ScatterJS = require('scatterjs-core');
+let ScatterEOS = require('scatterjs-plugin-eosjs');
+let Eos = require('eosjs');
+ScatterJS = ScatterJS.default;
+ScatterEOS = ScatterEOS.default;
+ScatterJS.plugins( new ScatterEOS() );
+
+let globals = require('./globals.js');
+let utils = require('./utils.js');
 
 class BecomeProxyModal extends EosVoterModal {
     constructor(vnode) {
@@ -27,12 +36,12 @@ class BecomeProxyModal extends EosVoterModal {
         this.is_processing = true;
 
     const requiredFields = {
-        accounts:[ globals.network ],
+        accounts:[ utils.get_network() ],
     };
-    //globals.scatter.suggestNetwork(globals.network).then((result) => {
-        globals.scatter.getIdentity(requiredFields).then(identity => {
+    ScatterJS.scatter.suggestNetwork(globals.network).then((result) => {
+        ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
 
-            var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
 
             eos.contract('eosio', requiredFields).then(c => {
                     eos.regproxy({'proxy': identity.accounts[0].name, 'isproxy': this.is_proxy} )
@@ -41,7 +50,7 @@ class BecomeProxyModal extends EosVoterModal {
                             this.owner.push_modal([OKModal, {
                               owner: this.owner,
                               info_message: 'Proxy registration was submitted successfully.\n Transaction id = \'' + result.transaction_id + '\'',
-                            }, null]);
+                            }]);
                             globals.is_proxy = this.is_proxy;
                             m.redraw();
                         })
@@ -59,11 +68,11 @@ class BecomeProxyModal extends EosVoterModal {
                 errorDisplay('getidentity returned an error', e);
                 console.log(this.owner, 'getidentity error e=', e)
             });
-        /*})
+        })
         .catch(e => {
             errorDisplay('suggestNetwork returned an error', e);
             console.log(this.owner, 'suggestNetwork error e=', e)
-        });*/
+        });
     }
 
     get_internal_content() {
@@ -114,7 +123,6 @@ class BecomeProxyModal extends EosVoterModal {
 class BecomeProxyView extends VoteView {
   oncreate() {
     super.oncreate();
-    //this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
   }
   get_current_modal() {
     let ret =  super.get_current_modal();

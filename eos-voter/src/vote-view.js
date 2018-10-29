@@ -12,9 +12,16 @@ let {StakeModal} = require('./stake-modal.js');
 let {UnstakeModal} = require('./unstake-modal.js');
 let {ErrorModal, errorDisplay, ErrorOKModal} = require('./error-modal.js');
 let {NotDetectedModal} = require('./not-detected-modal.js');
+let ScatterJS = require('scatterjs-core');
+let ScatterEOS = require('scatterjs-plugin-eosjs');
+let Eos = require('eosjs');
 
+let globals = require('./globals.js');
+let utils = require('./utils.js');
 
-var globals = require('./globals.js');
+ScatterJS = ScatterJS.default;
+ScatterEOS = ScatterEOS.default;
+ScatterJS.plugins( new ScatterEOS() );
 
 function eos_to_float(s) {
     //console.log('eos_to_float s=', s);
@@ -25,10 +32,13 @@ function eos_to_float(s) {
 class VoteView extends ModalStackMixin {
     constructor(vnode) {
       super();
+      //console.log('VoteView constructor(): is called.')
 
-      document.addEventListener('scatterLoaded', scatterExtension => {
-          console.log('scatterLoaded called');
-
+      ScatterJS.scatter.connect('EOS-VOTER', globals.connectionOptions).then(connected => {
+          if(!connected) {
+              // User does not have Scatter installed/unlocked.
+              return false;
+          }
           if (globals.scatter != null)
             return;
 
@@ -38,18 +48,23 @@ class VoteView extends ModalStackMixin {
           // Scatter will now be available from the window scope.
           // At this stage the connection to Scatter from the application is
           // already encrypted.
-          globals.scatter = window.scatter;
+          globals.scatter = ScatterJS.scatter;
 
           // It is good practice to take this off the window once you have
           // a reference to it.
-          window.scatter = null;
+          window.scatterJS = null;
 
           // If you want to require a specific version of Scatter
-          var ret = globals.scatter.requireVersion(5.0);
+          //var ret = globals.scatter.requireVersion(5.0);
 
           this.display_connection_modal();
-      })
+      });
+      document.addEventListener('scatterLoaded', scatterExtension => {
+        //console.log('scatterLoaded evet trigger');
+        globals.has_scatter_extension = true;
+      });
     }
+
 
     recalcVotes() {
         //globals.proxy_name = document.getElementById('id-proxy-name').value;
@@ -60,14 +75,14 @@ class VoteView extends ModalStackMixin {
 
     cast_vote() {
         if (globals.proxy_name === '' && globals.votes.length > 30)
-            this.push_modal([ErrorOKModal, {owner: this, error_messages: ['Too many votes. You can only vote for 30 producers']}, null]);
+            this.push_modal([ErrorOKModal, {owner: this, error_messages: ['Too many votes. You can only vote for 30 producers']}]);
         else
-            this.push_modal([VoteModal, {owner: this, proxy_name: globals.proxy_name, votes: globals.votes}, null]);
+            this.push_modal([VoteModal, {owner: this, proxy_name: globals.proxy_name, votes: globals.votes}]);
     }
 
     display_connection_modal() {
       //Display the connecting screen
-      this.push_modal([ConnectingToScatter, {owner: this, on_close: this.pop_modal}, null]);
+      this.push_modal([ConnectingToScatter, {owner: this, on_close: this.pop_modal}]);
       m.redraw();
 
       this.redrawAll();
@@ -93,7 +108,7 @@ class VoteView extends ModalStackMixin {
       // After two seconds complain that we couldn't detect scatter
       setTimeout(() => {
           if (globals.scatter === null) {
-              this.push_modal([NotDetectedModal, {owner: this}, null]);
+              this.push_modal([NotDetectedModal, {owner: this}]);
               m.redraw();
           }
           } ,2000);
@@ -105,11 +120,16 @@ class VoteView extends ModalStackMixin {
         if (globals.active_block_producers.length == 0 && globals.backup_block_producers.length == 0) {
             setTimeout(() => document.location.reload(true), 2000);
         } else {
-            if (global.scatter != null) {
-              this.push_modal([DetectScatterModal, {owner: this}, null]);
+            if (globals.scatter === null) {
+              this.push_modal([DetectScatterModal, {owner: this}]);
               this.set_pop_listener_fn(() => { this.redrawAll() });
             }
         }
+    }
+
+    forceRedrawAll() {
+      globals.has_loaded = false;
+      this.redrawAll();
     }
 
     redrawAll() {
@@ -119,26 +139,31 @@ class VoteView extends ModalStackMixin {
        if (globals.has_loaded)
          return;
 
-        var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+        var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
 
         const requiredFields = {
-            accounts:[ globals.network ],
+            accounts:[ utils.get_network() ],
         };
 
-        //globals.scatter.suggestNetwork(globals.network_secure).then((result) => {
-                globals.scatter.getIdentity(requiredFields).then(identity => {
-                    // Set up any extra options you want to use eosjs with.
+        ScatterJS.scatter.suggestNetwork(globals.network_secure).then((result) => {
+
+                //console.log('Calling get identity');
+                ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
+                  //console.log('Calling get identity returned=', identity);
+
                     if (identity.accounts[0].authority != 'active'){
                         this.push_modal([ErrorModal, {owner: this, error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
-                              ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}, null]);
+                              ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}]);
                         m.redraw();
                         return;
                     }
 
-
                     // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-                    eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+                    //console.log('getIdentity globals.has_scatter_extensionr=', globals.has_scatter_extension)
 
+                    eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosOptions);
+
+                    //console.log('Calling getAccount')
                     eos.getAccount({'account_name': identity.accounts[0].name}).then((result) => {
                             //console.log('getAccount result=', result);
                             globals.account_name = identity.accounts[0].name;
@@ -195,7 +220,7 @@ class VoteView extends ModalStackMixin {
                 }).catch(error => {
                     console.error('scatter.getIdentity() gave error=', error);
                     if (error.type == 'identity_rejected') {
-                        this.push_modal([ErrorModal, {owner: this, error_messages: ['No identity was chosen. Please config an identity in Scatter and link it to your private key'], show_retry: true}, null]);
+                        this.push_modal([ErrorModal, {owner: this, error_messages: ['No identity was chosen. Please config an identity in Scatter and link it to your private key'], show_retry: true}]);
                         m.redraw();
                     } else
                         errorDisplay(this.owner, 'Scatter returned an error from getIdentity', error);
@@ -206,14 +231,14 @@ class VoteView extends ModalStackMixin {
 
 
 
-              /*}).catch((error) => {
+              }).catch((error) => {
                 console.error('Suggested network was rejected result=', error);
                 if (error.type == "locked") {
-                    this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}, null]);
+                    this.push_modal([ErrorModal, {owner: this, error_messages: ['Scatter is locked. Please unlock it and then retry'], show_retry: true}]);
                     m.redraw();
                 } else
                     errorDisplay(this.owner, 'Scatter returned an error from suggestNetwork', error);
-            })*/;
+            });
     }
 
     block_producers_grid(block_producer_list, description) {
@@ -377,8 +402,11 @@ class VoteView extends ModalStackMixin {
                    m("div", m.trust(globals.voting_page_content)),
                    m("p", {'class': 'centre'}, 'Currently connected to the ' + globals.chain_name + ' network'),
                    m("p", {'class': 'centre'}, 'Chain id = ' + globals.chain_id + '.'),
+                   /*
                    m("p.centre", 'Percentage of EOS voting ' + globals.activated_percent + '%'),
                    m("p.centre", Humanize.formatNumber(globals.total_activated_stake) + ' EOS have voted'),
+                   */
+                   m("p.centre-activated", 'Eos-Voter now supports scatter desktop.'),
                    (this.has_activated) ? [m("div", m.trust(globals.has_activated_message))] : [],
                  ].concat(this.block_producers_grid(globals.active_block_producers, globals.has_activated ? "Active Block Producers" : "Block Producer Candidates")).
                  concat(this.block_producers_grid(globals.backup_block_producers, "Backup Block Producers"))),

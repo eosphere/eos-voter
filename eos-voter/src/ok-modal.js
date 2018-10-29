@@ -13,6 +13,7 @@ class OKModal extends EosVoterModal {
     ok_now() {
         document.location = "#!"
         m.route.set('#!');
+        this.owner.forceRedrawAll();
     }
     get_internal_content() {
         return [

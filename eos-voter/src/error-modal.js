@@ -54,6 +54,7 @@ class ErrorOKModal extends EosVoterModal {
 }
 
 function errorDisplay(owner, description, e) {
+    console.log('owner=', owner);
     console.log('errorDisplay e=', e);
     let message = 'Null message';
     let details = 'Null details';
@@ -73,7 +74,7 @@ function errorDisplay(owner, description, e) {
         // Silently ignore if error details does not exists Ie because the error message isn't JSON
         message = e;
     }
-    owner.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}, null]);
+    owner.push_modal([ErrorModal, {error_messages: [description, 'Message:' + message, 'Details: ' + details], show_retry: false}]);
     m.redraw();
 }
 

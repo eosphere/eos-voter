@@ -8,8 +8,10 @@ class NotDetectedModal extends EosVoterModal {
     canclose() { return false; };
     get_internal_content() {
     return [
+             m('h1', 'Could not connect to scatter.'),
              m('h2', 'You need to install Scatter'),
              m('a', { href: 'https://scatter-eos.com', target: '_blank'}, 'Download scatter'),
+             m('p', 'If you are using Scatter Desktop you start it and unlock.'),
              m('h2', 'Go back'),
              m('a', { href: '/'}, 'Go back'),
            ];

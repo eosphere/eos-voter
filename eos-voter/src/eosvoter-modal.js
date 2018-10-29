@@ -49,9 +49,6 @@ class ModalStackMixin {
         // Returns the modal on the top of the stack
         let top = this.get_top();
         let inst = m(top[0] /*the class*/, top[1] /* the params*/);
-        if (top[2] === null) {
-            top[2] = inst;
-        }
         return [inst];
     }
 }

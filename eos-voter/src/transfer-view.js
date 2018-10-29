@@ -4,12 +4,21 @@ let exports = module.exports = {};
 let {VoteView} = require('./vote-view.js');
 let {StakeModal} = require('./stake-modal.js');
 let m = require("mithril");
-var globals = require('./globals.js');
 var {EosVoterModal} = require('./eosvoter-modal.js');
 var {errorDisplay} = require('./error-modal.js');
 var eosjs = require('eosjs');
 var {OKModal} = require('./ok-modal.js');
 var {float_to_eos} = require('./utils.js');
+
+let ScatterJS = require('scatterjs-core');
+let ScatterEOS = require('scatterjs-plugin-eosjs');
+let Eos = require('eosjs');
+ScatterJS = ScatterJS.default;
+ScatterEOS = ScatterEOS.default;
+ScatterJS.plugins( new ScatterEOS() );
+
+let globals = require('./globals.js');
+let utils = require('./utils.js');
 
 class TransferModal extends EosVoterModal {
     constructor(vnode) {
@@ -31,17 +40,17 @@ class TransferModal extends EosVoterModal {
         this.is_transfering = true;
 
     const requiredFields = {
-        accounts:[ globals.network ],
+        accounts:[ utils.get_network() ],
     };
-    //globals.scatter.suggestNetwork(globals.network).then((result) => {
-        globals.scatter.getIdentity(requiredFields).then(identity => {
+    ScatterJS.scatter.suggestNetwork(globals.network).then((result) => {
+        ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with.
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
-            var eos = globals.scatter.eos( globals.network_secure, eosjs.Localnet, globals.eosOptions, globals.chain_protocol );
+            var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions);
               eos.transfer(identity.accounts[0].name, this.destination_account, float_to_eos(this.transfer_amount), this.memo_field)
                   .then((result) => {
                   console.log('transfer result=', result);
-                  this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Transfer was succesful. Transaction id = \'' + result.transaction_id + '\''}, null]);
+                  this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Transfer was succesful. Transaction id = \'' + result.transaction_id + '\''}]);
                   m.redraw();
                   })
                   .catch(e => {
@@ -53,11 +62,11 @@ class TransferModal extends EosVoterModal {
                 errorDisplay(this.owner, 'getidentity returned an error', e);
                 console.log('getidentity error e=', e)
             });
-        /*})
+        })
         .catch(e => {
             errorDisplay(this.owner, 'suggestNetwork returned an error', e);
             console.log('suggestNetwork error e=', e)
-        });*/
+        });
     }
 
     get_internal_content() {
@@ -127,7 +136,6 @@ class TransferModal extends EosVoterModal {
 class TransferView extends VoteView {
   oncreate() {
     super.oncreate();
-    //this.push_modal([VoteModal, {owner: this, proxy_name: this.proxy_name, votes: this.votes}, null]);
   }
   get_current_modal() {
     let ret =  super.get_current_modal();
