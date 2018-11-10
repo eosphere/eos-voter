@@ -92,7 +92,6 @@ class TransferModal extends EosVoterModal {
                                  'value': this.destination_account,
                                  'onchange': (e) => { this.destination_account = e.target.value; },
                                  }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                    ]),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '140px', 'display': 'inline-block'}}, [
@@ -112,7 +111,6 @@ class TransferModal extends EosVoterModal {
                                  'value': this.memo_field,
                                  'onchange': (e) => { this.memo_field = e.target.value; },
                                 }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                    ]),
 
                  ]),
