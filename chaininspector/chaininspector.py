@@ -66,10 +66,10 @@ try:
         download_producers('')
 
         owners = {k: v for (k, v) in owners.items() if v['is_active'] == 1}
-        #owners = {k: v for (k, v) in owners.items() if v['is_active'] == 1 and v['owner'][:1] != 'e'}
 
         bp_json_inspector.set_producers(owners, mongodb_server, chain_id)
-        total_votes = sum([float(producer['total_votes']) for producer in owners.values() if producer['is_active'] == True])
+        #total_votes = sum([float(producer['total_votes']) for producer in owners.values() if producer['is_active'] == True])
+        total_votes = d['rows'][0]['total_producer_vote_weight']
         producers.update_one({'_id': 1}, {'$set': {'_id': 1,
                                                    'chain_id': chain_id,
                                                    'total_activated_stake': total_activated_stake,
