@@ -208,12 +208,40 @@ cd /srv/eos-voter/eos-voter
 sudo -u deployment nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production -d
 ```
 
+Update the chain inspector's requirements
+```
+cd /srv/eos-voter/chaininspector
+sudo ./venv/bin/pip install -r requirements.txt
+```
+
 Change the ownership of all files in the directory
 ```
 sudo chown deployment:www-data /srv/eos-voter -R
 ```
 
+Restart the chain inspector
+```
+sudo service supervisor restart
+```
+
 Restart the app
 ```
 sudo -u www-data pm2 restart all
+```
+
+If the operating system packages need an upgrade do the following
+Type in
+
+```
+sudo apt-get update
+
+sudo apt-get dist-upgrade
+
+sudo apt-get autoremove
+```
+
+If it updated then kernel you will need to reboot
+
+```
+sudo reboot
 ```
