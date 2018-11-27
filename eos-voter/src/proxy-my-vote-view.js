@@ -104,7 +104,6 @@ class ProxyMyVote extends EosVoterModal {
                                  'value': this.proxy_name,
                                  'onchange': (e) => { this.proxy_name = e.target.value; },
                                  }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
                    ]),
 
                  ]),
