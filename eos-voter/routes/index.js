@@ -15,7 +15,7 @@ function ProcessBPListRequest(res, template) {
     if (err) throw err;
     var dbo = db.db("eos_producers");
     var query = { "_id": 1 };
-    dbo.collection("producers").find(query).toArray(function(err, result) {
+    dbo.collection(config.mongodb_prefix + "producers").find(query).toArray(function(err, result) {
       if (err) throw err;
       var producers = result[0]['producers'];
       var total_votes = parseFloat(result[0]['total_votes']);
@@ -26,7 +26,7 @@ function ProcessBPListRequest(res, template) {
       var producer_list = Object.keys(producers).map((key) => producers[key] );
       producer_list.sort((a, b) => { return parseFloat(b.total_votes) - parseFloat(a.total_votes); });
 
-      dbo.collection("bp_info").find().toArray(function(err, result2) {
+      dbo.collection(config.mongodb_prefix + "bp_info").find().toArray(function(err, result2) {
         var bp_info = {};
         for (let i = 0; i < result2.length ; i++) {
           bp_info[result2[i]._id] = result2[i];
