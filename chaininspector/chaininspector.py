@@ -10,6 +10,9 @@ import os
 from chainlogger import log
 import datetime
 
+mongodb_prefix = ''
+bp_json_inspector.set_mongodb_prefix(mongodb_prefix)
+
 c = Client(nodes=['https://node2.eosphere.io'])
 
 if len(sys.argv) != 2:
@@ -19,7 +22,7 @@ mongodb_server = sys.argv[1]
 
 client = MongoClient('mongodb://{}:27017/'.format(mongodb_server))
 db = client.eos_producers
-producers = db.producers
+producers = db[mongodb_prefix + 'producers']
 owners = {}
 last_owner = ''
 more = None

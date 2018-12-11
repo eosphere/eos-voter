@@ -9,6 +9,11 @@ from chainlogger import log
 producers = None
 mongodb_server = None
 chain_id = None
+_mongodb_prefix = ''
+
+def set_mongodb_prefix(mongodb_prefix):
+    global _mongodb_prefix
+    _mongodb_prefix = mongodb_prefix
 
 def set_producers(prods, srv, c):
     global producers
@@ -38,7 +43,7 @@ def trailing_slash(s):
 def inpsect_bp_json():
     mongo_client = MongoClient('mongodb://{}:27017/'.format(mongodb_server))
     db = mongo_client.eos_producers
-    bp_info = db.bp_info
+    bp_info = db[_mongodb_prefix + 'bp_info']
     try:
         global producers
         while True:
