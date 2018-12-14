@@ -14,7 +14,7 @@ config.chain_secure_port = '38888'
 
 
 //If connecting via the scatter web extension use these settings
-config.chain_addr = 'node1.eosphere.io'
+config.chain_addr = 'api.telosvoyager.io'
 // Port to connect to the API
 config.chain_port = '443'
 // Protocol to use. Valid choices are http or https
