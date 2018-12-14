@@ -40,6 +40,14 @@ def trailing_slash(s):
     else:
         return s
 
+def remove_leading_slash(s):
+    if len(s) == 0:
+        return s
+    if s[0] == '/':
+        return s[1:]
+    else:
+        return s
+
 def inpsect_bp_json():
     mongo_client = MongoClient('mongodb://{}:27017/'.format(mongodb_server))
     db = mongo_client.eos_producers
@@ -53,13 +61,21 @@ def inpsect_bp_json():
                 if valid_url(bp['url'].lower()):
                     try:
                         result = {}
-                        r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.' + chain_id + '.json', timeout=30)
+                        r = requests.get(trailing_slash(bp['url'].lower()) + 'chains.json', timeout=30)
+                        if r.status_code == 200:
+                            chains = r.json()
+                            chain_file = chains["chains"][chain_id]
+                        else:
+                            chain_file = 'bp.json'
+                        r = requests.get(trailing_slash(bp['url'].lower()) + remove_leading_slash(chain_file), timeout=30)
                         if r.status_code == 200:
                             result = r.json()
+                        """
                         r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json', timeout=30)
                         if r.status_code == 200:
                             result = {**r.json(), **result}
-                            bp_info.update_one({'_id': bp_name}, {"$set": result}, upsert=True)
+                        """
+                        bp_info.update_one({'_id': bp_name}, {"$set": result}, upsert=True)
 
                     except Exception as ex:
                         log("an EXCEPTION OCCURERD    ex=", ex)
