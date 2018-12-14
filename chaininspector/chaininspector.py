@@ -13,7 +13,7 @@ import datetime
 mongodb_prefix = ''
 bp_json_inspector.set_mongodb_prefix(mongodb_prefix)
 
-c = Client(nodes=['https://api.telosvoyager.io'])
+c = Client(nodes=['https://telos.eosphere.io])
 
 if len(sys.argv) != 2:
     raise Exception("You must provide the IP address of the mongodb server on the commandline")
