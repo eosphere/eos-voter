@@ -40,7 +40,7 @@ function ProcessBPListRequest(res, template) {
 
         has_activated = total_activated_stake > config.min_activated_stake;
 
-        res.render(template, { title: 'EOS Voter',
+        res.render(template, { title: 'Telos Voter',
                               chainname: config.chain_name,
                              'activeblockproducers': active_block_producers,
                              'backupblockproducers': backup_block_producers,

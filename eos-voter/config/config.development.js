@@ -14,7 +14,7 @@ config.chain_secure_port = '38888'
 
 
 //If connecting via the scatter web extension use these settings
-config.chain_addr = 'api.telosvoyager.io'
+config.chain_addr = 'telos.eosphere.io'
 // Port to connect to the API
 config.chain_port = '443'
 // Protocol to use. Valid choices are http or https
@@ -37,7 +37,7 @@ config.chain_secure_port = '443'
 */
 
 // User readable name for the chain
-config.chain_name = 'EOS Mainnet';
+config.chain_name = 'Telos Mainnet';
 //config.chain_name = 'Jungle Testnet';
 
 config.bp_info_refresh_secs = 60;

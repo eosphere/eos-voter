@@ -323,7 +323,7 @@ class VoteView extends ModalStackMixin {
                      m("img", {'class': 'eoslogo', 'src': '/images/Logo-dark-landscape-v2-1.png'})
                    ]),
                    m("div", {'class': 'centre-header'}, [
-                     m("h1", {'class': 'centre-h1'}, "EOS Voter")
+                     m("h1", {'class': 'centre-h1'}, "Telos Voter")
                    ]),
                    m("div", {'class': 'pageheaderitem signupbuttoncontainer'}, [
                      m("a", {'class': 'signupbutton', 'href': '#!cast', 'onclick': (e) => {m.route.set('#!cast');}}, 'Cast Vote'),
