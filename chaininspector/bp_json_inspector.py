@@ -10,6 +10,7 @@ producers = None
 mongodb_server = None
 chain_id = None
 _mongodb_prefix = ''
+default_chain_file = 'telos/bp.json'
 
 def set_mongodb_prefix(mongodb_prefix):
     global _mongodb_prefix
@@ -61,14 +62,20 @@ def inpsect_bp_json():
                 if valid_url(bp['url'].lower()):
                     try:
                         result = {}
+                        log("Getting chains file")
                         r = requests.get(trailing_slash(bp['url'].lower()) + 'chains.json', timeout=30)
                         if r.status_code == 200:
-                            chains = r.json()
-                            chain_file = chains["chains"][chain_id]
+                            try:
+                                chains = r.json()
+                                chain_file = chains["chains"][chain_id]
+                            except Exception as ex:
+                                chain_file = default_chain_file
                         else:
-                            chain_file = 'bp.json'
+                            chain_file = default_chain_file
+                        log("Getting bp.json file=", bp['url'],'=', chain_file)
                         r = requests.get(trailing_slash(bp['url'].lower()) + remove_leading_slash(chain_file), timeout=30)
                         if r.status_code == 200:
+                            #log("BP json file contains=", r.content)
                             result = r.json()
                         """
                         r = requests.get(trailing_slash(bp['url'].lower()) + 'bp.json', timeout=30)
