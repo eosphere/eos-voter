@@ -38,7 +38,7 @@ function ProcessBPListRequest(res, template) {
         let backup_block_producers = active_block_producers.slice(21);
         active_block_producers = active_block_producers.slice(0, 21);
 
-        has_activated = total_activated_stake > config.min_activated_stake;
+        has_activated = true; //Telos has activated
 
         res.render(template, { title: 'Telos Voter',
                               chainname: config.chain_name,
