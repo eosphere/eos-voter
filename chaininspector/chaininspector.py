@@ -73,6 +73,7 @@ try:
         bp_json_inspector.set_producers(owners, mongodb_server, chain_id)
         #total_votes = sum([float(producer['total_votes']) for producer in owners.values() if producer['is_active'] == True])
         total_votes = d['rows'][0]['total_producer_vote_weight']
+        #print('total_votes=', total_votes)
         producers.update_one({'_id': 1}, {'$set': {'_id': 1,
                                                    'chain_id': chain_id,
                                                    'total_activated_stake': total_activated_stake,
