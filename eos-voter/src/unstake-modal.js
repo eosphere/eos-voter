@@ -40,21 +40,56 @@ class UnstakeModal extends EosVoterModal {
     const requiredFields = {
         accounts:[ utils.get_network() ],
     };
+
+    /*
+    const network = ScatterJS.Network.fromJson({
+        blockchain:'eos',
+        chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
+        host:'nodes.get-scatter.com',
+        port:443,
+        protocol:'https'
+    });
+
+    ScatterJS.connect('EosVoter - Eosphere.io', {network}).then(connected => {
+        if(!connected) return console.error('no scatter');
+
+        const eos = ScatterJS.eos(network, Eos);
+
+        ScatterJS.login().then(id => {
+            if(!id) return console.error('no identity');
+            const account = ScatterJS.account('eos');
+            const options = {authorization:[`${account.name}@${account.authority}`]};
+            c.undelegatebw({'from':identity.accounts[0].name, 'receiver': identity.accounts[0].name,
+                           'unstake_net_quantity': float_to_eos(this.new_delegated_net_weight),
+                           'unstake_cpu_quantity': float_to_eos(this.new_delegated_cpu_weight)}).then(res => {
+                console.log('sent: ', res);
+            }).catch(err => {
+                console.error('error: ', err);
+            });
+        });
+    });*/
+
     ScatterJS.scatter.suggestNetwork(globals.network_secure).then((result) => {
+    //ScatterJS.scatter.connect('EosVoter - eosphere.io').then(connected => {
+    //     if(!connected) return false;
         ScatterJS.scatter.getIdentity(requiredFields).then(identity => {
             // Set up any extra options you want to use eosjs with.
             // Get a reference to an 'Eosjs' instance with a Scatter signature provider.
             var eos = ScatterJS.scatter.eos(utils.get_network(), Eos, globals.eosjsOptions, globals.chain_protocol);
             eos.contract('eosio', requiredFields).then(c => {
-                c.undelegatebw(identity.accounts[0].name, identity.accounts[0].name, float_to_eos(this.new_delegated_net_weight), float_to_eos(this.new_delegated_cpu_weight))
+                const account = identity.accounts[0];
+                const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
+                c.undelegatebw({'from':account.name, 'receiver': account.name,
+                               'unstake_net_quantity': float_to_eos(this.new_delegated_net_weight),
+                               'unstake_cpu_quantity': float_to_eos(this.new_delegated_cpu_weight)}, transactionOptions)
                     .then((result) => {
-                    console.log('delegatebw result=', result);
+                    //console.log('undelegatebw result=', result);
                     this.owner.push_modal([OKModal, {owner: this.owner, info_message: 'Unstaking was succesful. Transaction id = \'' + result.transaction_id + '\'. Unstaked coins take 3 days to become available.'}]);
                     m.redraw();
                     })
                     .catch(e => {
-                        errorDisplay(this.owner, 'eosio.delegatebw returned an error', e);
-                        console.log('delegatebw error e=', e)
+                        errorDisplay(this.owner, 'eosio.undelegatebw returned an error', e);
+                        console.log('undelegatebw error e=', e)
                     });
                 })
                 .catch(e => {
