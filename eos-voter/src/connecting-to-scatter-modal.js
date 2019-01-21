@@ -8,10 +8,9 @@ class ConnectingToScatter extends EosVoterModal {
     canclose() { return false; };
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Connecting Scatter to EOS'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Connecting to Scatter'),
                ];
     }
 }
 
 exports.ConnectingToScatter = ConnectingToScatter;
-

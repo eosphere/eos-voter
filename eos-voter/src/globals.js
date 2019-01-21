@@ -10,3 +10,4 @@ globals.network_secure = {};
 globals.registered_producers = new Set();
 globals.connectionOptions = {};
 globals.esosJsOptions = {};
+globals.token_symbol = 'TLOS';

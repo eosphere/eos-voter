@@ -1,7 +1,7 @@
 How to cast a vote with Eosvoter by eosphere
 
 (1) Install the scatter add on - it is available from https://scatter-eos.com/
-(2) Load your EOS private key into scatter.
+(2) Load your private key into scatter.
 (3) Browse to http://eosvoter.eosphere.io/vote the website should detect scatter and scatter should prompt you to accept the network.
 (4) The next step will give an error because you haven't yet link an identity to this network
 (5) Open up scatter and add a new identity or edit an existing one.
@@ -11,7 +11,6 @@ How to cast a vote with Eosvoter by eosphere
 (9) Choose that identity. You should now be presented with information about the state of the blockchain and I list of block producer candidates. If the chain has activated the list will the seperated into the active producers and the backups.
 (10) Choose the producers you wish to vote form you can vote for up to 30.
 (11) Alternatively you can proxy your vote to another user, however that user must have previous registered as a proxy.
-(12) Click the cast vote in the top right hand corner of the screen. 
+(12) Click the cast vote in the top right hand corner of the screen.
 (13) You will now be presented with a list of producers you are voting for.
 (14) Click 'Cast Vote' and the voting shall begin. It takes are few seconds to complete the action and will give you a message when complete.
-

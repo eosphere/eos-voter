@@ -4,7 +4,7 @@ let globals = require('./globals.js');
 
 function float_to_eos(f) {
   //return a float as a correctly formatted EOS amount
-  return parseFloat(f).toFixed(4) + ' EOS';
+  return parseFloat(f).toFixed(4) + ' ' + globals.token_symbol;
 }
 
 function get_network() {

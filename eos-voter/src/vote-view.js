@@ -34,7 +34,7 @@ class VoteView extends ModalStackMixin {
       super();
       //console.log('VoteView constructor(): is called.')
 
-      ScatterJS.scatter.connect('EOS-VOTER', globals.connectionOptions).then(connected => {
+      ScatterJS.scatter.connect('TELOS-VOTER', globals.connectionOptions).then(connected => {
           if(!connected) {
               // User does not have Scatter installed/unlocked.
               return false;
@@ -178,7 +178,7 @@ class VoteView extends ModalStackMixin {
                                 limit:500
                             }).then(
                                 (result) => {
-                                    const row = result.rows.find(row => row.balance.split(" ")[1].toLowerCase() === 'eos');
+                                    const row = result.rows.find(row => row.balance.split(" ")[1].toUpperCase() === globals.token_symbol);
                                     globals.balance = row ? row.balance.split(" ")[0] : 0;
                                     m.redraw();
                             }).catch(

@@ -71,7 +71,7 @@ class TransferModal extends EosVoterModal {
 
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Transfer your EOS'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Transfer your ' + globals.token_symbol + '.'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
                      'By sending EOS you are agreeing to the ',
@@ -80,10 +80,10 @@ class TransferModal extends EosVoterModal {
                              'target': '_blank'},
                              'EOS Constitution detailed here'),
                    ]),
-                   m('p', 'Send EOS to another account.'),
-                   m("p", 'Your available EOS balance is ' + this.balance + ' EOS.'),
-                   m("p", 'You currently have ' + this.delegated_cpu_weight + ' EOS staked to CPU.'),
-                   m("p", 'You currently have ' + this.delegated_net_weight + ' EOS staked to Net.'),
+                   m('p', 'Send ' + globals.token_symbol + ' to another account.'),
+                   m("p", 'Your available EOS balance is ' + this.balance + ' ' + globals.token_symbol + '.'),
+                   m("p", 'You currently have ' + this.delegated_cpu_weight + ' ' + globals.token_symbol + ' staked to CPU.'),
+                   m("p", 'You currently have ' + this.delegated_net_weight + ' ' + globals.token_symbol + ' staked to Net.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '140px', 'display': 'inline-block'}}, [
                        m('label', {'for': 'id-CPU-stake'}, 'Destination account'),
@@ -101,7 +101,7 @@ class TransferModal extends EosVoterModal {
                                  'value': this.transfer_amount,
                                  'onchange': (e) => { this.transfer_amount = e.target.value; },
                                 }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                     m('span', {'style': {'margin-left': '3px'}}, globals.token_symbol),
                    ]),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '140px', 'display': 'inline-block'}}, [
@@ -117,7 +117,7 @@ class TransferModal extends EosVoterModal {
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.stake_now()},
-                       (this.is_transfering == false ? "Transfer EOS" : [
+                       (this.is_transfering == false ? ('Transfer ' + globals.token_symbol + '.') : [
                        m('span', {'style': {'display': 'inline-block'}}, "Transfering"),
                        m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
                      ])),

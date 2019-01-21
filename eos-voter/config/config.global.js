@@ -6,7 +6,7 @@ config.refresh_secs = 5;
 config.landing_page_content = '<p class=\'centre\'>Telos Voter is a provided as a free service to the community by EOSphere. You can use it to monitor the votes of block producers and to vote</p>';
 
 // Warning voting page content should include HTML tag it will be injected into a div tag
-config.voting_page_content = '<p class=\'centre\'>You may vote for up to 30 block producer candidates. Or you can proxy your vote to another EOS user.</p>'
+config.voting_page_content = '<p class=\'centre\'>You may vote for up to 30 block producer candidates. Or you can proxy your vote to another Telos user.</p>'
 
 // Message to give this users when this chain activates
 // Warning voting page content should include HTML tag it will be injected into a div tag

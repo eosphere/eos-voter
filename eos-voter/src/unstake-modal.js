@@ -110,7 +110,7 @@ class UnstakeModal extends EosVoterModal {
 
     get_internal_content() {
         return [
-                 m('h2', {'style': {'text-align': 'center'}}, 'Unstake your EOS'),
+                 m('h2', {'style': {'text-align': 'center'}}, 'Unstake your ' + globals.token_symbol + '.'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
                      'By unstaking you are agreeing to the ',
@@ -119,14 +119,14 @@ class UnstakeModal extends EosVoterModal {
                              'target': '_blank'},
                              'EOS Constitution detailed here'),
                    ]),
-                   m('h2', {'style': {'text-align': 'center'}}, 'You must unstake EOS from CPU and Net to trade'),
+                   m('h2', {'style': {'text-align': 'center'}}, 'You must unstake ' + globals.token_symbol + ' from CPU and Net to trade'),
                    ((this.delegated_cpu_weight == 0 && this.delegated_net_weight == 0) ? [
-                     m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked EOS'),
+                     m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked ' + globals.token_symbol + '.'),
                    ]:[]),
-                   m("p", 'Your available EOS balance is ' + this.balance + ' EOS.'),
-                   m("p", 'You currently have ' + this.delegated_cpu_weight + ' EOS staked to CPU.'),
-                   m("p", 'You currently have ' + this.delegated_net_weight + ' EOS staked to Net.'),
-                   m("p", 'Enter the number of EOS tokens you wish to remove from the stake and return to your account.'),
+                   m("p", 'Your available ' + globals.token_symbol + ' balance is ' + this.balance + ' ' + globals.token_symbol + '.'),
+                   m("p", 'You currently have ' + this.delegated_cpu_weight + ' ' + globals.token_symbol + ' staked to CPU.'),
+                   m("p", 'You currently have ' + this.delegated_net_weight + ' ' + globals.token_symbol + ' staked to Net.'),
+                   m("p", 'Enter the number of ' + globals.token_symbol + ' tokens you wish to remove from the stake and return to your account.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '160px', 'display': 'inline-block'}}, [
                        m('label', {'for': 'id-CPU-stake'}, 'CPU amount to unstake'),
@@ -135,7 +135,7 @@ class UnstakeModal extends EosVoterModal {
                                  'value': this.new_delegated_cpu_weight,
                                  'onchange': (e) => { this.new_delegated_cpu_weight = e.target.value; },
                                  }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                     m('span', {'style': {'margin-left': '3px'}}, globals.token_symbol),
                    ]),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '160px', 'display': 'inline-block'}}, [
@@ -145,14 +145,14 @@ class UnstakeModal extends EosVoterModal {
                                  'value': this.new_delegated_net_weight == 'Unknown' ? '0' : this.new_delegated_net_weight,
                                  'onchange': (e) => { this.new_delegated_net_weight = e.target.value; },
                                 }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                     m('span', {'style': {'margin-left': '3px'}}, globals.token_symbol),
                    ]),
 
                  ]),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.unstake_now()},
-                       (this.is_staking == false ? "Unstake EOS" : [
+                       (this.is_staking == false ? 'Unstake ' + globals.token_symbol + '.' : [
                        m('span', {'style': {'display': 'inline-block'}}, "Unstaking"),
                        m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
                      ])),

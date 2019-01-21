@@ -1,5 +1,5 @@
 # eos-voter
-Website for voting for EOS Block Producers
+Website for voting for EOSIO Block Producers
 
 To set up this project
 

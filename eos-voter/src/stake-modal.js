@@ -84,19 +84,19 @@ class StakeModal extends EosVoterModal {
                  m('h2', {'style': {'text-align': 'center'}}, 'Stake your EOS'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
-                     'By staking EOS you are agreeing to the ',
+                     'By staking Telos you are agreeing to the ',
                      m('a', {'class': 'constitution-agreement-link',
                              'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
                              'target': '_blank'},
                              'EOS Constitution detailed here'),
                    ]),
-                   m('h2', {'style': {'text-align': 'center'}}, 'You must stake EOS to CPU and Net to vote'),
+                   m('h2', {'style': {'text-align': 'center'}}, 'You must stake Telos to CPU and Net to vote'),
                    ((this.delegated_cpu_weight == 0 && this.delegated_net_weight == 0) ? [
-                     m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked EOS'),
+                     m('h2', {'style': {'text-align': 'center', 'color': 'red'}}, 'You currently have no staked ' + globals.token_symbol + '.'),
                    ]:[]),
-                   m("p", 'Your available EOS balance is ' + this.balance + ' EOS.'),
-                   m("p", 'You currently have ' + this.delegated_cpu_weight + ' EOS staked to CPU.'),
-                   m("p", 'You currently have ' + this.delegated_net_weight + ' EOS staked to Net.'),
+                   m("p", 'Your available ' + globals.token_symbol + ' balance is ' + this.balance + ' ' + globals.token_symbol + '.'),
+                   m("p", 'You currently have ' + this.delegated_cpu_weight + ' ' + globals.token_symbol + ' staked to CPU.'),
+                   m("p", 'You currently have ' + this.delegated_net_weight + ' ' + globals.token_symbol + ' staked to Net.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
                        m('label', {'for': 'id-CPU-stake'}, 'CPU stake'),
@@ -105,7 +105,7 @@ class StakeModal extends EosVoterModal {
                                  'value': this.new_delegated_cpu_weight,
                                  'onchange': (e) => { this.new_delegated_cpu_weight = e.target.value; },
                                  }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                     m('span', {'style': {'margin-left': '3px'}}, globals.token_symbol),
                    ]),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
                      m('div', {'style': {'width': '70px', 'display': 'inline-block'}}, [
@@ -115,14 +115,14 @@ class StakeModal extends EosVoterModal {
                                  'value': this.new_delegated_net_weight == 'Unknown' ? '0' : this.new_delegated_net_weight,
                                  'onchange': (e) => { this.new_delegated_net_weight = e.target.value; },
                                 }),
-                     m('span', {'style': {'margin-left': '3px'}}, 'EOS'),
+                     m('span', {'style': {'margin-left': '3px'}}, globals.token_symbol),
                    ]),
 
                  ]),
                  m('div', {'style': {'width': '100%', 'height': '120px'}}, [
                    m('div', {'style': {'text-align': 'center'}}, [
                      m("Button", {'class': 'big-vote-now-button', 'onclick': e => this.stake_now()},
-                       (this.is_staking == false ? "Stake EOS" : [
+                       (this.is_staking == false ? ('Stake ' + globals.token_symbol + '.') : [
                        m('span', {'style': {'display': 'inline-block'}}, "Staking"),
                        m('div', {'class': 'loader', 'style': {'display': 'inline-block', 'margin-left': '5px'}}),
                      ])),
