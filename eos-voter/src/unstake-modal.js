@@ -115,9 +115,9 @@ class UnstakeModal extends EosVoterModal {
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
                      'By unstaking you are agreeing to the ',
                      m('a', {'class': 'constitution-agreement-link',
-                             'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
+                             'href': 'https://resources.telosfoundation.io/governance_documents/TBNOA_Adopted_2018-11-20.pdf',
                              'target': '_blank'},
-                             'EOS Constitution detailed here'),
+                             'Telos network operators agreement detailed here'),
                    ]),
                    m('h2', {'style': {'text-align': 'center'}}, 'You must unstake ' + globals.token_symbol + ' from CPU and Net to trade'),
                    ((this.delegated_cpu_weight == 0 && this.delegated_net_weight == 0) ? [

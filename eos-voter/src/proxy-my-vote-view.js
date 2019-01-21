@@ -95,9 +95,9 @@ class ProxyMyVote extends EosVoterModal {
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
                      'By Proxying and voting you are agreeing to the ',
                      m('a', {'class': 'constitution-agreement-link',
-                             'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
+                             'href': 'https://resources.telosfoundation.io/governance_documents/TBNOA_Adopted_2018-11-20.pdf',
                              'target': '_blank'},
-                             'EOS Constitution detailed here'),
+                             'Telos network operators agreement detailed here'),
                    ]),
                    m('p', 'Proxy you vote to another account.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [

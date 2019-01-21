@@ -82,17 +82,6 @@ class VoteModal extends EosVoterModal {
     }
 
     get_internal_content() {
-        /*
-        get_constitution_agreement
-
-                 m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
-                   'By voting you are agreeing to the ',
-                   m('a', {'class': 'constitution-agreement-link',
-                           'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
-                           'target': '_blank'},
-                           'EOS Constitution detailed here'),
-                 ]),
-        */
 
         return [
                  m('h2', {'style': {'text-align': 'center'}}, 'Confirm your vote'),
@@ -100,9 +89,9 @@ class VoteModal extends EosVoterModal {
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
                      'By voting you are agreeing to the ',
                      m('a', {'class': 'constitution-agreement-link',
-                             'href': 'https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md',
+                             'href': 'https://resources.telosfoundation.io/governance_documents/TBNOA_Adopted_2018-11-20.pdf',
                              'target': '_blank'},
-                             'EOS Constitution detailed here'),
+                             'Telos network operators agreement detailed here'),
                    ]),
                  ].concat(
                    (this.proxy_name != '' ?
