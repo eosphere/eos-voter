@@ -89,6 +89,12 @@ Start the application with pm2
 sudo -u www-data pm2 start /srv/telos-voter/eos-voter/bin/www
 ```
 
+Set the application to auto start
+```
+sudo -u www-data pm2 save
+sudo -u www-data pm2 startup systemd
+```
+
 ### Run webpack to compress javascript
 
 Run webpack to generate the static files
