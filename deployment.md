@@ -85,9 +85,11 @@ sudo npm install
 
 ### Set up the python block chain inspector
 
+```
 cd /srv/eos-voter/chaininspector
 sudo virtualenv venv -p python3
 sudo ./venv/bin/pip install -r requirements.txt
+```
 
 ### Finalise the application file set up
 
@@ -101,6 +103,7 @@ sudo chown deployment:www-data /srv/eos-voter -R
 First create the Diffie-Helman parameters. This is necessary because the defaults
 are too weak to defeat the logjam vulnerability.
 ```
+sudo mkdir /etc/nginx/ssl
 sudo openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
 ```
 
@@ -154,7 +157,7 @@ Set the application to auto start
 sudo -u www-data pm2 startup systemd
 ```
 
-It will return to you a command you need to enter into the prompt to run as sudo.
+It may return to you a command you need to enter into the prompt to run as sudo.
 
 ### Run webpack to compress javascript
 
