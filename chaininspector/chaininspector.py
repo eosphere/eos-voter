@@ -10,7 +10,7 @@ import os
 from chainlogger import log
 import datetime
 
-mongodb_prefix = ''
+mongodb_prefix = 'telos'
 bp_json_inspector.set_mongodb_prefix(mongodb_prefix)
 
 c = Client(nodes=['https://telos.eosphere.io'])

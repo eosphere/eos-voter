@@ -41,4 +41,4 @@ config.timefactor = 7218513226.892367735;
 
 config.bp_info_refresh_secs = 60;
 
-config.mongodb_prefix = '';
+config.mongodb_prefix = 'telos';
