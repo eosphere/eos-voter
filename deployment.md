@@ -110,31 +110,31 @@ First merge all necessary changes into the master branch of the git repo and pus
 ssh into the server. Then change to the software directory and pull the updates
 
 ```
-cd /srv/eos-voter
+cd /srv/telos-voter
 sudo -u deployment git pull
 ```
 
 Install any updated npm requirements
 ```
-cd /srv/eos-voter/eos-voter
-sudo -u deployment npm install
+cd /srv/telos-voter/eos-voter
+sudo npm install
 ```
 
 Run webpack to regenerate the client side javascript
 ```
-cd /srv/eos-voter/eos-voter
+cd /srv/telos-voter/eos-voter
 sudo -u deployment nodejs node_modules/webpack/bin/webpack.js src/votefrontend.js --output public/bin/app.js --mode production -d
 ```
 
 Update the chain inspector's requirements
 ```
-cd /srv/eos-voter/chaininspector
+cd /srv/telos-voter/chaininspector
 sudo ./venv/bin/pip install -r requirements.txt
 ```
 
 Change the ownership of all files in the directory
 ```
-sudo chown deployment:www-data /srv/eos-voter -R
+sudo chown deployment:www-data /srv/telos-voter -R
 ```
 
 Restart the chain inspector
