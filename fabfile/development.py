@@ -27,7 +27,7 @@ def bash():
     print(yellow('Running docker process bash...'))
     with lcd('.'):
         local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
-              '--entrypoint="bash" --publish=3000:3000 '
+              '--entrypoint="bash" --publish=3001:3001 '
               '--network={project_name}-network '
               '--network-alias=webserver '
               #'--user=$(id -u):$(id -g) '
@@ -58,7 +58,7 @@ def runserver():
         if result.failed:
             abort(red('Could not start mongodb. Have you run \'setup_mongodb\'?'))
         local('docker run --tty --interactive --volume "{local_pwd}":/opt/project '
-              '--entrypoint="/opt/project/run-eos-voter" --publish=3000:3000 '
+              '--entrypoint="/opt/project/run-eos-voter" --publish=3001:3001 '
               '--network={project_name}-network '
               '--network-alias=webserver '
               #'--user=$(id -u):$(id -g) '

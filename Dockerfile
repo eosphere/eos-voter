@@ -46,6 +46,6 @@ RUN chmod 777 /.npm -R
 
 # Entrypoint
 # Also need
-EXPOSE 3000-3000
+EXPOSE 3001-3001
 WORKDIR /opt/project/eos-voter
 ENTRYPOINT ["/opt/project/run-eos-voter"]
