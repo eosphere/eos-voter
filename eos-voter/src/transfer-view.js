@@ -74,14 +74,14 @@ class TransferModal extends EosVoterModal {
                  m('h2', {'style': {'text-align': 'center'}}, 'Transfer your ' + globals.token_symbol + '.'),
                  m('div', {'style': {'width': '100%', 'height': 'calc(100% - 120px - 49px)'}}, [
                    m('p', {'class': 'constitution-agreement-text', 'style': {'text-align': 'center', 'color': 'red'}}, [
-                     'By sending EOS you are agreeing to the ',
+                     'By sending TLOS you are agreeing to the ',
                      m('a', {'class': 'constitution-agreement-link',
                              'href': 'https://resources.telosfoundation.io/governance_documents/TBNOA_Adopted_2018-11-20.pdf',
                              'target': '_blank'},
                              'Telos network operators agreement detailed here'),
                    ]),
                    m('p', 'Send ' + globals.token_symbol + ' to another account.'),
-                   m("p", 'Your available EOS balance is ' + this.balance + ' ' + globals.token_symbol + '.'),
+                   m("p", 'Your available TLOS balance is ' + this.balance + ' ' + globals.token_symbol + '.'),
                    m("p", 'You currently have ' + this.delegated_cpu_weight + ' ' + globals.token_symbol + ' staked to CPU.'),
                    m("p", 'You currently have ' + this.delegated_net_weight + ' ' + globals.token_symbol + ' staked to Net.'),
                    m('div', {'style': {'margin-bottom': '3px'}}, [
