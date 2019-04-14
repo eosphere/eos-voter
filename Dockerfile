@@ -10,7 +10,7 @@
 
 FROM ubuntu:18.04
 
-ENV last_update 20180823
+ENV last_update 20190318
 
 
 # Install required packages
@@ -25,6 +25,7 @@ RUN apt-get update --quiet --yes && apt-get install --quiet --yes --force-yes \
 # Install required packages
 ADD chaininspector/requirements.txt /root/requirements.txt
 RUN pip3 install --upgrade pip
+RUN pip3 install cryptography==2.6.1
 RUN pip3 install --upgrade setuptools urllib3[secure]
 RUN pip3 install -r /root/requirements.txt
 

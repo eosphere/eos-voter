@@ -57,13 +57,22 @@ def inpsect_bp_json():
         while True:
             prods = producers
             for bp_name, bp in prods.items():
+                if bp_name != 'dutcheosxxxx':
+                    continue
                 log("Connecting to bp.json url for {} url = {}".format(bp['owner'], bp['url']))
                 if valid_url(bp['url'].lower()):
                     try:
                         result = {}
-                        r = requests.get(trailing_slash(bp['url'].lower()) + 'chains.json', timeout=30)
+                        chains_url = trailing_slash(bp['url'].lower()) + 'chains.json'
+                        chains_url = 'http://dutcheos.io/chains.json'
+                        #chains_url = 'https://dutcheos.io/bp.json'
+                        log('chains_url=', chains_url)
+                        r = requests.get(chains_url, timeout=30)
+                        log("Request for chains.json returned ", r.status_code)
                         if r.status_code == 200:
+                            log("Returned 200 for chains.json")
                             chains = r.json()
+                            log("chains=", chains)
                             chain_file = chains["chains"][chain_id]
                         else:
                             chain_file = 'bp.json'
