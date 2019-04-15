@@ -11,6 +11,7 @@ let {ModalStackMixin} = require('./eosvoter-modal.js');
 let {StakeModal} = require('./stake-modal.js');
 let {UnstakeModal} = require('./unstake-modal.js');
 let {ErrorModal, errorDisplay, ErrorOKModal} = require('./error-modal.js');
+let {IncorrectIdentityErrorModal} = require('./incorrect-identity-error-modal.js');
 let {NotDetectedModal} = require('./not-detected-modal.js');
 let ScatterJS = require('scatterjs-core');
 let ScatterEOS = require('scatterjs-plugin-eosjs');
@@ -152,7 +153,7 @@ class VoteView extends ModalStackMixin {
                   //console.log('Calling get identity returned=', identity);
 
                     if (identity.accounts[0].authority != 'active'){
-                        this.push_modal([ErrorModal, {owner: this, error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
+                        this.push_modal([IncorrectIdentityErrorModal, {owner: this, error_messages: ['You have chosen an account with the ' + identity.accounts[0].authority +
                               ' authority only the active authority can stake EOS. You should change identity'], show_retry: true}]);
                         m.redraw();
                         return;
