@@ -95,6 +95,8 @@ sudo -u www-data pm2 save
 sudo -u www-data pm2 startup systemd
 ```
 
+It may return to you a command you need to enter into the prompt to run as sudo.
+
 ### Run webpack to compress javascript
 
 Run webpack to generate the static files
