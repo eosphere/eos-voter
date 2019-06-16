@@ -10,7 +10,7 @@
 
 FROM ubuntu:18.04
 
-ENV last_update 20180823
+ENV last_update 20190616
 
 
 # Install required packages

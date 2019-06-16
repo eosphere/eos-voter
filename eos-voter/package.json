@@ -7,25 +7,25 @@
     "startdev": "NODE_ENV=development nodemon ./bin/www"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "eosjs": "^16.0.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "humanize-plus": "^1.8.2",
-    "jade": "~1.11.0",
+    "pug": "~2.0.3",
     "mithril": "^1.1.6",
     "mongodb": "^3.1.4",
-    "morgan": "~1.9.0",
+    "morgan": "^1.9.1",
     "nodemon": "^1.17.5",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
-    "sprintf": "^0.1.5",
-    "webpack": "^4.9.1",
-    "webpack-cli": "^2.1.4",
     "scatterjs-core": "^2.7.0",
     "scatterjs-plugin-eosjs": "^1.5.0",
-    "@babel/runtime": "^7.1.2"
+    "sprintf": "^0.1.5",
+    "webpack": "^4.9.1",
+    "webpack-cli": "^3.3.4"
   },
   "devDependencies": {
     "@babel/runtime": "^7.1.2"
