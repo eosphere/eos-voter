@@ -41,7 +41,12 @@ exports.format_block_producer = (x, total_votes, bp_info) => {
     // Format the block producers information for the frontend
     var country_code = '';
     if (x.owner in bp_info) {
+      try {
         country_code = bp_info[x.owner].org.location.country;
+      } catch (err) {
+          //console.log('format_block_producer err=', err);
+          // Lots of BPs don't conform to the standard just continue as best as possible
+      }
     }
     let bp_logo_256 = '';
     try {
@@ -53,19 +58,24 @@ exports.format_block_producer = (x, total_votes, bp_info) => {
         // Lots of BPs don't conform to the standard just continue as best as possible
     }
     //console.log('bp_logo_256=',bp_logo_256);
-    if (!(bp_logo_256.slice(0, 7) === 'http://' || bp_logo_256.slice(0, 8) === 'https://') && ValidURL(x.url) &&  bp_logo_256 != '') {
-        //console.log('INvalid fixable url=',bp_logo_256);
-        let url = x.url;
-        if (url.substr(-1) != '/') url += '/';
-        bp_logo_256 = url + bp_logo_256;
-    }
-    if (bp_logo_256.slice(0, 7) === 'http://') {
-        bp_logo_256 = "";
-    }
-    if (bp_logo_256.indexOf('cypherglass') > -1) {
-        // A temporary work around since cypherglasses logo just timesout instead we ignore it.
-        // Fix in a better way later
-        bp_logo_256 = "";
+    try {
+      if (!(bp_logo_256.slice(0, 7) === 'http://' || bp_logo_256.slice(0, 8) === 'https://') && ValidURL(x.url) &&  bp_logo_256 != '') {
+          //console.log('INvalid fixable url=',bp_logo_256);
+          let url = x.url;
+          if (url.substr(-1) != '/') url += '/';
+          bp_logo_256 = url + bp_logo_256;
+      }
+      if (bp_logo_256.slice(0, 7) === 'http://') {
+          bp_logo_256 = "";
+      }
+      if (bp_logo_256.indexOf('cypherglass') > -1) {
+          // A temporary work around since cypherglasses logo just timesout instead we ignore it.
+          // Fix in a better way later
+          bp_logo_256 = "";
+      }
+    } catch (err) {
+        //console.log('format_block_producer err=', err);
+        // Lots of BPs don't conform to the standard just continue as best as possible
     }
     let fake_bp = false;
     try {
