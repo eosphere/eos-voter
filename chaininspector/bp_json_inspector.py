@@ -5,6 +5,7 @@ import sys
 from pymongo import MongoClient
 import os
 from chainlogger import log
+import traceback
 
 producers = None
 mongodb_server = None
@@ -57,7 +58,7 @@ def inpsect_bp_json():
         while True:
             prods = producers
             for bp_name, bp in prods.items():
-                log("Connecting to bp.json url for {} url = {}".format(bp['owner'], bp['url']))
+                log("Connecting to bp.json url for {} url = {}".format(bp['owner'].encode('utf-8'), bp['url'].encode('utf-8')))
                 if valid_url(bp['url'].lower()):
                     try:
                         result = {}
@@ -78,11 +79,17 @@ def inpsect_bp_json():
                         bp_info.update_one({'_id': bp_name}, {"$set": result}, upsert=True)
 
                     except Exception as ex:
-                        log("an EXCEPTION OCCURERD    ex=", ex)
+                        log("an EXCEPTION OCCURERD    ex={}".format(str(ex).encode('utf-8')))
+                        exc_info = sys.exc_info()
+                        (exc_type, exc_value, exc_traceback) = exc_info
+                        print('extract_tb=',traceback.extract_tb(exc_traceback))
 
             time.sleep(10)
     except Exception as ex:
-        log("bp.json Exception ex=", ex)
+        log("bp.json Exception ex={}".format(str(ex).encode('utf-8')))
+        exc_info = sys.exc_info()
+        (exc_type, exc_value, exc_traceback) = exc_info
+        print('extract_tb=',traceback.extract_tb(exc_traceback))
         os._exit(1)
     finally:
         log("Finally called")
