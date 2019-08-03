@@ -5,11 +5,8 @@ import sys
 from pymongo import MongoClient
 import os
 from chainlogger import log
-<<<<<<< HEAD
 from urllib.parse import urlparse
-=======
 import traceback
->>>>>>> develop
 
 producers = None
 mongodb_server = None
